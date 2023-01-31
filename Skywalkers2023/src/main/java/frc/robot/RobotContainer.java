@@ -127,5 +127,4 @@ return new SequentialCommandGroup(
         swerveControllerCommand,
         new InstantCommand(() -> swerveSubsystem.stopModules()));
 }
-
-  }
+}
