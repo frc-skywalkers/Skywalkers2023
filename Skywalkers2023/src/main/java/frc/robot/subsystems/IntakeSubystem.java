@@ -29,11 +29,11 @@ public class IntakeSubystem extends SubsystemBase {
     motorSpeed = speed;
   }
 
-  public void moveUp() {
+  public void moveIn() {
     setSpeed(IntakeConstants.kMaxIntakeSpeed);
   }
 
-  public void moveDown() {
+  public void moveOut() {
     setSpeed(-IntakeConstants.kMaxIntakeSpeed);
   }
 
@@ -46,7 +46,7 @@ public class IntakeSubystem extends SubsystemBase {
   }
 
   public double getActualVelocity() {
-    return rightIntake.getSelectedSensorVelocity() / IntakeConstants.kIntakeGearRatio;
+    return rightIntake.getSelectedSensorVelocity() / IntakeConstants.kIntakeTicksPerRotation;
   }
 
   public boolean objectHeld() {

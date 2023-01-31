@@ -136,9 +136,39 @@ public final class Constants {
         public static final double kMaxIntakeSpeed = 0.3; // ??
         public static final boolean kLeftIntakeInverted = false; // ?
         public static final boolean kRightIntakeInverted = true; // ? should be opposites
-        public static final int kIntakeGearRatio = 4096; // ??
+        public static final int kIntakeTicksPerRotation = 4096; // ??
         public static final double kExpectedFullVelocity = 50; // ?? in rotations per cycle
         public static final double kObjectHeldRatioThreshold = 3.0; // ?? modify as needed
+    }
+
+    public static final class ElevatorConstants {
+        public static final int kLeftElevatorPort = 16; // ??
+        public static final int kRightElevatorPort = 17; // ??
+        public static final double kMaxElevatorSpeed = 0.5; // ??
+        public static final boolean kLeftElevatorInverted = false; // ? 
+        public static final boolean kRightElevatorInverted = true; // ?? must be opposites
+        public static final int kelevatorTicksPerRotation = 4096; // ??
+        public static final double kElevatorGearRatio = 20.00;
+        public static final double kSpoolDiameter = 0.01; // meters
+        public static final double kDistancePerRevolution = Math.PI * kSpoolDiameter;
+
+        public static final double kConversionFactor = kDistancePerRevolution/(kElevatorGearRatio * kelevatorTicksPerRotation);
+
+        // feedback
+
+        public static final double kPElevator = 1.00;
+        public static final double kIElevator = 0.00;
+        public static final double kDElevator = 0.00;
+
+        // feedforward
+
+        // calculate necessary gains using recalc: https://www.reca.lc/linear
+
+        public static final double kSElevator = 0.00;
+        public static final double kVElevator = 0.00;
+        public static final double kGElevator = 0.00;
+        public static final double kAElevator = 0.00;
+
     }
 
 }
