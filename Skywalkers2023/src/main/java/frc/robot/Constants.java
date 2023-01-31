@@ -130,4 +130,9 @@ public final class Constants {
         public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond/4; //????
     }
 
+    public static final class IntakeConstants {
+        public static final int kLeftIntakePort = 14; // ??
+        public static final int kRightIntakePort = 15; // ??
+    }
+
 }
