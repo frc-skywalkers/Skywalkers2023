@@ -133,7 +133,11 @@ public final class Constants {
     public static final class IntakeConstants {
         public static final int kLeftIntakePort = 14; // ??
         public static final int kRightIntakePort = 15; // ??
+<<<<<<< HEAD
         public static final double kMaxIntakeSpeed = 0.3; // ????
+=======
+        public static final double kMaxIntakeSpeed = 0.3; // ??
+>>>>>>> f34afb47c70f3a67e8ecab9b0fcb1096a3281127
     }
 
 }
