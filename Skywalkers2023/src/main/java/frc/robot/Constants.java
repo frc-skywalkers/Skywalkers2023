@@ -148,7 +148,7 @@ public final class Constants {
         public static final boolean kLeftElevatorInverted = false; // ? 
         public static final boolean kRightElevatorInverted = true; // ?? must be opposites
         public static final int kelevatorTicksPerRotation = 4096; // ??
-        public static final double kElevatorGearRatio = 20.00;
+        public static final double kElevatorGearRatio = 20.00; // ????
         public static final double kSpoolDiameter = 0.01; // meters
         public static final double kDistancePerRevolution = Math.PI * kSpoolDiameter;
 
@@ -173,5 +173,35 @@ public final class Constants {
         public static final double kAElevator = 0.00;
 
     }
+
+
+    public static final class ArmConstants {
+        public static final int kArmPort = 18; // ???
+        public static final double kMaxArmSpeed = 0.5; // ??
+        public static final boolean kArmInverted = false; // ??
+        
+        public static final int kArmTicksPerRotation = 4096; // ??
+        public static final double kElevatorGearRatio = 30.00; // ???
+
+        public static final double kConversionFactor = 2 * Math.PI / (kArmTicksPerRotation * kElevatorGearRatio);
+
+        public static final double kBottomLimit = -0.17; // -10 degrees
+        public static final double kTopLimit = 2.44; // 150 degrees
+
+        // feedback
+
+        public static final double kPArm = 1.00;
+        public static final double kIArm = 0.00;
+        public static final double kDArm = 0.00;
+
+        // feedforward
+
+        // calculate necessary gains using recalc: https://www.reca.lc/linear
+
+        public static final double kSArm = 0.00;
+        public static final double kVArm = 0.00;
+        public static final double kGArm = 0.00;
+        public static final double kAArm = 0.00;
+}
 
 }

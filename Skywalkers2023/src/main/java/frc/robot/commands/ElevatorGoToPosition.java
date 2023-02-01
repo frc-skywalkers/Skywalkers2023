@@ -24,8 +24,8 @@ public class ElevatorGoToPosition extends CommandBase {
   private final XboxController joystick;
 
   private final TrapezoidProfile.Constraints m_constraints = new TrapezoidProfile.Constraints(1, 1.5);
-  private TrapezoidProfile.State m_goal = new TrapezoidProfile.State();
-  private TrapezoidProfile.State m_setpoint = new TrapezoidProfile.State();
+  // private TrapezoidProfile.State m_goal = new TrapezoidProfile.State();
+  // private TrapezoidProfile.State m_setpoint = new TrapezoidProfile.State();
 
   private final ProfiledPIDController m_controller = new ProfiledPIDController(ElevatorConstants.kPElevator, ElevatorConstants.kIElevator, ElevatorConstants.kDElevator, m_constraints, kDt);
 
@@ -48,6 +48,7 @@ public class ElevatorGoToPosition extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    // potentially change goal here if needed from joystick input
     final double elevPIDOutput = m_controller.calculate(elevator.getPosition(), goal);
 
     final double elevFeedforward = m_ElevatorFeedforward.calculate(m_controller.getSetpoint().velocity);
