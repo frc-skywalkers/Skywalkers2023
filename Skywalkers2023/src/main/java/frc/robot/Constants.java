@@ -154,6 +154,9 @@ public final class Constants {
 
         public static final double kConversionFactor = kDistancePerRevolution/(kElevatorGearRatio * kelevatorTicksPerRotation);
 
+        public static final double kBottomLimit = 0.3; // 30 cm ??
+        public static final double kTopLimit = 1.2; // ????
+
         // feedback
 
         public static final double kPElevator = 1.00;

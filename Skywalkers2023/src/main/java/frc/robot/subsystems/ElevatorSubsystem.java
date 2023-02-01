@@ -14,6 +14,9 @@ public class ElevatorSubsystem extends SubsystemBase {
   public final WPI_TalonFX leftElevator = new WPI_TalonFX(ElevatorConstants.kLeftElevatorPort);
   public final WPI_TalonFX rightElevator = new WPI_TalonFX(ElevatorConstants.kRightElevatorPort);
 
+  private double motorSpeed = 0;
+  private double scaleFactor = 1.0;
+
   public ElevatorSubsystem() {
     leftElevator.setInverted(ElevatorConstants.kLeftElevatorInverted);
     rightElevator.setInverted(ElevatorConstants.kRightElevatorInverted);
@@ -25,7 +28,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public void setSpeed(double speed) {
-    rightElevator.set(speed);
+    motorSpeed = speed;
   }
 
   public double getPosition() {
@@ -44,8 +47,21 @@ public class ElevatorSubsystem extends SubsystemBase {
     setSpeed(-ElevatorConstants.kMaxElevatorSpeed);
   }
 
+  private void updateScaleFactor() {
+    double pos = getPosition();
+    if(pos <= ElevatorConstants.kBottomLimit || pos >= ElevatorConstants.kTopLimit) scaleFactor = 0.3;
+    else scaleFactor = 1.0;
+  }
 
+  public void stop() {
+    setSpeed(0);
+  }
 
   @Override
-  public void periodic() {}
+  public void periodic() {
+
+    updateScaleFactor();
+
+    rightElevator.set(motorSpeed * scaleFactor);
+  }
 }
