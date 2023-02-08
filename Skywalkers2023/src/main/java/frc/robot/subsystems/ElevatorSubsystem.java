@@ -32,6 +32,9 @@ public class ElevatorSubsystem extends SubsystemBase {
     MathUtil.clamp(speed, -ElevatorConstants.kMaxElevatorSpeed, ElevatorConstants.kMaxElevatorSpeed);
 
     motorSpeed = speed;
+    updateScaleFactor();
+    rightElevator.set(motorSpeed * scaleFactor);
+
   }
 
   public double getPosition() {
@@ -60,11 +63,16 @@ public class ElevatorSubsystem extends SubsystemBase {
     setSpeed(0);
   }
 
+  public void resetEncoders() {
+    rightElevator.setSelectedSensorPosition(0);
+  }
+
+  public boolean isZeroed() {
+    return rightElevator.getSupplyCurrent() > ElevatorConstants.kCurrentThreshold;
+  }
+
   @Override
   public void periodic() {
 
-    updateScaleFactor();
-
-    rightElevator.set(motorSpeed * scaleFactor);
   }
 }

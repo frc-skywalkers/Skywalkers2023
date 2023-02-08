@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubystem extends SubsystemBase {
@@ -27,6 +28,7 @@ public class IntakeSubystem extends SubsystemBase {
 
   public void setSpeed(double speed) {
     motorSpeed = speed;
+    rightIntake.set(motorSpeed);
   }
 
   public void moveIn() {
@@ -50,16 +52,16 @@ public class IntakeSubystem extends SubsystemBase {
   }
 
   public boolean objectHeld() {
-    double expected = getExpectedVelocity();
-    double actual = getActualVelocity();
-    double ratio = Math.abs(expected/actual);
-    return ratio > IntakeConstants.kObjectHeldRatioThreshold;
+    // double expected = getExpectedVelocity();
+    // double actual = getActualVelocity();
+    // double ratio = Math.abs(expected/actual);
+    // return ratio > IntakeConstants.kObjectHeldRatioThreshold;
+    return rightIntake.getSupplyCurrent() > IntakeConstants.kCurrentThreshold;
   }
 
 
 
   @Override
   public void periodic() {
-    rightIntake.set(motorSpeed);
   }
 }

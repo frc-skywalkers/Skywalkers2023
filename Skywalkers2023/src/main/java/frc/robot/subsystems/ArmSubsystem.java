@@ -28,6 +28,10 @@ public class ArmSubsystem extends SubsystemBase {
   public void setSpeed(double speed) {
     MathUtil.clamp(speed, -ArmConstants.kMaxArmSpeed, ArmConstants.kMaxArmSpeed);
     motorSpeed = speed;
+
+    updateScaleFactor();
+
+    armMotor.set(motorSpeed * scaleFactor);
   }
 
   public double getPosition() {
@@ -58,11 +62,17 @@ public class ArmSubsystem extends SubsystemBase {
     else scaleFactor = 1.00;
   }
 
+  public void resetEncoders() {
+    armMotor.setSelectedSensorPosition(0);
+  }
+
+  public boolean isZeroed() {
+    return armMotor.getSupplyCurrent() > ArmConstants.kCurrentThreshold;
+  }
+
   @Override
   public void periodic() {
 
-    updateScaleFactor();
 
-    armMotor.set(motorSpeed * scaleFactor);
   }
 }

@@ -139,6 +139,7 @@ public final class Constants {
         public static final int kIntakeTicksPerRotation = 4096; // ??
         public static final double kExpectedFullVelocity = 50; // ?? in rotations per cycle
         public static final double kObjectHeldRatioThreshold = 3.0; // ?? modify as needed
+        public static final double kCurrentThreshold = 15.00;
     }
 
     public static final class ElevatorConstants {
@@ -165,12 +166,16 @@ public final class Constants {
 
         // feedforward
 
-        // calculate necessary gains using recalc: https://www.reca.lc/linear
+        // calculate necessary gains using recalc: https://www.reca.lc/linear (overkill?)
 
         public static final double kSElevator = 0.00;
         public static final double kVElevator = 0.00;
         public static final double kGElevator = 0.00;
         public static final double kAElevator = 0.00;
+        public static final double kCurrentThreshold = 15.00;
+
+        public static final double kHoningSpeed = -0.1;
+
 
     }
 
@@ -196,12 +201,17 @@ public final class Constants {
 
         // feedforward
 
-        // calculate necessary gains using recalc: https://www.reca.lc/linear
+        // calculate necessary gains using recalc: https://www.reca.lc/linear (overkill?)
 
         public static final double kSArm = 0.00;
         public static final double kVArm = 0.00;
         public static final double kGArm = 0.00;
         public static final double kAArm = 0.00;
+
+        public static final double kCurrentThreshold = 15.00;
+
+        public static final double kHoningSpeed = -0.1;
+
 }
 
 }
