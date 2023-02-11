@@ -29,7 +29,7 @@ public class ElevatorGoToPosition extends CommandBase {
 
   private final ProfiledPIDController m_controller = new ProfiledPIDController(ElevatorConstants.kPElevator, ElevatorConstants.kIElevator, ElevatorConstants.kDElevator, m_constraints, kDt);
 
-  private final ElevatorFeedforward m_ElevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kSElevator, ElevatorConstants.kGElevator, ElevatorConstants.kVElevator, ElevatorConstants.kAElevator);
+  private final ElevatorFeedforward m_ElevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kSElevator, ElevatorConstants.kGElevator * Math.sin(ElevatorConstants.kMountAngleRadians), ElevatorConstants.kVElevator, ElevatorConstants.kAElevator);
 
   public ElevatorGoToPosition(ElevatorSubsystem elevator, double goal, XboxController joystick) {
     // Use addRequirements() here to declare subsystem dependencies.

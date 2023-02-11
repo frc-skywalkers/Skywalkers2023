@@ -169,12 +169,14 @@ public final class Constants {
         // calculate necessary gains using recalc: https://www.reca.lc/linear (overkill?)
 
         public static final double kSElevator = 0.00;
-        public static final double kVElevator = 0.00;
-        public static final double kGElevator = 0.00;
-        public static final double kAElevator = 0.00;
+        public static final double kVElevator = 15.91;
+        public static final double kGElevator = 0.13;
+        public static final double kAElevator = 0.01;
         public static final double kCurrentThreshold = 15.00;
 
         public static final double kHoningSpeed = -0.1;
+
+        public static final double kMountAngleRadians = 0.9599;
 
 
     }
@@ -203,9 +205,9 @@ public final class Constants {
 
         // calculate necessary gains using recalc: https://www.reca.lc/linear (overkill?)
 
-        public static final double kSArm = 0.00;
-        public static final double kVArm = 0.00;
-        public static final double kGArm = 0.00;
+        public static final double kSArm = 0.00; 
+        public static final double kVArm = 2.69; //1.47 for Neo550
+        public static final double kGArm = 0.07; //0.32 for Neo550
         public static final double kAArm = 0.00;
 
         public static final double kCurrentThreshold = 15.00;
