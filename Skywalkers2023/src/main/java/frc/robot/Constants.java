@@ -212,6 +212,11 @@ public final class Constants {
 
         public static final double kHoningSpeed = -0.1;
 
-}
+    }
+
+    public static final class SensorConstants {
+        public static final int limitSwitchPort = 4;
+        public static final int beamBreakerPort = 5;
+    }
 
 }

@@ -36,7 +36,7 @@ public class IntakeSubystem extends SubsystemBase {
   }
 
   public void moveOut() {
-    setSpeed(-IntakeConstants.kMaxIntakeSpeed);
+    setSpeed(-IntakeConstants.kMaxIntakeSpeed); 
   }
 
   public void stopIntake() {
