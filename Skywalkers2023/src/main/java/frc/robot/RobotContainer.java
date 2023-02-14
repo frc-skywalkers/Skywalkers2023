@@ -13,6 +13,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,6 +24,9 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.SwerveJoystick;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -43,7 +47,14 @@ public class RobotContainer {
 
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 
+  private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+  
+  private final ArmSubsystem armSubsystem = new ArmSubsystem();
+
+  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+
   private final XboxController driverJoystick = new XboxController(OIConstants.kDriverControllerPort);
+  private final XboxController driverJoystick2 = new XboxController(OIConstants.kDriverControllerPort2);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -75,8 +86,18 @@ public class RobotContainer {
     
     new JoystickButton(driverJoystick, Button.kY.value).onTrue(Commands.runOnce(() -> swerveSubsystem.reset(), swerveSubsystem));
     new JoystickButton(driverJoystick, Button.kB.value).onTrue(Commands.runOnce(() -> swerveSubsystem.toggleField(), swerveSubsystem));
+    new JoystickButton(driverJoystick, Button.kX.value).onTrue(Commands.runOnce(() -> elevatorSubsystem.moveUp(), elevatorSubsystem));
+    new JoystickButton(driverJoystick, Button.kA.value).onTrue(Commands.runOnce(() -> elevatorSubsystem.moveDown(), elevatorSubsystem));
+    new JoystickButton(driverJoystick, Button.kLeftBumper.value).onTrue(Commands.runOnce(() -> armSubsystem.moveArmUp(), armSubsystem));
+    new JoystickButton(driverJoystick, Button.kRightBumper.value).onTrue(Commands.runOnce(() -> armSubsystem.moveArmDown(), armSubsystem));
+    
+    new JoystickButton(driverJoystick2, Button.kY.value).onTrue(Commands.runOnce(() -> elevatorSubsystem.stop(), elevatorSubsystem));
+    new JoystickButton(driverJoystick2, Button.kB.value).onTrue(Commands.runOnce(() -> armSubsystem.stop(), armSubsystem));
+    new JoystickButton(driverJoystick2, Button.kX.value).onTrue(Commands.runOnce(() -> intakeSubsystem.stopIntake(), intakeSubsystem));
+    new JoystickButton(driverJoystick2, Button.kLeftBumper.value).onTrue(Commands.runOnce(() -> intakeSubsystem.moveIn(), intakeSubsystem));
+    new JoystickButton(driverJoystick2, Button.kRightBumper.value).onTrue(Commands.runOnce(() -> intakeSubsystem.moveOut(), intakeSubsystem));
 
-    // to balance we can first drive to approximate middle then attempt to alignx
+
   }
 
   /**

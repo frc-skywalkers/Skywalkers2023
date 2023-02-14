@@ -117,6 +117,13 @@ public class SwerveModule extends SubsystemBase {
     return angle;
   }
 
+  public double recalibrateAbsoluteEncoderRad() {
+    double angle = absoluteEncoder.getAbsolutePosition() * 2.0 * Math.PI / 360.000; // might need to correct??????
+    if (absoluteEncoderReversed) angle *= -1.0;
+    SmartDashboard.putNumber("test " + motorId, angle);
+    return angle;
+  }
+
   public void resetEncoders() {
     driveMotor.setSelectedSensorPosition(0);
     turningMotor.setSelectedSensorPosition(getAbsoluteEncoderRad() / (2.000 * Math.PI) * ModuleConstants.kTicksPerRotation);

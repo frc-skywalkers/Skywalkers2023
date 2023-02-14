@@ -153,6 +153,13 @@ public class SwerveSubsystem extends SubsystemBase {
     resetEncoders();
     zeroHeading();
   }
+
+  public void recalibrate() {
+    frontLeft.recalibrateAbsoluteEncoderRad();
+    frontRight.recalibrateAbsoluteEncoderRad();
+    backLeft.recalibrateAbsoluteEncoderRad();
+    backRight.recalibrateAbsoluteEncoderRad();
+  }
  
   public void testMotors() {
     // for testing purposes test each swerve module individually at first

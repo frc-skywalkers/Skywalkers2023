@@ -18,6 +18,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public IntakeSubsystem() {
     intake.configFactoryDefault();
+    intake.setInverted(IntakeConstants.kIntakeInverted);
   }
 
   // just speed should be fine, motor voltage unecessary
