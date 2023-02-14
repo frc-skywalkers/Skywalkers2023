@@ -7,13 +7,18 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.SensorConstants;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
   public final WPI_TalonFX leftElevator = new WPI_TalonFX(ElevatorConstants.kLeftElevatorPort);
   public final WPI_TalonFX rightElevator = new WPI_TalonFX(ElevatorConstants.kRightElevatorPort);
+
+  public final DigitalInput limitSwitch = new DigitalInput(SensorConstants.limitSwitchPort);
+  public final DigitalInput beamBreaker = new DigitalInput(SensorConstants.beamBreakerPort);
 
   private double motorSpeed = 0;
   private double scaleFactor = 1.0;
@@ -69,6 +74,16 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public boolean isZeroed() {
     return rightElevator.getSupplyCurrent() > ElevatorConstants.kCurrentThreshold;
+    //return this.getLimitSwitch();
+    //return !this.getBeamBreaker();
+  }
+
+  public boolean getLimitSwitch() {
+    return limitSwitch.get();
+  }
+
+  public boolean getBeamBreaker() {
+    return beamBreaker.get();
   }
 
   @Override
