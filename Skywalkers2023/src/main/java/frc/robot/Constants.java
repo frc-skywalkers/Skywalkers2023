@@ -131,11 +131,8 @@ public final class Constants {
     }
 
     public static final class IntakeConstants {
-        public static final int kLeftIntakePort = 14; // ??
-        public static final int kRightIntakePort = 15; // ??
+        public static final int kIntakePort = 14; // ??
         public static final double kMaxIntakeSpeed = 0.3; // ??
-        public static final boolean kLeftIntakeInverted = false; // ?
-        public static final boolean kRightIntakeInverted = true; // ? should be opposites
         public static final int kIntakeTicksPerRotation = 4096; // ??
         public static final double kExpectedFullVelocity = 50; // ?? in rotations per cycle
         public static final double kObjectHeldRatioThreshold = 3.0; // ?? modify as needed
