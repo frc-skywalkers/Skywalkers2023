@@ -10,13 +10,13 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
-public class IntakeSubystem extends SubsystemBase {
+public class IntakeSubsystem extends SubsystemBase {
 
   private final WPI_TalonFX intake = new WPI_TalonFX(IntakeConstants.kIntakePort);
 
   private double motorSpeed = 0.0;
 
-  public IntakeSubystem() {
+  public IntakeSubsystem() {
     intake.configFactoryDefault();
   }
 
