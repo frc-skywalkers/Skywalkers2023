@@ -8,6 +8,7 @@ import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -29,7 +30,7 @@ public class ElevatorGoToPosition extends CommandBase {
 
   private final ProfiledPIDController m_controller = new ProfiledPIDController(ElevatorConstants.kPElevator, ElevatorConstants.kIElevator, ElevatorConstants.kDElevator, m_constraints, kDt);
 
-  private final ElevatorFeedforward m_ElevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kSElevator, ElevatorConstants.kGElevator, ElevatorConstants.kVElevator, ElevatorConstants.kAElevator);
+  private final ElevatorFeedforward m_ElevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kSElevator, ElevatorConstants.kGElevator * Math.sin(ElevatorConstants.kMountAngleRadians), ElevatorConstants.kVElevator, ElevatorConstants.kAElevator);
 
   public ElevatorGoToPosition(ElevatorSubsystem elevator, double goal, XboxController joystick) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -54,6 +55,9 @@ public class ElevatorGoToPosition extends CommandBase {
     final double elevFeedforward = m_ElevatorFeedforward.calculate(m_controller.getSetpoint().velocity);
 
     elevator.setVoltage(elevPIDOutput + elevFeedforward);
+
+    SmartDashboard.putBoolean("Limit Switch", elevator.getLimitSwitch());
+    SmartDashboard.putBoolean("Beam Breaker", elevator.getBeamBreaker());
   }
 
   // Called once the command ends or is interrupted.

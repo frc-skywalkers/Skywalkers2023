@@ -49,6 +49,7 @@ public final class Constants {
         public static final double kDeadband = 0.1;
 
         public static final int kDriverControllerPort = 0;
+        public static final int kDriverControllerPort2 = 1;
 
         public static final int kDriverYAxis = 1;
         public static final int kDriverXAxis = 0;
@@ -131,11 +132,9 @@ public final class Constants {
     }
 
     public static final class IntakeConstants {
-        public static final int kLeftIntakePort = 14; // ??
-        public static final int kRightIntakePort = 15; // ??
+        public static final int kIntakePort = 14; // ??
         public static final double kMaxIntakeSpeed = 0.3; // ??
-        public static final boolean kLeftIntakeInverted = false; // ?
-        public static final boolean kRightIntakeInverted = true; // ? should be opposites
+        public static final boolean kIntakeInverted = false; // ?
         public static final int kIntakeTicksPerRotation = 4096; // ??
         public static final double kExpectedFullVelocity = 50; // ?? in rotations per cycle
         public static final double kObjectHeldRatioThreshold = 3.0; // ?? modify as needed
@@ -168,13 +167,15 @@ public final class Constants {
 
         // calculate necessary gains using recalc: https://www.reca.lc/linear (overkill?)
 
-        public static final double kSElevator = 0.00;
-        public static final double kVElevator = 0.00;
-        public static final double kGElevator = 0.00;
-        public static final double kAElevator = 0.00;
+        public static final double kSElevator = 0.00; // to overcome static friction
+        public static final double kVElevator = 15.91;
+        public static final double kGElevator = 0.13;
+        public static final double kAElevator = 0.01;
         public static final double kCurrentThreshold = 15.00;
 
         public static final double kHoningSpeed = -0.1;
+
+        public static final double kMountAngleRadians = 0.9599;
 
 
     }
@@ -203,15 +204,20 @@ public final class Constants {
 
         // calculate necessary gains using recalc: https://www.reca.lc/linear (overkill?)
 
-        public static final double kSArm = 0.00;
-        public static final double kVArm = 0.00;
-        public static final double kGArm = 0.00;
+        public static final double kSArm = 0.00; // to overcome static friction
+        public static final double kVArm = 2.69; //1.47 for Neo550
+        public static final double kGArm = 0.07; //0.32 for Neo550
         public static final double kAArm = 0.00;
 
         public static final double kCurrentThreshold = 15.00;
 
         public static final double kHoningSpeed = -0.1;
 
+}
+
+public static final class SensorConstants {
+    public static final int limitSwitchPort = 4;
+    public static final int beamBreakerPort = 5;
 }
 
 }
