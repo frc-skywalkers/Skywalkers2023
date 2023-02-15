@@ -22,7 +22,9 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.ElevatorGoToPosition;
 import frc.robot.commands.SwerveJoystick;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -43,6 +45,8 @@ public class RobotContainer {
 
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 
+  private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+
   private final XboxController driverJoystick = new XboxController(OIConstants.kDriverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -50,9 +54,11 @@ public class RobotContainer {
     // Configure the button bindings
 
 
-    swerveSubsystem.setDefaultCommand(new SwerveJoystick(
+    /*swerveSubsystem.setDefaultCommand(new SwerveJoystick(
       swerveSubsystem,
-     driverJoystick));
+     driverJoystick));*/
+
+     elevatorSubsystem.setDefaultCommand(new ElevatorGoToPosition(elevatorSubsystem, 5, driverJoystick));
 
 
 
@@ -117,7 +123,7 @@ SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
         DriveConstants.kDriveKinematics,
         xController,
         yController,
-        thetaController,
+        thetaController,        
         swerveSubsystem::setModuleStates,
         swerveSubsystem);
 

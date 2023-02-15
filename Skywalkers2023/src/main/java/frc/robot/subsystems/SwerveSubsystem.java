@@ -181,4 +181,8 @@ public class SwerveSubsystem extends SubsystemBase {
     fieldOriented = !fieldOriented;
   }
 
+  public boolean getFieldOriented() {
+    return fieldOriented;
+  }
+
 }

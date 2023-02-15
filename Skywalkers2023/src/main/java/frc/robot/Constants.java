@@ -143,8 +143,8 @@ public final class Constants {
     }
 
     public static final class ElevatorConstants {
-        public static final int kLeftElevatorPort = 16; // ??
-        public static final int kRightElevatorPort = 17; // ??
+        public static final int kLeftElevatorPort = 1; // ??
+        public static final int kRightElevatorPort = 2; // ??
         public static final double kMaxElevatorSpeed = 0.5; // ??
         public static final boolean kLeftElevatorInverted = false; // ? 
         public static final boolean kRightElevatorInverted = true; // ?? must be opposites

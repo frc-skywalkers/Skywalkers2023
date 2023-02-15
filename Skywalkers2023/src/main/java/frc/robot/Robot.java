@@ -59,7 +59,9 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {}
 
   @Override
-  public void simulationInit() {}
+  public void simulationInit() {
+    System.out.println("Here");
+  }
 
   @Override
   public void simulationPeriodic() {}
