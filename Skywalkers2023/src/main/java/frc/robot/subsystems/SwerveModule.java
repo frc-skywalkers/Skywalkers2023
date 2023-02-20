@@ -87,7 +87,7 @@ public class SwerveModule extends SubsystemBase {
     turningPidController.enableContinuousInput(-Math.PI, Math.PI);
     // drivingPidController = new PIDController(ModuleConstants.kPDriving, ModuleConstants.kIDriving, ModuleConstants.kDDriving);
     // drivingPidController.enableContinuousInput(-0.8, 0.8);
-    turningPidController.setTolerance(0.02);
+    turningPidController.setTolerance(0.04);
 
     resetEncoders();
   }
@@ -165,9 +165,9 @@ public class SwerveModule extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber(motorId + " drive Position", getDrivePosition());
+    // SmartDashboard.putNumber(motorId + " drive Position", getDrivePosition());
     SmartDashboard.putNumber(motorId + " turning Position", getTurningPosition());
     SmartDashboard.putNumber(motorId + " absolute Position", getAbsoluteEncoderRad());
-    SmartDashboard.putNumber(motorId + " drive Speed", getDriveVelocity());
+    // SmartDashboard.putNumber(motorId + " drive Speed", getDriveVelocity());
   }
 }

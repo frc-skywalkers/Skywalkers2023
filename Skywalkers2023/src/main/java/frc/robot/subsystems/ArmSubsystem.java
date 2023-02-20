@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.MathUtil;
@@ -12,13 +13,14 @@ import frc.robot.Constants.ArmConstants;
 
 public class ArmSubsystem extends SubsystemBase {
 
-  WPI_TalonFX armMotor = new WPI_TalonFX(ArmConstants.kArmPort);
+  WPI_TalonFX armMotor = new WPI_TalonFX(ArmConstants.kArmPort, "CANivore");
 
   double motorSpeed = 0.00;
   double scaleFactor = 1.00;
 
   public ArmSubsystem() {
     armMotor.setInverted(ArmConstants.kArmInverted);
+    armMotor.setNeutralMode(NeutralMode.Brake);
   }
 
   public void setVoltage(double voltage) {
@@ -29,7 +31,7 @@ public class ArmSubsystem extends SubsystemBase {
     MathUtil.clamp(speed, -ArmConstants.kMaxArmSpeed, ArmConstants.kMaxArmSpeed);
     motorSpeed = speed;
 
-    updateScaleFactor();
+    // updateScaleFactor();
 
     armMotor.set(motorSpeed * scaleFactor);
   }

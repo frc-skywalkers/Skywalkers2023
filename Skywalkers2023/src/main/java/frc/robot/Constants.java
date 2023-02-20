@@ -40,7 +40,7 @@ public final class Constants {
         public static final double kTicksPerRotation = 2048 * 150 / 7; // done
         public static final double kDriveTicksPerRotation = 2048 * 6.75;
 
-        public static final double kPTurning = 0.65; // CHANGE!!!
+        public static final double kPTurning = 0.5; // CHANGE!!!
         public static final double kDTurning = 0.025; // necessary??
         public static final double kITurning = 0.0;
    }
@@ -105,15 +105,15 @@ public final class Constants {
         public static final boolean kFrontRightDriveAbsoluteEncoderReversed = true;
         public static final boolean kBackRightDriveAbsoluteEncoderReversed = true;
 
-        public static final double kFLAbsEcoderOffsetDeg = 81.5;
-        public static final double kBLAbsEcoderOffsetDeg = 160.2;
-        public static final double kFRAbsEncoderOffsetDeg = 22.7;
-        public static final double kBRAbsEncoderOffsetDeg = 168.8;
+        // public static final double kFLAbsEcoderOffsetDeg = 81.5;
+        // public static final double kBLAbsEcoderOffsetDeg = 160.2;
+        // public static final double kFRAbsEncoderOffsetDeg = 22.7;
+        // public static final double kBRAbsEncoderOffsetDeg = 168.8;
 
-        public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 4.53;
-        public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 5.93;
-        public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 0.414;
-        public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 6.111;
+        public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 2.96;
+        public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 4.409;
+        public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 5.135;
+        public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 4.532;
 
         
 
@@ -127,13 +127,15 @@ public final class Constants {
 
         public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3; // ????
         
-        public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond/4; // ?????
+        public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond*3/5; // ?????
         public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond/4; //????
     }
 
     public static final class IntakeConstants {
-        public static final int kIntakePort = 14; // ??
-        public static final double kMaxIntakeSpeed = 0.3; // ??
+        public static final int kIntakePort = 22; // ??
+        public static final double kMaxIntakeSpeed = 0.4; // ??
+        public static final double kMaxOuttakeSpeed = 0.25; // ??
+        public static final double kHoldSpeed = 0.05;
         public static final boolean kIntakeInverted = false; // ?
         public static final int kIntakeTicksPerRotation = 4096; // ??
         public static final double kExpectedFullVelocity = 50; // ?? in rotations per cycle
@@ -142,9 +144,9 @@ public final class Constants {
     }
 
     public static final class ElevatorConstants {
-        public static final int kLeftElevatorPort = 1; // ??
-        public static final int kRightElevatorPort = 2; // ??
-        public static final double kMaxElevatorSpeed = 0.5; // ??
+        public static final int kLeftElevatorPort = 31; // ??
+        public static final int kRightElevatorPort = 30; // ??
+        public static final double kMaxElevatorSpeed = 1.00; // ??
         public static final boolean kLeftElevatorInverted = false; // ? 
         public static final boolean kRightElevatorInverted = true; // ?? must be opposites
         public static final int kelevatorTicksPerRotation = 4096; // ??
@@ -182,7 +184,7 @@ public final class Constants {
 
 
     public static final class ArmConstants {
-        public static final int kArmPort = 18; // ???
+        public static final int kArmPort = 23; // ???
         public static final double kMaxArmSpeed = 0.5; // ??
         public static final boolean kArmInverted = false; // ??
         
@@ -216,7 +218,7 @@ public final class Constants {
 }
 
 public static final class SensorConstants {
-    public static final int limitSwitchPort = 4;
+    public static final int limitSwitchPort = 0;
     public static final int beamBreakerPort = 5;
 }
 

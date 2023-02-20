@@ -25,6 +25,9 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ElevatorGoToPosition;
 import frc.robot.commands.SwerveJoystick;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -45,6 +48,12 @@ public class RobotContainer {
 
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 
+  private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+
+  private final ArmSubsystem armSubsystem = new ArmSubsystem();
+
+  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+
   private final XboxController driverJoystick = new XboxController(OIConstants.kDriverControllerPort);
   private final XboxController driverJoystick2 = new XboxController(OIConstants.kDriverControllerPort2);
 
@@ -53,11 +62,15 @@ public class RobotContainer {
     // Configure the button bindings
 
 
-    /*swerveSubsystem.setDefaultCommand(new SwerveJoystick(
+    swerveSubsystem.setDefaultCommand(new SwerveJoystick(
       swerveSubsystem,
-     driverJoystick));*/
+       driverJoystick));
 
-     elevatorSubsystem.setDefaultCommand(new ElevatorGoToPosition(elevatorSubsystem, 5, driverJoystick));
+    elevatorSubsystem.setDefaultCommand(Commands.runOnce(() -> elevatorSubsystem.setSpeed(driverJoystick2.getLeftY()), elevatorSubsystem));
+//     armSubsystem.setDefaultCommand(Commands.run(() -> armSubsystem.setSpeed(0.5 * driverJoystick.getRightY()), armSubsystem));
+    armSubsystem.setDefaultCommand(Commands.run(() -> armSubsystem.setSpeed(0.5 * driverJoystick2.getRightY()), armSubsystem));
+
+//      elevatorSubsystem.setDefaultCommand(new ElevatorGoToPosition(elevatorSubsystem, 5, driverJoystick));
 
 
 
@@ -80,16 +93,16 @@ public class RobotContainer {
     
     new JoystickButton(driverJoystick, Button.kY.value).onTrue(Commands.runOnce(() -> swerveSubsystem.reset(), swerveSubsystem));
     new JoystickButton(driverJoystick, Button.kB.value).onTrue(Commands.runOnce(() -> swerveSubsystem.toggleField(), swerveSubsystem));
-    new JoystickButton(driverJoystick, Button.kX.value).onTrue(Commands.runOnce(() -> elevatorSubsystem.moveUp(), elevatorSubsystem));
-    new JoystickButton(driverJoystick, Button.kA.value).onTrue(Commands.runOnce(() -> elevatorSubsystem.moveDown(), elevatorSubsystem));
-    new JoystickButton(driverJoystick, Button.kLeftBumper.value).onTrue(Commands.runOnce(() -> armSubsystem.moveArmUp(), armSubsystem));
-    new JoystickButton(driverJoystick, Button.kRightBumper.value).onTrue(Commands.runOnce(() -> armSubsystem.moveArmDown(), armSubsystem));
+//     new JoystickButton(driverJoystick, Button.kX.value).onTrue(Commands.runOnce(() -> elevatorSubsystem.moveUp(), elevatorSubsystem));
+//     new JoystickButton(driverJoystick, Button.kA.value).onTrue(Commands.runOnce(() -> elevatorSubsystem.moveDown(), elevatorSubsystem));
+//     new JoystickButton(driverJoystick, Button.kB.value).onTrue(Commands.runOnce(() -> elevatorSubsystem.stop(), elevatorSubsystem));
+//     new JoystickButton(driverJoystick, Button.kRightBumper.value).onTrue(Commands.runOnce(() -> armSubsystem.moveArmDown(), armSubsystem));
     
-    new JoystickButton(driverJoystick2, Button.kY.value).onTrue(Commands.runOnce(() -> elevatorSubsystem.stop(), elevatorSubsystem));
-    new JoystickButton(driverJoystick2, Button.kB.value).onTrue(Commands.runOnce(() -> armSubsystem.stop(), armSubsystem));
-    new JoystickButton(driverJoystick2, Button.kX.value).onTrue(Commands.runOnce(() -> intakeSubsystem.stopIntake(), intakeSubsystem));
-    new JoystickButton(driverJoystick2, Button.kLeftBumper.value).onTrue(Commands.runOnce(() -> intakeSubsystem.moveIn(), intakeSubsystem));
-    new JoystickButton(driverJoystick2, Button.kRightBumper.value).onTrue(Commands.runOnce(() -> intakeSubsystem.moveOut(), intakeSubsystem));
+//     new JoystickButton(driverJoystick2, Button.kY.value).onTrue(Commands.runOnce(() -> elevatorSubsystem.stop(), elevatorSubsystem));
+//     new JoystickButton(driverJoystick2, Button.kB.value).onTrue(Commands.runOnce(() -> armSubsystem.stop(), armSubsystem));
+    new JoystickButton(driverJoystick2, Button.kX.value).onTrue(Commands.run(() -> intakeSubsystem.stopIntake(), intakeSubsystem));
+    new JoystickButton(driverJoystick2, Button.kLeftBumper.value).onTrue(Commands.run(() -> intakeSubsystem.moveIn(), intakeSubsystem));
+    new JoystickButton(driverJoystick2, Button.kRightBumper.value).onTrue(Commands.run(() -> intakeSubsystem.moveOut(), intakeSubsystem));
 
 
   }
@@ -108,7 +121,7 @@ public class RobotContainer {
         AutoConstants.kMaxAccelerationMetersPerSecondSquared)
                 .setKinematics(DriveConstants.kDriveKinematics);
 
-// 2. Generate trajectory
+// 2. Generate trajectory        
 Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
         new Pose2d(0, 0, new Rotation2d(0)),
         List.of(

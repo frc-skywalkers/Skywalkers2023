@@ -4,18 +4,20 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.SensorConstants;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
-  public final WPI_TalonFX leftElevator = new WPI_TalonFX(ElevatorConstants.kLeftElevatorPort);
-  public final WPI_TalonFX rightElevator = new WPI_TalonFX(ElevatorConstants.kRightElevatorPort);
+  public final WPI_TalonFX leftElevator = new WPI_TalonFX(ElevatorConstants.kLeftElevatorPort, "CANivore");
+  public final WPI_TalonFX rightElevator = new WPI_TalonFX(ElevatorConstants.kRightElevatorPort, "CANivore");
 
   public final DigitalInput limitSwitch = new DigitalInput(SensorConstants.limitSwitchPort);
   public final DigitalInput beamBreaker = new DigitalInput(SensorConstants.beamBreakerPort);
@@ -26,19 +28,24 @@ public class ElevatorSubsystem extends SubsystemBase {
   public ElevatorSubsystem() {
     leftElevator.setInverted(ElevatorConstants.kLeftElevatorInverted);
     rightElevator.setInverted(ElevatorConstants.kRightElevatorInverted);
-    leftElevator.follow(rightElevator);
+    // leftElevator.follow(rightElevator);
+    leftElevator.setNeutralMode(NeutralMode.Brake);
+    rightElevator.setNeutralMode(NeutralMode.Brake);
   }
 
   public void setVoltage(double voltage) {
-    setSpeed(voltage/(double)12.000);
+    // setSpeed(voltage/(double)12.000);
+    rightElevator.setVoltage(voltage);
+    leftElevator.setVoltage(voltage);
   }
 
   public void setSpeed(double speed) {
     MathUtil.clamp(speed, -ElevatorConstants.kMaxElevatorSpeed, ElevatorConstants.kMaxElevatorSpeed);
 
     motorSpeed = speed;
-    updateScaleFactor();
-    rightElevator.set(motorSpeed * scaleFactor);
+    // updateScaleFactor();
+    // rightElevator.set(motorSpeed * scaleFactor);
+    setVoltage(motorSpeed * 12.00);
 
   }
 
@@ -88,6 +95,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-
+    SmartDashboard.putBoolean("limit Switch", getLimitSwitch());
+    SmartDashboard.putNumber("left Elevator", leftElevator.getStatorCurrent());
+    SmartDashboard.putNumber("right Elevator", rightElevator.getStatorCurrent());
   }
 }

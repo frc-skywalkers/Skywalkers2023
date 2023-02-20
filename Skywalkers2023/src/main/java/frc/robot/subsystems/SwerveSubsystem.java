@@ -107,14 +107,17 @@ public class SwerveSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
+    // recalibrate();
+
     odometer.update(getRotation2d(), getModulePositions());
 
     SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
 
     SmartDashboard.putNumber("Robot X Location", Units.metersToInches(getPose().getTranslation().getX()));
     SmartDashboard.putNumber("Robot Y Location", Units.metersToInches(getPose().getTranslation().getY()));
-
     SmartDashboard.putNumber("Robot Heading", getHeading());
+    SmartDashboard.putBoolean("field Oriented", fieldOriented);
+
   }
 
   public void stopModules() {

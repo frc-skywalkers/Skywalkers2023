@@ -48,6 +48,7 @@ public class SwerveJoystick extends CommandBase {
     // double xSpeed = xSpdFunction.get();
     double ySpeed = driverJoystick.getRawAxis(OIConstants.kDriverXAxis);
     double xSpeed = -driverJoystick.getRawAxis(OIConstants.kDriverYAxis);
+    
     double turningSpeed = driverJoystick.getRawAxis(OIConstants.kDriverRotAxis);
     xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
     ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
@@ -81,7 +82,6 @@ public class SwerveJoystick extends CommandBase {
     SmartDashboard.putNumber("xSpeed", xSpeed);
     SmartDashboard.putNumber("ySpeed", ySpeed);
     SmartDashboard.putNumber("rotSpeed", turningSpeed);
-    SmartDashboard.putBoolean("field Oriented", fieldOriented);
 
 
     // 5. Convert chassis speeds to individual module states

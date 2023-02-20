@@ -4,21 +4,26 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
 
-  private final WPI_TalonFX intake = new WPI_TalonFX(IntakeConstants.kIntakePort);
+  private final WPI_TalonFX intake = new WPI_TalonFX(IntakeConstants.kIntakePort, "CANivore");
 
   private double motorSpeed = 0.0;
 
   public IntakeSubsystem() {
-    intake.configFactoryDefault();
+    // intake.configFactoryDefault();
+    intake.setNeutralMode(NeutralMode.Brake);
     intake.setInverted(IntakeConstants.kIntakeInverted);
+    // intake.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 20, 75, 1));
   }
 
   // just speed should be fine, motor voltage unecessary
@@ -30,14 +35,19 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void moveIn() {
     setSpeed(IntakeConstants.kMaxIntakeSpeed);
+    SmartDashboard.putString("Intake Status", "Moving");
   }
 
   public void moveOut() {
-    setSpeed(-IntakeConstants.kMaxIntakeSpeed); 
+    setSpeed(-IntakeConstants.kMaxOuttakeSpeed); 
+    SmartDashboard.putString("Intake Status", "Moving");
+
   }
 
   public void stopIntake() {
-    setSpeed(0.000);
+    setSpeed(IntakeConstants.kHoldSpeed);
+    SmartDashboard.putString("Intake Status", "Stopped");
+
   }
 
   public double getExpectedVelocity() {
@@ -60,5 +70,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("intake velocity", getActualVelocity());
+    SmartDashboard.putNumber("Intake Stator Current", intake.getStatorCurrent());
+    SmartDashboard.putNumber("Intake Supply Current", intake.getSupplyCurrent());
   }
 }
