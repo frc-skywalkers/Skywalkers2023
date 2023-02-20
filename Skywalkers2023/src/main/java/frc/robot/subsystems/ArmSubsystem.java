@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
@@ -15,25 +16,20 @@ public class ArmSubsystem extends SubsystemBase {
 
   WPI_TalonFX armMotor = new WPI_TalonFX(ArmConstants.kArmPort, "CANivore");
 
-  double motorSpeed = 0.00;
-  double scaleFactor = 1.00;
-
   public ArmSubsystem() {
+    armMotor.configFactoryDefault();
+    armMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
     armMotor.setInverted(ArmConstants.kArmInverted);
     armMotor.setNeutralMode(NeutralMode.Brake);
   }
 
   public void setVoltage(double voltage) {
-    setSpeed(voltage/(double)12.000);
+    armMotor.setVoltage(voltage);
   }
 
   public void setSpeed(double speed) {
-    MathUtil.clamp(speed, -ArmConstants.kMaxArmSpeed, ArmConstants.kMaxArmSpeed);
-    motorSpeed = speed;
-
-    // updateScaleFactor();
-
-    armMotor.set(motorSpeed * scaleFactor);
+    speed = MathUtil.clamp(speed, -ArmConstants.kMaxArmSpeed, ArmConstants.kMaxArmSpeed);
+    armMotor.set(speed);
   }
 
   public double getPosition() {
@@ -44,24 +40,8 @@ public class ArmSubsystem extends SubsystemBase {
     return armMotor.getSelectedSensorVelocity() * ArmConstants.kConversionFactor;
   }
 
-  public void moveArmUp() {
-    setSpeed(ArmConstants.kMaxArmSpeed);
-  }
-
-  public void moveArmDown() {
-    setSpeed(-ArmConstants.kMaxArmSpeed);
-  }
-
   public void stop() {
-    setSpeed(0.00);
-  }
-
-  private void updateScaleFactor() {
-    double pos = getPosition();
-    if(pos <= ArmConstants.kBottomLimit || pos >= ArmConstants.kTopLimit) {
-      scaleFactor = 0.3;
-    }
-    else scaleFactor = 1.00;
+    armMotor.stopMotor();
   }
 
   public void resetEncoders() {

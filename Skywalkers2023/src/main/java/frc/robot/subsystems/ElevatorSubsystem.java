@@ -20,10 +20,6 @@ public class ElevatorSubsystem extends SubsystemBase {
   public final WPI_TalonFX rightElevator = new WPI_TalonFX(ElevatorConstants.kRightElevatorPort, "CANivore");
 
   public final DigitalInput limitSwitch = new DigitalInput(SensorConstants.limitSwitchPort);
-  public final DigitalInput beamBreaker = new DigitalInput(SensorConstants.beamBreakerPort);
-
-  private double motorSpeed = 0;
-  private double scaleFactor = 1.0;
 
   public ElevatorSubsystem() {
     leftElevator.setInverted(ElevatorConstants.kLeftElevatorInverted);
@@ -34,19 +30,14 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public void setVoltage(double voltage) {
-    // setSpeed(voltage/(double)12.000);
     rightElevator.setVoltage(voltage);
     leftElevator.setVoltage(voltage);
   }
 
   public void setSpeed(double speed) {
-    MathUtil.clamp(speed, -ElevatorConstants.kMaxElevatorSpeed, ElevatorConstants.kMaxElevatorSpeed);
-
-    motorSpeed = speed;
-    // updateScaleFactor();
-    // rightElevator.set(motorSpeed * scaleFactor);
-    setVoltage(motorSpeed * 12.00);
-
+    speed = MathUtil.clamp(speed, -ElevatorConstants.kMaxElevatorSpeed, ElevatorConstants.kMaxElevatorSpeed);
+    rightElevator.set(speed);
+    leftElevator.set(speed);
   }
 
   public double getPosition() {
@@ -55,20 +46,6 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public double getVelocity() {
     return rightElevator.getSelectedSensorVelocity() * ElevatorConstants.kConversionFactor;
-  }
-
-  public void moveUp() {
-    setSpeed(ElevatorConstants.kMaxElevatorSpeed);
-  }
-
-  public void moveDown() {
-    setSpeed(-ElevatorConstants.kMaxElevatorSpeed);
-  }
-
-  private void updateScaleFactor() {
-    double pos = getPosition();
-    if(pos <= ElevatorConstants.kBottomLimit || pos >= ElevatorConstants.kTopLimit) scaleFactor = 0.3;
-    else scaleFactor = 1.0;
   }
 
   public void stop() {
@@ -89,14 +66,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     return limitSwitch.get();
   }
 
-  public boolean getBeamBreaker() {
-    return beamBreaker.get();
-  }
-
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("limit Switch", getLimitSwitch());
-    SmartDashboard.putNumber("left Elevator", leftElevator.getStatorCurrent());
-    SmartDashboard.putNumber("right Elevator", rightElevator.getStatorCurrent());
+    SmartDashboard.putBoolean("Limit Switch", getLimitSwitch());
+    SmartDashboard.putNumber("Left Elevator Current", leftElevator.getStatorCurrent());
+    SmartDashboard.putNumber("Right Elevator Current", rightElevator.getStatorCurrent());
   }
 }

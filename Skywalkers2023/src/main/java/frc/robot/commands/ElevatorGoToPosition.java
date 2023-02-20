@@ -57,7 +57,6 @@ public class ElevatorGoToPosition extends CommandBase {
     elevator.setVoltage(elevPIDOutput + elevFeedforward);
 
     SmartDashboard.putBoolean("Limit Switch", elevator.getLimitSwitch());
-    SmartDashboard.putBoolean("Beam Breaker", elevator.getBeamBreaker());
   }
 
   // Called once the command ends or is interrupted.

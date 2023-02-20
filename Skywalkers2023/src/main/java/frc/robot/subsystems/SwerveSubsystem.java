@@ -105,7 +105,6 @@ public class SwerveSubsystem extends SubsystemBase {
  
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
 
     // recalibrate();
 
@@ -137,7 +136,6 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void setModuleStates(SwerveModuleState[] desiredStates) {
-    // SwerveDriveKinematics.desaturateWheelSpeeds(desired, attainableMaxSpeedMetersPerSecond);
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
     frontLeft.setDesiredState(desiredStates[0]);
     frontRight.setDesiredState(desiredStates[1]);
