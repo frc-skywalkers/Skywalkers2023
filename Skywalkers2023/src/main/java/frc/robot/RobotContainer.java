@@ -29,7 +29,7 @@ public class RobotContainer {
 
     swerve.setDefaultCommand(new SwerveJoystick(swerve, driverJoystick));
 
-    elevator.setDefaultCommand(Commands.runOnce(() -> elevator.setSpeed(operatorJoystick.getLeftY()), elevator));
+    elevator.setDefaultCommand(Commands.runOnce(() -> elevator.setSpeed(-operatorJoystick.getLeftY() * 0.4), elevator));
 
     arm.setDefaultCommand(Commands.run(() -> arm.setSpeed(0.5 * operatorJoystick.getRightY()), arm));
 
