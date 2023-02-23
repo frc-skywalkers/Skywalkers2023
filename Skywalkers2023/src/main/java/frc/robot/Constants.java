@@ -157,11 +157,11 @@ public final class Constants {
         public static final boolean kLeftElevatorInverted = false;
         public static final boolean kRightElevatorInverted = true;
         public static final int kelevatorTicksPerRotation = 2048;
-        public static final double kElevatorGearRatio = 10.00 * 22.0 / 12.0;
+        public static final double kElevatorGearRatio = 10.0 * 22.0 / 12.0;
         public static final double kSpoolDiameter = Units.inchesToMeters(1.751);
         public static final double kDistancePerRevolution = Math.PI * kSpoolDiameter;
 
-        public static final double kPositionConversionFactor = kDistancePerRevolution/(kElevatorGearRatio * kelevatorTicksPerRotation) * (double) 2.53715;
+        public static final double kPositionConversionFactor = kDistancePerRevolution/(kElevatorGearRatio * kelevatorTicksPerRotation) * 2.53715;
         public static final double kVelocityConversionFactor = kPositionConversionFactor * 10.0;
 
         public static final double kBottomLimit = 0.0;
