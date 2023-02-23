@@ -144,17 +144,18 @@ public final class Constants {
     }
 
     public static final class ElevatorConstants {
-        public static final int kLeftElevatorPort = 31; // ??
-        public static final int kRightElevatorPort = 30; // ??
-        public static final double kMaxElevatorSpeed = 1.00; // ??
-        public static final boolean kLeftElevatorInverted = false; // ? 
-        public static final boolean kRightElevatorInverted = true; // ?? must be opposites
-        public static final int kelevatorTicksPerRotation = 4096; // ??
-        public static final double kElevatorGearRatio = 20.00; // ????
-        public static final double kSpoolDiameter = 0.01; // meters
+        public static final int kLeftElevatorPort = 31;
+        public static final int kRightElevatorPort = 30; 
+        public static final double kMaxElevatorSpeed = 0.4;
+        public static final boolean kLeftElevatorInverted = false;
+        public static final boolean kRightElevatorInverted = true;
+        public static final int kelevatorTicksPerRotation = 2048;
+        public static final double kElevatorGearRatio = 10.00 * 22.0 / 16.0;
+        public static final double kSpoolDiameter = Units.inchesToMeters(1.751);
         public static final double kDistancePerRevolution = Math.PI * kSpoolDiameter;
 
-        public static final double kConversionFactor = kDistancePerRevolution/(kElevatorGearRatio * kelevatorTicksPerRotation);
+        public static final double kPositionConversionFactor = kDistancePerRevolution/(kElevatorGearRatio * kelevatorTicksPerRotation);
+        public static final double kVelocityConversionFactor = kPositionConversionFactor * 10.0;
 
         public static final double kBottomLimit = 0.3; // 30 cm ??
         public static final double kTopLimit = 1.2; // ????

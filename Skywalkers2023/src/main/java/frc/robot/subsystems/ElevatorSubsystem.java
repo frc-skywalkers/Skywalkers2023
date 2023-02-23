@@ -4,10 +4,13 @@
 
 package frc.robot.subsystems;
 
+
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -19,14 +22,20 @@ public class ElevatorSubsystem extends SubsystemBase {
   public final WPI_TalonFX leftElevator = new WPI_TalonFX(ElevatorConstants.kLeftElevatorPort, "CANivore");
   public final WPI_TalonFX rightElevator = new WPI_TalonFX(ElevatorConstants.kRightElevatorPort, "CANivore");
 
+  LinearFilter homingMovingAvg = LinearFilter.movingAverage(8);
+
   public final DigitalInput limitSwitch = new DigitalInput(SensorConstants.limitSwitchPort);
 
   public ElevatorSubsystem() {
+    leftElevator.configFactoryDefault();
+    rightElevator.configFactoryDefault();
     leftElevator.setInverted(ElevatorConstants.kLeftElevatorInverted);
     rightElevator.setInverted(ElevatorConstants.kRightElevatorInverted);
-    // leftElevator.follow(rightElevator);
     leftElevator.setNeutralMode(NeutralMode.Brake);
     rightElevator.setNeutralMode(NeutralMode.Brake);
+
+    leftElevator.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+    rightElevator.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
   }
 
   public void setVoltage(double voltage) {
@@ -41,25 +50,24 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public double getPosition() {
-    return rightElevator.getSelectedSensorPosition() * ElevatorConstants.kConversionFactor;
+    return rightElevator.getSelectedSensorPosition() * ElevatorConstants.kPositionConversionFactor;
   }
 
   public double getVelocity() {
-    return rightElevator.getSelectedSensorVelocity() * ElevatorConstants.kConversionFactor;
+    return rightElevator.getSelectedSensorVelocity() * ElevatorConstants.kVelocityConversionFactor;
+  }
+
+  public double getCurrent() {
+    return homingMovingAvg.calculate((rightElevator.getStatorCurrent() + leftElevator.getStatorCurrent()) / 2.0);
   }
 
   public void stop() {
-    setSpeed(0);
+    leftElevator.stopMotor();
+    rightElevator.stopMotor();
   }
 
   public void resetEncoders() {
     rightElevator.setSelectedSensorPosition(0);
-  }
-
-  public boolean isZeroed() {
-    return rightElevator.getSupplyCurrent() > ElevatorConstants.kCurrentThreshold;
-    //return this.getLimitSwitch();
-    //return !this.getBeamBreaker();
   }
 
   public boolean getLimitSwitch() {
@@ -69,7 +77,8 @@ public class ElevatorSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putBoolean("Limit Switch", getLimitSwitch());
-    SmartDashboard.putNumber("Left Elevator Current", leftElevator.getStatorCurrent());
-    SmartDashboard.putNumber("Right Elevator Current", rightElevator.getStatorCurrent());
+    SmartDashboard.putNumber("Elevator Current", getCurrent());
+    SmartDashboard.putNumber("Elevator Position", getPosition());
+    SmartDashboard.putNumber("Elevator Velocity", getVelocity());
   }
 }
