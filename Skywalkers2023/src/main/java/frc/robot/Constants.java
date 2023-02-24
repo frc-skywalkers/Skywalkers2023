@@ -151,7 +151,7 @@ public final class Constants {
         public static final boolean kLeftElevatorInverted = false;
         public static final boolean kRightElevatorInverted = true;
         public static final int kelevatorTicksPerRotation = 2048;
-        public static final double kElevatorGearRatio = 10.0 * 22.0 / 12.0;
+        public static final double kElevatorGearRatio = 10.00 * 22.0 / 12.0;
         public static final double kSpoolDiameter = Units.inchesToMeters(1.751);
         public static final double kDistancePerRevolution = Math.PI * kSpoolDiameter;
 

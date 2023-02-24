@@ -36,6 +36,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     leftElevator.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
     rightElevator.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+    resetEncoders();
   }
 
   public void setVoltage(double voltage) {
