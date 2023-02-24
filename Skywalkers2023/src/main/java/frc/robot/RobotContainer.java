@@ -49,6 +49,7 @@ public class RobotContainer {
 
 
     operatorJoystick.a().onTrue(new HomeElevator(elevator));
+<<<<<<< HEAD
     operatorJoystick.x().onTrue(
       Commands.runOnce(() -> {
         elevator.disable();
