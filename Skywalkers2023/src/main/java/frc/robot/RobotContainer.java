@@ -48,6 +48,8 @@ public class RobotContainer {
 
     operatorJoystick.a().onTrue(new HomeElevator(elevator));
     operatorJoystick.x().onTrue(Commands.runOnce(elevator::stop));
+    operatorJoystick.y().onTrue(Commands.runOnce(elevator::resetEncoders));
+
     
     // driverJoystick.y().onTrue(Commands.runOnce(() -> swerve.reset(), swerve));
     // driverJoystick.b().onTrue(Commands.runOnce(() -> swerve.toggleField(), swerve));
