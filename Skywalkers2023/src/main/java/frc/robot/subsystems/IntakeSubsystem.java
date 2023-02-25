@@ -4,8 +4,7 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -15,52 +14,40 @@ import frc.robot.Constants.IntakeConstants;
 public class IntakeSubsystem extends SubsystemBase {
 
   private final WPI_TalonFX intake = new WPI_TalonFX(IntakeConstants.kIntakePort, "CANivore");
-
-  private double motorSpeed = 0.0;
+  private double intakeSpeed = 0;
 
   public IntakeSubsystem() {
-    // intake.configFactoryDefault();
-    intake.setNeutralMode(NeutralMode.Brake);
-    intake.setInverted(IntakeConstants.kIntakeInverted);
-    // intake.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 20, 75, 1));
+    intake.configFactoryDefault();
   }
 
   // just speed should be fine, motor voltage unecessary
 
   public void setSpeed(double speed) {
-    motorSpeed = speed;
-    intake.set(motorSpeed);
-  }
-
-  public void setVoltage(double voltage) {
-    intake.setVoltage(voltage);
+    intake.set(speed);
+    intakeSpeed = speed;
   }
 
   public void moveIn() {
     setSpeed(IntakeConstants.kMaxIntakeSpeed);
-    SmartDashboard.putString("Intake Status", "Moving");
+    intakeSpeed = IntakeConstants.kMaxIntakeSpeed;
   }
 
   public void moveOut() {
-    // setSpeed(-IntakeConstants.kMaxOuttakeSpeed); 
-    setVoltage(-IntakeConstants.kMaxOuttakeSpeed * 12.000);
-    SmartDashboard.putString("Intake Status", "Moving");
-
+    setSpeed(-IntakeConstants.kMaxIntakeSpeed);
+    intakeSpeed = -IntakeConstants.kMaxIntakeSpeed; 
   }
 
-  public void stopIntake() {
-    setSpeed(IntakeConstants.kHoldSpeed);
-    // setVoltage(12.00 * IntakeConstants.k)
-    SmartDashboard.putString("Intake Status", "Stopped");
-
-  }
-
-  public double getExpectedVelocity() {
-    return motorSpeed * IntakeConstants.kExpectedFullVelocity;
+  public void stop() {
+    setSpeed(0.000);
+    intakeSpeed = 0;
   }
 
   public double getActualVelocity() {
-    return intake.getSelectedSensorVelocity() / IntakeConstants.kIntakeTicksPerRotation;
+    return intake.getSelectedSensorVelocity();
+  }
+
+  public double getActualCurrent() {
+    return intake.getStatorCurrent();
   }
 
   public boolean objectHeld() {
@@ -68,15 +55,23 @@ public class IntakeSubsystem extends SubsystemBase {
     // double actual = getActualVelocity();
     // double ratio = Math.abs(expected/actual);
     // return ratio > IntakeConstants.kObjectHeldRatioThreshold;
-    return intake.getSupplyCurrent() > IntakeConstants.kCurrentThreshold;
+    return getActualCurrent() > IntakeConstants.kObjectHeldThreshold * IntakeConstants.kMaxIntakeSpeed;
   }
 
+  public boolean speedUp() {
+    return getActualCurrent() > IntakeConstants.kSpeedUpThreshold * IntakeConstants.kMaxIntakeSpeed;
+  }
 
+  public boolean objectOut() {
+    return getActualCurrent() < IntakeConstants.kObjectOutThreshold * IntakeConstants.kMaxIntakeSpeed;
+  }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("intake velocity", getActualVelocity());
-    SmartDashboard.putNumber("Intake Stator Current", intake.getStatorCurrent());
-    SmartDashboard.putNumber("Intake Supply Current", intake.getSupplyCurrent());
+    /*SmartDashboard.putNumber("Velocity", getActualVelocity());
+    SmartDashboard.putNumber("Speed", intakeSpeed);
+    SmartDashboard.putBoolean("Object Held", objectHeld());
+    SmartDashboard.putNumber("Current", intake.getStatorCurrent());
+    System.out.println("Current: " + intake.getStatorCurrent());*/
   }
 }
