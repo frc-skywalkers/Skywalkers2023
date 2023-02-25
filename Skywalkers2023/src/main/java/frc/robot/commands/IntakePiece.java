@@ -37,6 +37,7 @@ public class IntakePiece extends CommandBase {
     intake.moveIn();
     speedUp.reset();
     speedUp.start();
+    intake.stop = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -78,6 +79,6 @@ public class IntakePiece extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return finished;
+    return finished || intake.stop;
   }
 }

@@ -74,8 +74,9 @@ public class RobotContainer {
     operatorJoystick.rightBumper().onTrue(Commands.run(() -> intake.moveOut(), intake));*/
 
 
-    operatorJoystick.a().onTrue(new IntakePiece(intake));
-    operatorJoystick.b().onTrue(new OuttakePiece(intake));
+    operatorJoystick.x().onTrue(new IntakePiece(intake));
+    operatorJoystick.y().onTrue(new OuttakePiece(intake));
+    operatorJoystick.a().onTrue(Commands.runOnce(() -> intake.stop(), intake));
 
   }
 
