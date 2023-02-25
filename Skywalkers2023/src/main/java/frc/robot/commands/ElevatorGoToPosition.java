@@ -30,7 +30,7 @@ public class ElevatorGoToPosition extends CommandBase {
 
   private final ProfiledPIDController m_controller = new ProfiledPIDController(ElevatorConstants.kPElevator, ElevatorConstants.kIElevator, ElevatorConstants.kDElevator, m_constraints, kDt);
 
-  private final ElevatorFeedforward m_ElevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kSElevator, ElevatorConstants.kGElevator * Math.sin(ElevatorConstants.kMountAngleRadians), ElevatorConstants.kVElevator, ElevatorConstants.kAElevator);
+  // private final ElevatorFeedforward m_ElevatorFeedforward = new ElevatorFeedforward(ElevatorConstants.kSElevator, ElevatorConstants.kGElevator * Math.sin(ElevatorConstants.kMountAngleRadians), ElevatorConstants.kVElevator, ElevatorConstants.kAElevator);
 
   public ElevatorGoToPosition(ElevatorSubsystem elevator, double goal, XboxController joystick) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -52,11 +52,24 @@ public class ElevatorGoToPosition extends CommandBase {
     // potentially change goal here if needed from joystick input
     final double elevPIDOutput = m_controller.calculate(elevator.getPosition(), goal);
 
-    final double elevFeedforward = m_ElevatorFeedforward.calculate(m_controller.getSetpoint().velocity);
+    // final double elevFeedforward = m_ElevatorFeedforward.calculate(m_controller.getSetpoint().velocity);
+
+    double elevFeedforward = 0;
+
+    double vel = m_controller.getSetpoint().velocity;
+
+    if(vel > 0.000) {
+      elevFeedforward = vel * ElevatorConstants.kVElevatorUp + ElevatorConstants.kSElevatorUp;
+    }
+    else {
+      elevFeedforward = vel * ElevatorConstants.kVElevatorDown + ElevatorConstants.kSElevatorDown;
+    }
 
     elevator.setVoltage(elevPIDOutput + elevFeedforward);
 
     SmartDashboard.putBoolean("Limit Switch", elevator.getLimitSwitch());
+    SmartDashboard.putNumber("Desired Elevator Position", m_controller.getSetpoint().position);
+    SmartDashboard.putNumber("Desired Elevator Velocity", m_controller.getSetpoint().velocity);
   }
 
   // Called once the command ends or is interrupted.

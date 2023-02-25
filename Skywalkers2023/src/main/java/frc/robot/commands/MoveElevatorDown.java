@@ -9,12 +9,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.ElevatorSubsystem;
 
-public class HomeElevator extends CommandBase {
+public class MoveElevatorDown extends CommandBase {
   /** Creates a new HomeElevator. */
 
   private final ElevatorSubsystem elevator;
 
-  public HomeElevator(ElevatorSubsystem elevator) {
+  public MoveElevatorDown(ElevatorSubsystem elevator) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.elevator = elevator;
     addRequirements(elevator);
@@ -23,14 +23,14 @@ public class HomeElevator extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    SmartDashboard.putBoolean("Zeroed", false);
+    // SmartDashboard.putBoolean("Zeroed", false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    elevator.setSpeed(-0.07);
-    // elevator.setVoltage(3);
+    // elevator.setSpeed(-0.07);
+    elevator.setVoltage(-3.5);
   }
 
   // Called once the command ends or is interrupted.
@@ -44,7 +44,7 @@ public class HomeElevator extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // return false;
-    return elevator.getCurrent() > 10;
+    return false;
+    // return elevator.getCurrent() > 10;
   }
 }

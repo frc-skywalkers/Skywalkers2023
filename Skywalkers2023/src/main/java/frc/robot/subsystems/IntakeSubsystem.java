@@ -32,19 +32,25 @@ public class IntakeSubsystem extends SubsystemBase {
     intake.set(motorSpeed);
   }
 
+  public void setVoltage(double voltage) {
+    intake.setVoltage(voltage);
+  }
+
   public void moveIn() {
     setSpeed(IntakeConstants.kMaxIntakeSpeed);
     SmartDashboard.putString("Intake Status", "Moving");
   }
 
   public void moveOut() {
-    setSpeed(-IntakeConstants.kMaxOuttakeSpeed); 
+    // setSpeed(-IntakeConstants.kMaxOuttakeSpeed); 
+    setVoltage(-IntakeConstants.kMaxOuttakeSpeed * 12.000);
     SmartDashboard.putString("Intake Status", "Moving");
 
   }
 
   public void stopIntake() {
     setSpeed(IntakeConstants.kHoldSpeed);
+    // setVoltage(12.00 * IntakeConstants.k)
     SmartDashboard.putString("Intake Status", "Stopped");
 
   }
