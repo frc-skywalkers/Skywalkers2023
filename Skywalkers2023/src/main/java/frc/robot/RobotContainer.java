@@ -11,8 +11,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.HomeElevator;
+<<<<<<< HEAD
 import frc.robot.commands.IntakePiece;
 import frc.robot.commands.OuttakePiece;
+=======
+import frc.robot.commands.MoveElevatorDown;
+import frc.robot.commands.MoveElevatorUp;
+>>>>>>> 2b5c1d1 (church 2/25)
 import frc.robot.commands.SwerveJoystick;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -40,22 +45,21 @@ public class RobotContainer {
     }, elevator).unless(elevator::isEnabled));
 
     arm.setDefaultCommand(Commands.run(() -> arm.setSpeed(0.5 * operatorJoystick.getRightY()), arm));
-
     configureButtonBindings();
   }
 
 
   private void configureButtonBindings() {
 
+    operatorJoystick.b().onTrue(Commands.runOnce(elevator::stop));
+    // operatorJoystick.a().onTrue(new HomeElevator(elevator));
+    // operatorJoystick.x().onTrue(Commands.runOnce(elevator::stop));
+    // operatorJoystick.y().onTrue(Commands.runOnce(elevator::resetEncoders));
+
+    // operatorJoystick.leftBumper().onTrue(new MoveElevatorUp(elevator));
+    // operatorJoystick.rightBumper().onTrue(new MoveElevatorDown(elevator));
 
     operatorJoystick.a().onTrue(new HomeElevator(elevator));
-<<<<<<< HEAD
-    operatorJoystick.x().onTrue(
-      Commands.runOnce(() -> {
-        elevator.disable();
-        elevator.stop();  
-      }, elevator)
-    );
 
     // operatorJoystick.b().onTrue(
     //   Commands.runOnce(
@@ -75,7 +79,6 @@ public class RobotContainer {
     
     driverJoystick.y().onTrue(Commands.runOnce(() -> swerve.reset(), swerve));
     driverJoystick.b().onTrue(Commands.runOnce(() -> swerve.toggleField(), swerve));
-
     operatorJoystick.rightBumper().onTrue(new IntakePiece(intake));
     operatorJoystick.leftBumper().onTrue(new OuttakePiece(intake));
     operatorJoystick.b().onTrue(Commands.runOnce(() -> intake.stop(), intake));

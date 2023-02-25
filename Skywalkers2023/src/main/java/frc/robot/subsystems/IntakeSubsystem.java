@@ -29,6 +29,10 @@ public class IntakeSubsystem extends SubsystemBase {
     intakeSpeed = speed;
   }
 
+  public void setVoltage(double voltage) {
+    intake.setVoltage(voltage);
+  }
+
   public void moveIn() {
     setSpeed(IntakeConstants.kMaxIntakeSpeed);
     intakeSpeed = IntakeConstants.kMaxIntakeSpeed;

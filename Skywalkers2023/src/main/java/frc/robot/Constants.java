@@ -183,11 +183,9 @@ public final class Constants {
         public static final double kD = 0.00;
 
         public static final double kCurrentThreshold = 10.00;
-
         public static final double kHomingSpeed = -0.07;
 
         public static final double kMountAngleRadians = 0.9599;
-        
     }
 
 

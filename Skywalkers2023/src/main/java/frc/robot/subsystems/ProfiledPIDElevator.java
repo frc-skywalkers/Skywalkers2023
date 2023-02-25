@@ -20,7 +20,7 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
 
   public final WPI_TalonFX leftElevator = new WPI_TalonFX(ElevatorConstants.kLeftElevatorPort, "CANivore");
   public final WPI_TalonFX rightElevator = new WPI_TalonFX(ElevatorConstants.kRightElevatorPort, "CANivore");
-
+  double scaleFactor;
   LinearFilter homingMovingAvg = LinearFilter.movingAverage(8);
 
   public boolean isZeroed = false;
@@ -91,8 +91,15 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
 
   public void setSpeed(double speed) {
     speed = MathUtil.clamp(speed, -ElevatorConstants.kMaxElevatorSpeed, ElevatorConstants.kMaxElevatorSpeed);
-    rightElevator.set(speed);
-    leftElevator.set(speed);
+    rightElevator.set(speed * scaleFactor);
+    leftElevator.set(speed * scaleFactor);
+  }
+
+  public void updateScaleFactor(double speed) {
+    scaleFactor = 1;
+    // if ((getPosition() >= 1.48 && speed > 0.1) || (getPosition() <= 0.05 && speed < -0.1)) {
+      // scaleFactor = 0.3;
+    // }
   }
 
   public double getPosition() {
