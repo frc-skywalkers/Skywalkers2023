@@ -20,7 +20,6 @@ public class OuttakePiece extends CommandBase {
   private boolean finished = false;
 
   private Timer outFail = new Timer();
-
   private CommandXboxController controller;
   /** Creates a new IntakeMotor. */
   public OuttakePiece(IntakeSubsystem rIntake) {

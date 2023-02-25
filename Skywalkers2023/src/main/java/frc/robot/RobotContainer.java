@@ -11,13 +11,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.HomeElevator;
-<<<<<<< HEAD
 import frc.robot.commands.IntakePiece;
 import frc.robot.commands.OuttakePiece;
-=======
-import frc.robot.commands.MoveElevatorDown;
-import frc.robot.commands.MoveElevatorUp;
->>>>>>> 2b5c1d1 (church 2/25)
 import frc.robot.commands.SwerveJoystick;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -82,6 +77,8 @@ public class RobotContainer {
     operatorJoystick.rightBumper().onTrue(new IntakePiece(intake));
     operatorJoystick.leftBumper().onTrue(new OuttakePiece(intake));
     operatorJoystick.b().onTrue(Commands.runOnce(() -> intake.stop(), intake));
+    operatorJoystick.a().onTrue(new IntakePiece(intake));
+    operatorJoystick.b().onTrue(new OuttakePiece(intake));
 
   }
 

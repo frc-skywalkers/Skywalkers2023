@@ -15,7 +15,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
   private final WPI_TalonFX intake = new WPI_TalonFX(IntakeConstants.kIntakePort, "CANivore");
   private double intakeSpeed = 0;
-
   public boolean stop = false;
 
   public IntakeSubsystem() {
