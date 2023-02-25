@@ -133,8 +133,8 @@ public final class Constants {
 
     public static final class IntakeConstants {
         public static final int kIntakePort = 22; // ??
-        public static final double kMaxIntakeSpeed = 0.4; // ??
-        public static final double kMaxOuttakeSpeed = 0.25; // ??
+        public static final double kMaxIntakeSpeed = 0.3; // ??
+        public static final double kMaxOuttakeSpeed = 1; // ??
         public static final double kHoldSpeed = 0.05;
         public static final boolean kIntakeInverted = false; // ?
         public static final int kIntakeTicksPerRotation = 4096; // ??
@@ -155,7 +155,7 @@ public final class Constants {
         public static final double kSpoolDiameter = Units.inchesToMeters(1.751);
         public static final double kDistancePerRevolution = Math.PI * kSpoolDiameter;
 
-        public static final double kPositionConversionFactor = kDistancePerRevolution/(kElevatorGearRatio * kelevatorTicksPerRotation) * 2.53715;
+        public static final double kPositionConversionFactor = kDistancePerRevolution/(kElevatorGearRatio * kelevatorTicksPerRotation) * (double) 2.53715;
         public static final double kVelocityConversionFactor = kPositionConversionFactor * 10.0;
 
         public static final double kBottomLimit = 0.0;
@@ -182,6 +182,12 @@ public final class Constants {
 
         public static final double kMountAngleRadians = 0.9599;
 
+        public static final double kVElevatorUp = 6.17;
+        public static final double kVElevatorDown = 6.08;
+
+        public static final double kSElevatorUp = 0.999;
+        public static final double kSElevatorDown = 0.47;
+        
 
     }
 

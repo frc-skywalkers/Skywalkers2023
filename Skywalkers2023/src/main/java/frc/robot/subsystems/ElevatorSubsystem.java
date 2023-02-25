@@ -21,7 +21,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public final WPI_TalonFX leftElevator = new WPI_TalonFX(ElevatorConstants.kLeftElevatorPort, "CANivore");
   public final WPI_TalonFX rightElevator = new WPI_TalonFX(ElevatorConstants.kRightElevatorPort, "CANivore");
-
+  double scaleFactor;
   LinearFilter homingMovingAvg = LinearFilter.movingAverage(8);
 
   public final DigitalInput limitSwitch = new DigitalInput(SensorConstants.limitSwitchPort);
@@ -36,18 +36,25 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     leftElevator.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
     rightElevator.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-    resetEncoders();
+    // resetEncoders();
   }
 
   public void setVoltage(double voltage) {
-    rightElevator.setVoltage(voltage);
-    leftElevator.setVoltage(voltage);
+    rightElevator.setVoltage(voltage * scaleFactor);
+    leftElevator.setVoltage(voltage * scaleFactor);
   }
 
   public void setSpeed(double speed) {
     speed = MathUtil.clamp(speed, -ElevatorConstants.kMaxElevatorSpeed, ElevatorConstants.kMaxElevatorSpeed);
-    rightElevator.set(speed);
-    leftElevator.set(speed);
+    rightElevator.set(speed * scaleFactor);
+    leftElevator.set(speed * scaleFactor);
+  }
+
+  public void updateScaleFactor(double speed) {
+    scaleFactor = 1;
+    // if ((getPosition() >= 1.48 && speed > 0.1) || (getPosition() <= 0.05 && speed < -0.1)) {
+      // scaleFactor = 0.3;
+    // }
   }
 
   public double getPosition() {
@@ -73,6 +80,14 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public boolean getLimitSwitch() {
     return limitSwitch.get();
+  }
+
+  public void moveUp() {
+    setVoltage(5);
+  }
+
+  public void moveDown() {
+    setVoltage(-0.5);
   }
 
   @Override
