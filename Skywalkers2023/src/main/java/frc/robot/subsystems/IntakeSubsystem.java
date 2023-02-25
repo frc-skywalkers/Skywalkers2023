@@ -24,8 +24,8 @@ public class IntakeSubsystem extends SubsystemBase {
   // just speed should be fine, motor voltage unecessary
 
   public void setSpeed(double speed) {
-    intake.set(speed);
     intakeSpeed = speed;
+    intake.set(intakeSpeed);
   }
 
   public void setVoltage(double voltage) {
