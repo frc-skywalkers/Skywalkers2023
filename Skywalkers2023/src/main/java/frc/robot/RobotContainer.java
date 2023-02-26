@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.HomeElevator;
 import frc.robot.commands.SwerveJoystick;
@@ -19,7 +20,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
 
-  // private final SwerveSubsystem swerve = new SwerveSubsystem();
+  private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final ProfiledPIDElevator elevator = new ProfiledPIDElevator();
   private final ArmSubsystem arm = new ArmSubsystem();
   // private final IntakeSubsystem intake = new IntakeSubsystem();
@@ -30,11 +31,10 @@ public class RobotContainer {
 
   public RobotContainer() {
 
-    // swerve.setDefaultCommand(new SwerveJoystick(swerve, driverJoystick));
+    swerve.setDefaultCommand(new SwerveJoystick(swerve, driverJoystick));
 
     elevator.setDefaultCommand(Commands.run(() -> {
-      double speed = -operatorJoystick.getLeftY() * 0.4;
-      SmartDashboard.putNumber("Elevator Speed", speed);
+      double speed = -operatorJoystick.getLeftY() * ElevatorConstants.kMaxElevatorSpeed;
       elevator.setSpeed(speed);
     }, elevator).unless(elevator::isEnabled));
 
@@ -71,8 +71,8 @@ public class RobotContainer {
         }, elevator)
     );
     
-    // driverJoystick.y().onTrue(Commands.runOnce(() -> swerve.reset(), swerve));
-    // driverJoystick.b().onTrue(Commands.runOnce(() -> swerve.toggleField(), swerve));
+    driverJoystick.y().onTrue(Commands.runOnce(() -> swerve.reset(), swerve));
+    driverJoystick.b().onTrue(Commands.runOnce(() -> swerve.toggleField(), swerve));
 
     // operatorJoystick.x().onTrue(Commands.run(() -> intake.stopIntake(), intake));
     // operatorJoystick.leftBumper().onTrue(Commands.run(() -> intake.moveIn(), intake));
