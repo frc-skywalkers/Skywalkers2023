@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.ProfiledPIDElevator;
 
 public class HomeElevator extends CommandBase {
@@ -22,13 +23,14 @@ public class HomeElevator extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    elevator.disableSoftLimits();
     SmartDashboard.putBoolean("Zeroed", false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    elevator.setSpeed(-0.07);
+    elevator.setSpeed(ElevatorConstants.kHomingSpeed);
   }
 
   // Called once the command ends or is interrupted.
@@ -36,6 +38,8 @@ public class HomeElevator extends CommandBase {
   public void end(boolean interrupted) {
     elevator.stop();
     elevator.resetEncoders();
+    elevator.isZeroed = true;
+    elevator.enableSoftLimits();
     SmartDashboard.putBoolean("Zeroed", true);
   }
 
@@ -43,6 +47,6 @@ public class HomeElevator extends CommandBase {
   @Override
   public boolean isFinished() {
     
-    return elevator.getCurrent() > 10;
+    return elevator.getCurrent() > ElevatorConstants.kCurrentThreshold;
   }
 }

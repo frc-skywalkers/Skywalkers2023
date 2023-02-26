@@ -21,7 +21,7 @@ public class RobotContainer {
 
   // private final SwerveSubsystem swerve = new SwerveSubsystem();
   private final ProfiledPIDElevator elevator = new ProfiledPIDElevator();
-  // private final ArmSubsystem arm = new ArmSubsystem();
+  private final ArmSubsystem arm = new ArmSubsystem();
   // private final IntakeSubsystem intake = new IntakeSubsystem();
 
   private final CommandXboxController driverJoystick = new CommandXboxController(OIConstants.kDriverControllerPort);
@@ -38,7 +38,7 @@ public class RobotContainer {
       elevator.setSpeed(speed);
     }, elevator).unless(elevator::isEnabled));
 
-    // arm.setDefaultCommand(Commands.run(() -> arm.setSpeed(0.5 * operatorJoystick.getRightY()), arm));
+    arm.setDefaultCommand(Commands.run(() -> arm.setSpeed(0.5 * operatorJoystick.getRightY()), arm));
 
     configureButtonBindings();
   }
@@ -48,7 +48,28 @@ public class RobotContainer {
 
 
     operatorJoystick.a().onTrue(new HomeElevator(elevator));
-    operatorJoystick.x().onTrue(Commands.runOnce(elevator::stop));
+    operatorJoystick.x().onTrue(
+      Commands.runOnce(() -> {
+        elevator.disable();
+        elevator.stop();  
+      }, elevator)
+    );
+
+    operatorJoystick.b().onTrue(
+      Commands.runOnce(
+        () -> {
+          elevator.setGoal(0.3);
+          elevator.enable();
+        }, elevator)
+    );
+
+    operatorJoystick.y().onTrue(
+      Commands.runOnce(
+        () -> {
+          elevator.setGoal(1.0);
+          elevator.enable();
+        }, elevator)
+    );
     
     // driverJoystick.y().onTrue(Commands.runOnce(() -> swerve.reset(), swerve));
     // driverJoystick.b().onTrue(Commands.runOnce(() -> swerve.toggleField(), swerve));

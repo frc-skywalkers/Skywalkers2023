@@ -12,27 +12,26 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc.robot.Constants.ElevatorConstants;
-import frc.robot.Constants.SensorConstants;
 
 public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
-  /** Creates a new ProfiledPIDElevator. */
 
   public final WPI_TalonFX leftElevator = new WPI_TalonFX(ElevatorConstants.kLeftElevatorPort, "CANivore");
   public final WPI_TalonFX rightElevator = new WPI_TalonFX(ElevatorConstants.kRightElevatorPort, "CANivore");
 
   LinearFilter homingMovingAvg = LinearFilter.movingAverage(8);
+
+  public boolean isZeroed = false;
   
   public ProfiledPIDElevator() {
     super(
-        // The ProfiledPIDController used by the subsystem
         new ProfiledPIDController(
+            ElevatorConstants.kP,
             0,
             0,
-            0,
-            // The motion profile constraints
-            new TrapezoidProfile.Constraints(0.25, 0.25)));
+            new TrapezoidProfile.Constraints(ElevatorConstants.kMaxVel, ElevatorConstants.kMaxAcc)));
             
     leftElevator.configFactoryDefault();
     rightElevator.configFactoryDefault();
@@ -44,6 +43,12 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
     leftElevator.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
     rightElevator.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
 
+    leftElevator.configForwardSoftLimitThreshold(ElevatorConstants.kTopLimit / ElevatorConstants.kPositionConversionFactor, 0);
+    leftElevator.configReverseSoftLimitThreshold(ElevatorConstants.kBottomLimit / ElevatorConstants.kPositionConversionFactor, 0);
+
+    rightElevator.configForwardSoftLimitThreshold(ElevatorConstants.kTopLimit / ElevatorConstants.kPositionConversionFactor, 0);
+    rightElevator.configReverseSoftLimitThreshold(ElevatorConstants.kBottomLimit / ElevatorConstants.kPositionConversionFactor, 0);
+
     disable();
   }
 
@@ -51,12 +56,13 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
   public void useOutput(double output, TrapezoidProfile.State setpoint) {
     double feedforward = 0;
     if (setpoint.velocity > 0) {
-      feedforward = setpoint.velocity * 6.17 + 0.999;
+      feedforward = setpoint.velocity * ElevatorConstants.kVUp + ElevatorConstants.kSUp;
     } else {
-      feedforward = setpoint.velocity * 6.08 + 0.47;
+      feedforward = setpoint.velocity * ElevatorConstants.kVDown + ElevatorConstants.kSDown;
     }
 
     setVoltage(feedforward + output);
+    SmartDashboard.putNumber("Set Voltage", (feedforward + output));
   }
 
   @Override
@@ -64,10 +70,23 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
     return getPosition();
   }
 
+  @Override
+  public void periodic() {
+    super.periodic();
+    SmartDashboard.putNumber("Elevator Current", getCurrent());
+    SmartDashboard.putNumber("Elevator Position", getPosition());
+    SmartDashboard.putNumber("Elevator Velocity", getVelocity());
+    SmartDashboard.putNumber("Elevator Voltage", leftElevator.getMotorOutputVoltage());
+  }
+
   public void setVoltage(double voltage) {
-    voltage = MathUtil.clamp(voltage, -2, 2);
-    rightElevator.setVoltage(voltage);
-    leftElevator.setVoltage(voltage);
+    if (isZeroed) {
+      voltage = MathUtil.clamp(voltage, -6, 6);
+      rightElevator.setVoltage(voltage);
+      leftElevator.setVoltage(voltage);
+    } else {
+      stop();
+    }
   }
 
   public void setSpeed(double speed) {
@@ -95,6 +114,17 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
 
   public void resetEncoders() {
     rightElevator.setSelectedSensorPosition(0);
+  }
+
+  public void disableSoftLimits() {
+    leftElevator.configForwardSoftLimitEnable(false, 0);
+    rightElevator.configReverseSoftLimitEnable(false, 0);
+  }
+
+  public void enableSoftLimits() {
+    leftElevator.configForwardSoftLimitEnable(true, 0);
+    rightElevator.configReverseSoftLimitEnable(true, 0);
+    System.out.println("Enabled");
   }
 
 }
