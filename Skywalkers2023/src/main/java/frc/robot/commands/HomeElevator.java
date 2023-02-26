@@ -6,15 +6,14 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.ElevatorConstants;
-import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.ProfiledPIDElevator;
 
 public class HomeElevator extends CommandBase {
   /** Creates a new HomeElevator. */
 
-  private final ElevatorSubsystem elevator;
+  private final ProfiledPIDElevator elevator;
 
-  public HomeElevator(ElevatorSubsystem elevator) {
+  public HomeElevator(ProfiledPIDElevator elevator) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.elevator = elevator;
     addRequirements(elevator);

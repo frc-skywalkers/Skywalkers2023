@@ -14,12 +14,13 @@ import frc.robot.commands.SwerveJoystick;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ProfiledPIDElevator;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
 
   // private final SwerveSubsystem swerve = new SwerveSubsystem();
-  private final ElevatorSubsystem elevator = new ElevatorSubsystem();
+  private final ProfiledPIDElevator elevator = new ProfiledPIDElevator();
   // private final ArmSubsystem arm = new ArmSubsystem();
   // private final IntakeSubsystem intake = new IntakeSubsystem();
 
@@ -31,11 +32,11 @@ public class RobotContainer {
 
     // swerve.setDefaultCommand(new SwerveJoystick(swerve, driverJoystick));
 
-    elevator.setDefaultCommand(Commands.runOnce(() -> {
+    elevator.setDefaultCommand(Commands.run(() -> {
       double speed = -operatorJoystick.getLeftY() * 0.4;
       SmartDashboard.putNumber("Elevator Speed", speed);
       elevator.setSpeed(speed);
-    }, elevator));
+    }, elevator).unless(elevator::isEnabled));
 
     // arm.setDefaultCommand(Commands.run(() -> arm.setSpeed(0.5 * operatorJoystick.getRightY()), arm));
 
