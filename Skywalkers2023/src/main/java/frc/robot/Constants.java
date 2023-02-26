@@ -187,14 +187,7 @@ public final class Constants {
         public static final double kHomingSpeed = -0.07;
 
         public static final double kMountAngleRadians = 0.9599;
-
-        public static final double kVElevatorUp = 6.17;
-        public static final double kVElevatorDown = 6.08;
-
-        public static final double kSElevatorUp = 0.999;
-        public static final double kSElevatorDown = 0.47;
         
-
     }
 
 
