@@ -17,8 +17,6 @@ public class IntakeSubsystem extends SubsystemBase {
   private double intakeSpeed = 0;
   public boolean stop = false;
 
-  public boolean stop = false;
-
   public IntakeSubsystem() {
     intake.configFactoryDefault();
   }
