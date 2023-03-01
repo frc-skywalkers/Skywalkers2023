@@ -7,9 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class OuttakePiece extends CommandBase {
@@ -20,7 +18,6 @@ public class OuttakePiece extends CommandBase {
   private boolean finished = false;
 
   private Timer outFail = new Timer();
-  private CommandXboxController controller;
   /** Creates a new IntakeMotor. */
   public OuttakePiece(IntakeSubsystem rIntake) {
     intake = rIntake;

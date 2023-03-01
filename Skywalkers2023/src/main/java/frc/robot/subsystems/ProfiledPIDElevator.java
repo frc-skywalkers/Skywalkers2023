@@ -97,13 +97,6 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
     leftElevator.set(speed * scaleFactor);
   }
 
-  public void updateScaleFactor(double speed) {
-    scaleFactor = 1;
-    // if ((getPosition() >= 1.48 && speed > 0.1) || (getPosition() <= 0.05 && speed < -0.1)) {
-      // scaleFactor = 0.3;
-    // }
-  }
-
   public double getPosition() {
     return rightElevator.getSelectedSensorPosition() * ElevatorConstants.kPositionConversionFactor;
   }
