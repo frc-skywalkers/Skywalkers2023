@@ -46,7 +46,7 @@ public final class Constants {
    }
 
     public static final class OIConstants {
-        public static final double kDeadband = 0.1;
+        public static final double kDeadband = 0.15;
 
         public static final int kDriverControllerPort = 0;
         public static final int kDriverControllerPort2 = 1;
@@ -152,6 +152,7 @@ public final class Constants {
     public static final class ElevatorConstants {
         public static final int kLeftElevatorPort = 31;
         public static final int kRightElevatorPort = 30; 
+
         public static final double kMaxElevatorSpeed = 0.4;
         public static final boolean kLeftElevatorInverted = false;
         public static final boolean kRightElevatorInverted = true;
@@ -160,39 +161,31 @@ public final class Constants {
         public static final double kSpoolDiameter = Units.inchesToMeters(1.751);
         public static final double kDistancePerRevolution = Math.PI * kSpoolDiameter;
 
-        public static final double kPositionConversionFactor = kDistancePerRevolution/(kElevatorGearRatio * kelevatorTicksPerRotation) * (double) 2.53715;
+        public static final double kPositionConversionFactor = kDistancePerRevolution/(kElevatorGearRatio * kelevatorTicksPerRotation) * 2.53715;
         public static final double kVelocityConversionFactor = kPositionConversionFactor * 10.0;
 
-        public static final double kBottomLimit = 0.3; // 30 cm ??
-        public static final double kTopLimit = 1.2; // ????
+        public static final double kBottomLimit = 0.0;
+        public static final double kTopLimit = 1.45;
 
-        // feedback
+        public static final double kMaxVel = 0.5;
+        public static final double kMaxAcc = 0.5;
 
-        public static final double kPElevator = 1.00;
-        public static final double kIElevator = 0.00;
-        public static final double kDElevator = 0.00;
+        public static final double kVUp = 6.17;
+        public static final double kSUp = 0.999;
 
-        // feedforward
-
-        // calculate necessary gains using recalc: https://www.reca.lc/linear (overkill?)
-
-        public static final double kSElevator = 0.00; // to overcome static friction
-        public static final double kVElevator = 15.91;
-        public static final double kGElevator = 0.0;
-        public static final double kAElevator = 0.00;
-        public static final double kCurrentThreshold = 15.00;
-
-        public static final double kHoningSpeed = -0.1;
-
-        public static final double kMountAngleRadians = 0.9599;
-
-        public static final double kVElevatorUp = 6.17;
-        public static final double kVElevatorDown = 6.08;
-
-        public static final double kSElevatorUp = 0.999;
-        public static final double kSElevatorDown = 0.47;
+        public static final double kVDown = 6.41;
+        public static final double kSDown = -0.13;
+        
         
 
+        public static final double kP = 20.00;
+        public static final double kI = 0.00;
+        public static final double kD = 0.00;
+
+        public static final double kCurrentThreshold = 10.00;
+        public static final double kHomingSpeed = -0.07;
+
+        public static final double kMountAngleRadians = 0.9599;
     }
 
 

@@ -15,7 +15,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
   private final WPI_TalonFX intake = new WPI_TalonFX(IntakeConstants.kIntakePort, "CANivore");
   private double intakeSpeed = 0;
-
   public boolean stop = false;
 
   public IntakeSubsystem() {
@@ -25,8 +24,12 @@ public class IntakeSubsystem extends SubsystemBase {
   // just speed should be fine, motor voltage unecessary
 
   public void setSpeed(double speed) {
-    intake.set(speed);
     intakeSpeed = speed;
+    intake.set(intakeSpeed);
+  }
+
+  public void setVoltage(double voltage) {
+    intake.setVoltage(voltage);
   }
 
   public void moveIn() {
