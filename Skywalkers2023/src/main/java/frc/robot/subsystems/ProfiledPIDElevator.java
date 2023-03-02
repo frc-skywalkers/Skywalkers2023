@@ -22,7 +22,6 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
 
   public final WPI_TalonFX leftElevator = new WPI_TalonFX(ElevatorConstants.kLeftElevatorPort, "CANivore");
   public final WPI_TalonFX rightElevator = new WPI_TalonFX(ElevatorConstants.kRightElevatorPort, "CANivore");
-  double scaleFactor;
   LinearFilter homingMovingAvg = LinearFilter.movingAverage(8);
 
   public boolean isZeroed = false;
@@ -63,7 +62,12 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
       feedforward = setpoint.velocity * ElevatorConstants.kVDown + ElevatorConstants.kSDown;
     }
 
-    setVoltage(feedforward + output);
+    if (isZeroed) {
+      setVoltage(feedforward + output);
+    } else {
+      System.out.println("ELEVATOR NOT ZEROED!");
+    }
+    
     SmartDashboard.putNumber("Set Voltage", (feedforward + output));
   }
 
@@ -93,8 +97,8 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
 
   public void setSpeed(double speed) {
     speed = MathUtil.clamp(speed, -ElevatorConstants.kMaxElevatorSpeed, ElevatorConstants.kMaxElevatorSpeed);
-    rightElevator.set(speed * scaleFactor);
-    leftElevator.set(speed * scaleFactor);
+    rightElevator.set(speed);
+    leftElevator.set(speed);
   }
 
   public double getPosition() {

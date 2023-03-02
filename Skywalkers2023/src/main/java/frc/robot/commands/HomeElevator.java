@@ -37,7 +37,6 @@ public class HomeElevator extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     elevator.stop();
-    elevator.stop();
     elevator.resetEncoders();
     elevator.isZeroed = true;
     elevator.enableSoftLimits();

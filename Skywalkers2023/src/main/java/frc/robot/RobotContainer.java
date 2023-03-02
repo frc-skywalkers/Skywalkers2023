@@ -49,29 +49,34 @@ public class RobotContainer {
     driverJoystick.y().onTrue(Commands.runOnce(() -> swerve.reset(), swerve));
     driverJoystick.b().onTrue(Commands.runOnce(() -> swerve.toggleField(), swerve));
 
-    operatorJoystick.x().onTrue(Commands.runOnce(elevator::stop));
+    operatorJoystick.x().onTrue(
+      Commands.runOnce(() -> {
+        elevator.stop();
+        elevator.disable();
+      }, elevator));
+
     operatorJoystick.a().onTrue(new HomeElevator(elevator));
 
-    // operatorJoystick.b().onTrue(
-    //   Commands.runOnce(
-    //     () -> {
-    //       elevator.setGoal(0.3);
-    //       elevator.enable();
-    //     }, elevator)
-    // );
+    operatorJoystick.b().onTrue(
+      Commands.runOnce(
+        () -> {
+          elevator.setGoal(0.3);
+          elevator.enable();
+        }, elevator)
+    );
 
-    // operatorJoystick.y().onTrue(
-    //   Commands.runOnce(
-    //     () -> {
-    //       elevator.setGoal(1.0);
-    //       elevator.enable();
-    //     }, elevator)
-    // );
+    operatorJoystick.y().onTrue(
+      Commands.runOnce(
+        () -> {
+          elevator.setGoal(1.0);
+          elevator.enable();
+        }, elevator)
+    );
     
     
     operatorJoystick.rightBumper().onTrue(new IntakePiece(intake));
     operatorJoystick.leftBumper().onTrue(new OuttakePiece(intake));
-    operatorJoystick.b().onTrue(Commands.runOnce(() -> intake.stop(), intake));
+    // operatorJoystick.b().onTrue(Commands.runOnce(() -> intake.stop(), intake));
 
   }
 
