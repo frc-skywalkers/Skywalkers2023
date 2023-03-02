@@ -221,11 +221,36 @@ public final class Constants {
 
         public static final double kHoningSpeed = -0.1;
 
-}
+    }
 
-public static final class SensorConstants {
-    public static final int limitSwitchPort = 0;
-    public static final int beamBreakerPort = 5;
-}
+    public static final class SensorConstants {
+        public static final int limitSwitchPort = 0;
+        public static final int beamBreakerPort = 5;
+    }
+
+    public static final class LimelightConstants{
+        public static double kPx = 0.5; //meters
+        public static double kPy = 0.3; //meters
+        public static double kPr = 0.05; //degrees
+        public static double kDx = 0;
+        public static double kDy = 0;
+        public static double kDr = 0;
+        public static double kIx = 0;
+        public static double kIy = 0;
+        public static double kIr = 0;
+      
+        public static double xclamp = 0.8; //slides sideways very slowly
+        public static double yclamp = 0.4;
+        public static double rclamp = 0.2;
+      
+        //public static double tagheight = 0.49; //19.3 inches to meters
+      
+        public static double xtolerance = 0; 
+        public static double ytolerance = 0.3; 
+        public static double rtolerance = 5; //degrees
+      
+        public static double mountingangle = 0; //for adjustable camera
+        public static double cameraheight = 0.356; //14-ish inches, to meters
+    }
 
 }
