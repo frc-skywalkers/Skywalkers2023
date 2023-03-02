@@ -49,7 +49,7 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
 
     rightElevator.configForwardSoftLimitThreshold(ElevatorConstants.kTopLimit / ElevatorConstants.kPositionConversionFactor, 0);
     rightElevator.configReverseSoftLimitThreshold(ElevatorConstants.kBottomLimit / ElevatorConstants.kPositionConversionFactor, 0);
-
+    resetEncoders();
     disable();
   }
 
@@ -91,6 +91,7 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
       rightElevator.setVoltage(voltage);
       leftElevator.setVoltage(voltage);
     } else {
+      System.out.println("ELEVATOR NOT ZEROED!");
       stop();
     }
   }
