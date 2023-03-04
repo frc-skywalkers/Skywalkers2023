@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.sensors.AbsoluteSensorRange;
+import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -18,6 +20,7 @@ import frc.robot.Constants.ArmConstants;
 public class ProfiledPIDArm extends ProfiledPIDSubsystem {
 
   WPI_TalonFX armMotor = new WPI_TalonFX(ArmConstants.kArmPort, "CANivore");
+  private final CANCoder absoluteEncoder = new CANCoder(ArmConstants.kArmAbsoluteEncoderPort, "CANivore");
 
   public ProfiledPIDArm() {
     super(
@@ -33,12 +36,18 @@ public class ProfiledPIDArm extends ProfiledPIDSubsystem {
     armMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
     armMotor.setInverted(ArmConstants.kArmInverted);
     armMotor.setNeutralMode(NeutralMode.Brake);
+    absoluteEncoder.configSensorDirection(ArmConstants.kArmAbsEncoderInverted);
+    absoluteEncoder.configMagnetOffset(ArmConstants.kAbsEncoderOffset);
+    absoluteEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
 
+    armMotor.configForwardSoftLimitThreshold(1.35 / ArmConstants.kPositionConversionFactor);
+    armMotor.configForwardSoftLimitEnable(true);
+
+    resetEncoders();
     disable();
 
     SmartDashboard.putNumber("Desired Arm Position", 0);
     SmartDashboard.putNumber("Desired Arm Velocity", 0);
-    offsetEncoders();
     
   }
 
@@ -68,6 +77,7 @@ public class ProfiledPIDArm extends ProfiledPIDSubsystem {
   @Override
   public void periodic() {
     super.periodic();
+    SmartDashboard.putNumber("Absolute Arm Position", absoluteEncoder.getAbsolutePosition() * 2 * Math.PI /360.0);
     SmartDashboard.putNumber("Arm Position", getPosition());
     SmartDashboard.putNumber("Arm Velocity", getVelocity());
     SmartDashboard.putNumber("Arm Output Voltage", armMotor.getMotorOutputVoltage());
@@ -84,11 +94,11 @@ public class ProfiledPIDArm extends ProfiledPIDSubsystem {
   }
 
   public double getPosition() {
-    return armMotor.getSelectedSensorPosition() * ArmConstants.kPositionConversionFactor;
+    return absoluteEncoder.getAbsolutePosition() * Math.PI / 180.0;
   }
 
   public double getVelocity() {
-    return armMotor.getSelectedSensorVelocity() * ArmConstants.kVelocityConversionFactor * 10.000;
+    return absoluteEncoder.getVelocity() * Math.PI / 180.0;
   }
 
   public void stop() {
@@ -96,11 +106,7 @@ public class ProfiledPIDArm extends ProfiledPIDSubsystem {
   }
 
   public void resetEncoders() {
-    armMotor.setSelectedSensorPosition(0);
-  }
-
-  public void offsetEncoders() {
-    armMotor.setSelectedSensorPosition(1.335 / ArmConstants.kPositionConversionFactor);
+    armMotor.setSelectedSensorPosition(absoluteEncoder.getAbsolutePosition());
   }
 
   public boolean isZeroed() {

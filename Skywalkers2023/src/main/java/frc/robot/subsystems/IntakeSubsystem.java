@@ -37,7 +37,8 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void moveOut() {
-    setSpeed(-IntakeConstants.kMaxIntakeSpeed);
+    // setSpeed(-IntakeConstants.kMaxIntakeSpeed);
+    setSpeed(IntakeConstants.kMaxOuttakeSpeed);
     intakeSpeed = -IntakeConstants.kMaxIntakeSpeed; 
   }
 

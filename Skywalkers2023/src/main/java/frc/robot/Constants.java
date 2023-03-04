@@ -134,7 +134,7 @@ public final class Constants {
     public static final class IntakeConstants {
         public static final int kIntakePort = 22; // ??
         public static final double kMaxIntakeSpeed = 0.4; // ??
-        public static final double kMaxOuttakeSpeed = 0.4; // ??
+        public static final double kMaxOuttakeSpeed = -0.15; // ??
         public static final double kHoldSpeed = 0.05;
         public static final boolean kIntakeInverted = false; // ?
         public static final int kIntakeTicksPerRotation = 4096; // ??
@@ -191,11 +191,16 @@ public final class Constants {
 
     public static final class ArmConstants {
         public static final int kArmPort = 23; // ???
+        public static final int kArmAbsoluteEncoderPort = 16;
         public static final double kMaxArmSpeed = 0.5; // ??
         public static final boolean kArmInverted = true; // ??
+        public static final boolean kArmAbsEncoderInverted = true;
+        // public static final boolean kEncoderInverted = true;
         
         public static final int kArmTicksPerRotation = 2048; // ??
         public static final double kArmGearRatio = 180.00 * 2.0; // ???
+
+        public static final double kAbsEncoderOffset = 3.27 * 360.0 / (2.0 * Math.PI);
 
 
         public static final double kPositionConversionFactor = 2 * Math.PI / (kArmTicksPerRotation * kArmGearRatio);

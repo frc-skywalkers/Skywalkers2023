@@ -60,25 +60,15 @@ public class RobotContainer {
       Commands.runOnce(() -> {
         arm.stop();
         arm.disable();
-      }, arm));
+        elevator.stop();
+        elevator.disable();
+      }, arm, elevator));
 
-    operatorJoystick.a().onTrue(new HomeElevator(elevator));
-
-    // operatorJoystick.b().onTrue(
-    //   Commands.runOnce(
-    //     () -> {
-    //       elevator.setGoal(0.3);
-    //       elevator.enable();
-    //     }, elevator)
-    // );
-
-    // operatorJoystick.y().onTrue(
-    //   Commands.runOnce(
-    //     () -> {
-    //       elevator.setGoal(1.0);
-    //       elevator.enable();
-    //     }, elevator)
-    // );
+    operatorJoystick.a().onTrue(new HomeElevator(elevator).alongWith(
+      Commands.runOnce(() -> {
+        arm.setGoal(0.15);
+        arm.enable();
+      }, arm)));
 
     operatorJoystick.y().onTrue(
       new ExtendArmElevatorAutoTest(arm, elevator, 0.00, 1.00)
@@ -88,13 +78,11 @@ public class RobotContainer {
     operatorJoystick.b().onTrue(
       new ExtendArmElevatorAutoTest(arm, elevator, 1.33, 0)
     );
-
-    operatorJoystick.rightBumper().onTrue(Commands.runOnce(() -> arm.resetEncoders(), arm));
     
 
-    // operatorJoystick.rightBumper().onTrue(new IntakePiece(intake));
-    // operatorJoystick.leftBumper().onTrue(new OuttakePiece(intake));
-    // operatorJoystick.b().onTrue(Commands.runOnce(() -> intake.stop(), intake));
+    operatorJoystick.rightBumper().onTrue(new IntakePiece(intake));
+    operatorJoystick.leftBumper().onTrue(new OuttakePiece(intake).withTimeout(2));
+    operatorJoystick.start().onTrue(Commands.runOnce(() -> intake.stop(), intake));
 
   }
 
