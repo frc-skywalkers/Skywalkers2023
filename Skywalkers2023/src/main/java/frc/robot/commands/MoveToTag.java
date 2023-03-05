@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.MathUtil;
 import frc.robot.Constants.*;
@@ -24,6 +25,8 @@ public class MoveToTag extends CommandBase {
   SwerveSubsystem swerveSubsystem;
   Limelight camera;
 
+  boolean ydistreached;
+
   public MoveToTag(SwerveSubsystem swerveSubsystem, Limelight camera, double targetXDist, double targetYDist, double targetR) {
     this.targetXDist = targetXDist;
     this.targetYDist = targetYDist;
@@ -31,6 +34,7 @@ public class MoveToTag extends CommandBase {
 
     this.swerveSubsystem = swerveSubsystem;
     this.camera = camera;
+    addRequirements(swerveSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -40,6 +44,7 @@ public class MoveToTag extends CommandBase {
     xcontroller.setTolerance(LimelightConstants.xtolerance);
     ycontroller.setTolerance(LimelightConstants.ytolerance);
     rcontroller.setTolerance(LimelightConstants.rtolerance);
+    ydistreached = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -52,31 +57,40 @@ public class MoveToTag extends CommandBase {
     double xspeed = -1 * MathUtil.clamp((xcontroller.calculate(currentXDist, targetXDist)), -LimelightConstants.xclamp, LimelightConstants.xclamp);
     double yspeed = -1 * MathUtil.clamp((ycontroller.calculate(currentYDist, targetYDist)), -LimelightConstants.yclamp, LimelightConstants.yclamp);
     double rspeed = -0.5 * MathUtil.clamp((rcontroller.calculate(currentR, targetR)), -LimelightConstants.rclamp, LimelightConstants.rclamp);
+    
+    SmartDashboard.putNumber("rspeed", rspeed);
+    SmartDashboard.putNumber("xspeed", xspeed);
+    SmartDashboard.putNumber("yspeed", yspeed);
+
+    SmartDashboard.putBoolean("ydistreached", ydistreached);
 
     swerveSubsystem.drive(xspeed, yspeed, rspeed); //Have to recheck for swerve subsystem
 
     //stopping individually since command only ends with all 3
     if (xcontroller.atSetpoint()){
+      ydistreached = true;
       xspeed = 0;
     }
     if (ycontroller.atSetpoint()){
       yspeed = 0;
     }
-    if (ycontroller.atSetpoint()){
+    if (rcontroller.atSetpoint()){
       rspeed = 0;
     }
 
     //stopping abrupt movement at end
-    if (xspeed < 0.02){
+    if (Math.abs(xspeed) < 0.02){
       xspeed = 0;
     }
-    if (yspeed < 0.02){
+    if (Math.abs(yspeed) < 0.02){
       yspeed = 0;
     }
-    if (rspeed < 0.02){
+    if (Math.abs(rspeed) < 0.02){
       rspeed = 0;
     }
 
+    //+y = right
+    //+x = forward
   }
 
   // Called once the command ends or is interrupted.

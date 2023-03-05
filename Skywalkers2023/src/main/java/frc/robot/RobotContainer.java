@@ -16,10 +16,12 @@ import frc.robot.commands.HomeElevator;
 import frc.robot.commands.IntakePiece;
 import frc.robot.commands.OuttakePiece;
 import frc.robot.commands.SwerveJoystick;
+import frc.robot.commands.MoveToTag;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ProfiledPIDArm;
 import frc.robot.subsystems.ProfiledPIDElevator;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.Limelight;
 
 public class RobotContainer {
 
@@ -27,6 +29,7 @@ public class RobotContainer {
   private final ProfiledPIDElevator elevator = new ProfiledPIDElevator();
   private final ProfiledPIDArm arm = new ProfiledPIDArm();
   private final IntakeSubsystem intake = new IntakeSubsystem();
+  private final Limelight limelight = new Limelight();
 
   private final CommandXboxController driverJoystick = new CommandXboxController(OIConstants.kDriverControllerPort);
   private final CommandXboxController operatorJoystick = new CommandXboxController(OIConstants.kDriverControllerPort2);
@@ -55,6 +58,8 @@ public class RobotContainer {
 
     driverJoystick.y().onTrue(Commands.runOnce(() -> swerve.reset(), swerve));
     driverJoystick.b().onTrue(Commands.runOnce(() -> swerve.toggleField(), swerve));
+    driverJoystick.x().onTrue(new MoveToTag(swerve, limelight, 1, 0, 0));
+
 
     operatorJoystick.x().onTrue(
       Commands.runOnce(() -> {
