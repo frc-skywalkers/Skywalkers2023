@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.DriveConstants;
@@ -45,6 +46,8 @@ public class SwerveJoystick extends CommandBase {
     ySpeed = yLimiter.calculate(ySpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
     
     swerveSubsystem.drive(xSpeed, ySpeed, turningSpeed);
+
+    SmartDashboard.putNumber("Joystick Turning Speed", turningSpeed);
   }
 
   @Override

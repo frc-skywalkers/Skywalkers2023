@@ -11,11 +11,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.DriveForwardDistance;
 import frc.robot.commands.ExtendArmElevatorAutoTest;
 import frc.robot.commands.HomeElevator;
 import frc.robot.commands.IntakePiece;
 import frc.robot.commands.OuttakePiece;
 import frc.robot.commands.SwerveJoystick;
+import frc.robot.commands.TurnAngle;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ProfiledPIDArm;
 import frc.robot.subsystems.ProfiledPIDElevator;
@@ -55,7 +57,7 @@ public class RobotContainer {
 
     driverJoystick.y().onTrue(Commands.runOnce(() -> swerve.reset(), swerve));
     driverJoystick.b().onTrue(Commands.runOnce(() -> swerve.toggleField(), swerve));
-
+    driverJoystick.a().onTrue(Commands.runOnce(() -> swerve.drive(1.000, 0.000, 0.000), swerve));
     operatorJoystick.x().onTrue(
       Commands.runOnce(() -> {
         arm.stop();
@@ -87,6 +89,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return Commands.none();
+    return new TurnAngle(swerve, 180);
   }
 }
