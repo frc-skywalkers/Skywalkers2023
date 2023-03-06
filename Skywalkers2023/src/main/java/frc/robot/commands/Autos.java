@@ -10,11 +10,34 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ProfiledPIDArm;
+import frc.robot.subsystems.ProfiledPIDElevator;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public final class Autos {
+
+  // WORK IN PROGRESS
+  public static CommandBase chargingStation(SwerveSubsystem swerve, ProfiledPIDArm arm, ProfiledPIDElevator elevator) {
+    return Commands.sequence(
+      new ExtendArmElevatorAutoTest(arm, elevator, -0.3, 0.15),
+      new DriveForwardDistance(swerve, 0.5).alongWith(arm.goToPosition(1.33))
+    );
+    
+  }
+
+  public static CommandBase oneCubeAuto(ProfiledPIDArm arm, ProfiledPIDElevator elevator, IntakeSubsystem intake) {
+    return Commands.sequence(
+      new HomeElevator(elevator).alongWith(arm.goToPosition(1.33)),
+      new ExtendArmElevatorAutoTest(arm, elevator, 0, 1.26),
+      new WaitUntilCommand(() -> arm.atGoal() && elevator.atGoal()),
+      new OuttakePiece(intake),
+      new ExtendArmElevatorAutoTest(arm, elevator, 1.33, 0)
+    );
+  }
 
   public static CommandBase followTrajectory(SwerveSubsystem swerve, Trajectory trajectory) {
 

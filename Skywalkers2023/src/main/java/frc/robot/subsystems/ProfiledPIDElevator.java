@@ -15,6 +15,8 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc.robot.Constants.ElevatorConstants;
 
@@ -33,6 +35,8 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
             0,
             0,
             new TrapezoidProfile.Constraints(ElevatorConstants.kMaxVel, ElevatorConstants.kMaxAcc)));
+
+    this.getController().setTolerance(0.02);
             
     leftElevator.configFactoryDefault();
     rightElevator.configFactoryDefault();
@@ -76,6 +80,13 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
     return getPosition();
   }
 
+  public CommandBase goToPosition(double position) {
+    return Commands.runOnce(() -> {
+      this.setGoal(position);
+      this.enable();
+    }, this);
+  }
+
   @Override
   public void periodic() {
     super.periodic();
@@ -83,6 +94,7 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
     SmartDashboard.putNumber("Elevator Position", getPosition());
     SmartDashboard.putNumber("Elevator Velocity", getVelocity());
     SmartDashboard.putNumber("Elevator Voltage", leftElevator.getMotorOutputVoltage());
+    SmartDashboard.putBoolean("Elevator Goal Reached", this.getController().atGoal());
   }
 
   public void setVoltage(double voltage) {
@@ -132,6 +144,11 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
     leftElevator.configForwardSoftLimitEnable(true, 0);
     rightElevator.configReverseSoftLimitEnable(true, 0);
     System.out.println("Enabled");
+  }
+
+  public boolean atGoal() {
+    SmartDashboard.putBoolean("Elevator Goal Reached", this.getController().atGoal());
+    return this.getController().atGoal();
   }
 
 }

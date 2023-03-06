@@ -90,6 +90,10 @@ public class SwerveSubsystem extends SubsystemBase {
     return -ret;
   }
 
+  public double getRoll() {
+    return imu.getRoll();
+  }
+
   public Rotation2d getRotation2d() {
     return Rotation2d.fromDegrees(getHeading());
   }
@@ -116,6 +120,7 @@ public class SwerveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Robot Y Location", Units.metersToInches(getPose().getTranslation().getY()));
     SmartDashboard.putNumber("Robot Heading", getHeading());
     SmartDashboard.putBoolean("field Oriented", fieldOriented);
+    SmartDashboard.putNumber("Pitch", getRoll());
 
   }
 

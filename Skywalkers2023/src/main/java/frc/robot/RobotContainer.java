@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.Autos;
+import frc.robot.commands.Balance;
 import frc.robot.commands.DriveForwardDistance;
 import frc.robot.commands.ExtendArmElevatorAutoTest;
 import frc.robot.commands.HomeElevator;
@@ -28,8 +30,8 @@ import frc.robot.subsystems.Limelight;
 public class RobotContainer {
 
   private final SwerveSubsystem swerve = new SwerveSubsystem();
-  private final ProfiledPIDElevator elevator = new ProfiledPIDElevator();
-  private final ProfiledPIDArm arm = new ProfiledPIDArm();
+  public final ProfiledPIDElevator elevator = new ProfiledPIDElevator();
+  public final ProfiledPIDArm arm = new ProfiledPIDArm();
   private final IntakeSubsystem intake = new IntakeSubsystem();
   private final Limelight limelight = new Limelight();
 
@@ -60,10 +62,13 @@ public class RobotContainer {
 
     driverJoystick.y().onTrue(Commands.runOnce(() -> swerve.reset(), swerve));
     driverJoystick.b().onTrue(Commands.runOnce(() -> swerve.toggleField(), swerve));
-    driverJoystick.x().onTrue(new MoveToTag(swerve, limelight, 1, 0, 0));
+    // driverJoystick.x().onTrue(new MoveToTag(swerve, limelight, 1, 0, 0));
 
+    driverJoystick.a().onTrue(new Balance(swerve));
+    driverJoystick.rightBumper().onTrue(Commands.runOnce(swerve::stopModules, swerve));
 
-    operatorJoystick.x().onTrue(
+    // Right Trigger --> manual override
+    operatorJoystick.rightTrigger().onTrue(
       Commands.runOnce(() -> {
         arm.stop();
         arm.disable();
@@ -71,29 +76,58 @@ public class RobotContainer {
         elevator.disable();
       }, arm, elevator));
 
-    operatorJoystick.a().onTrue(new HomeElevator(elevator).alongWith(
-      Commands.runOnce(() -> {
-        arm.setGoal(0.15);
-        arm.enable();
-      }, arm)));
-
-    operatorJoystick.y().onTrue(
-      new ExtendArmElevatorAutoTest(arm, elevator, 0.00, 1.00)
-    );
+    // Start --> Home
+    operatorJoystick.start().onTrue(new HomeElevator(elevator).alongWith(
+      arm.goToPosition(1.33)));
 
     
-    operatorJoystick.b().onTrue(
+    // POV Left --> First Stage / Ground intake height
+    operatorJoystick.povLeft().onTrue(
+      new ExtendArmElevatorAutoTest(arm, elevator, -0.19, 0.10)
+    );
+
+    // POV Down --> Stowe
+    operatorJoystick.povDown().onTrue(
       new ExtendArmElevatorAutoTest(arm, elevator, 1.33, 0)
     );
-    
 
+    // POV Up --> Substration intake height
+    operatorJoystick.povUp().onTrue(
+      new ExtendArmElevatorAutoTest(arm, elevator, 0, 1.13)
+    );
+
+    // X --> Cone 2nd Stage
+    operatorJoystick.x().onTrue(
+      new ExtendArmElevatorAutoTest(arm, elevator, 0.8, 0.72)
+    );
+
+    // Y --> Cone 3rd Stage
+    operatorJoystick.y().onTrue(
+      new ExtendArmElevatorAutoTest(arm, elevator, 0.47, 1.38)
+    );
+
+    // A --> Cube 2nd Stage
+    operatorJoystick.a().onTrue(
+      new ExtendArmElevatorAutoTest(arm, elevator, 0, 0.85)
+    );
+
+    // B --> Cube 3rd Stage
+    operatorJoystick.b().onTrue(
+      new ExtendArmElevatorAutoTest(arm, elevator, 0, 1.26)
+    );
+    
+    // Right Bumper --> Intake 
     operatorJoystick.rightBumper().onTrue(new IntakePiece(intake));
+
+    // Left Bumper --> Outtake
     operatorJoystick.leftBumper().onTrue(new OuttakePiece(intake).withTimeout(2));
-    operatorJoystick.start().onTrue(Commands.runOnce(() -> intake.stop(), intake));
+
+    // Back --> Manual Intake Stop
+    operatorJoystick.back().onTrue(Commands.runOnce(() -> intake.stop(), intake));
 
   }
 
   public Command getAutonomousCommand() {
-    return new TurnAngle(swerve, 180);
+    return Autos.oneCubeAuto(arm, elevator, intake);
   }
 }

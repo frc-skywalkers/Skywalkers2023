@@ -14,6 +14,8 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc.robot.Constants.ArmConstants;
 
@@ -31,6 +33,8 @@ public class ProfiledPIDArm extends ProfiledPIDSubsystem {
             ArmConstants.kDArm,
 
             new TrapezoidProfile.Constraints(0.75, 1.00)));
+
+    this.getController().setTolerance(0.03);
 
     armMotor.configFactoryDefault();
     armMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
@@ -81,6 +85,14 @@ public class ProfiledPIDArm extends ProfiledPIDSubsystem {
     SmartDashboard.putNumber("Arm Position", getPosition());
     SmartDashboard.putNumber("Arm Velocity", getVelocity());
     SmartDashboard.putNumber("Arm Output Voltage", armMotor.getMotorOutputVoltage());
+    SmartDashboard.putBoolean("Arm Goal Reached", this.getController().atGoal());
+  }
+
+  public CommandBase goToPosition(double position) {
+    return Commands.runOnce(() -> {
+      this.setGoal(position);
+      this.enable();
+    }, this);
   }
 
   public void setVoltage(double voltage) {
@@ -111,5 +123,10 @@ public class ProfiledPIDArm extends ProfiledPIDSubsystem {
 
   public boolean isZeroed() {
     return armMotor.getSupplyCurrent() > ArmConstants.kCurrentThreshold;
+  }
+
+  public boolean atGoal() {
+    SmartDashboard.putBoolean("Arm Goal Reached", this.getController().atGoal());
+    return this.getController().atGoal();
   }
 }
