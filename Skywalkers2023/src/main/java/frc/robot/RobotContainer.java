@@ -11,7 +11,6 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.DashbaordConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.Dashboard.Arm;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Balance;
 import frc.robot.commands.DriveForwardDistance;
@@ -27,6 +26,7 @@ import frc.robot.subsystems.ProfiledPIDArm;
 import frc.robot.subsystems.ProfiledPIDElevator;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.Limelight;
+import frc.robot.Dashboard;
 
 public class RobotContainer {
 

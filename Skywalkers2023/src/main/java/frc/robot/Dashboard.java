@@ -1,7 +1,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.DashbaordConstants;
 
 public final class Dashboard {
     public static final class Swerve {
