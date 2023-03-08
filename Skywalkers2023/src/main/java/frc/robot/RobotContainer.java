@@ -31,7 +31,6 @@ import frc.robot.autos.AutoRoutines;
 import frc.robot.autos.DoublePieceAutoFactory;
 import frc.robot.autos.DriveForwardDistance;
 import frc.robot.commands.AlignCone;
-import frc.robot.Dashboard.Arm;
 import frc.robot.commands.Balance;
 import frc.robot.commands.Macros;
 import frc.robot.commands.MoveToTag;
@@ -41,6 +40,7 @@ import frc.robot.subsystems.ProfiledPIDArm;
 import frc.robot.subsystems.ProfiledPIDElevator;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.Limelight;
+import frc.robot.Dashboard;
 
 public class RobotContainer {
 
