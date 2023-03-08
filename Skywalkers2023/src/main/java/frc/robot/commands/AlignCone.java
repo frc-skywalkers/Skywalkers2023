@@ -7,9 +7,9 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.MathUtil;
+import frc.robot.Dashboard;
 import frc.robot.Constants.*;
 import frc.robot.subsystems.*;
 
@@ -114,18 +114,18 @@ public class AlignCone extends CommandBase {
  
     //may have to add min speed
     
-    SmartDashboard.putNumber("rspeed", rspeed);
-    SmartDashboard.putNumber("currentxdist", currentXdistance);
-    SmartDashboard.putNumber("currentydist", currentYdistance);
+    Dashboard.Tele.Debugging.putNumber("rspeed", rspeed);
+    Dashboard.Tele.Debugging.putNumber("currentxdist", currentXdistance);
+    Dashboard.Tele.Debugging.putNumber("currentydist", currentYdistance);
 
-    SmartDashboard.putNumber("xspeed", xspeed);
-    SmartDashboard.putNumber("yspeed", yspeed);
+    Dashboard.Tele.Debugging.putNumber("xspeed", xspeed);
+    Dashboard.Tele.Debugging.putNumber("yspeed", yspeed);
 
-    //SmartDashboard.putNumber("xerror", targetXAngle-currentXAngle);
-    //SmartDashboard.putNumber("yerror", targetYAngle-currentYAngle);
+    //Dashboard.Tele.Debugging.putNumber("xerror", targetXAngle-currentXAngle);
+    //Dashboard.Tele.Debugging.putNumber("yerror", targetYAngle-currentYAngle);
     
-    SmartDashboard.putNumber("xdistance", currentXdistance);
-    SmartDashboard.putNumber("ydistance", currentYdistance);
+    Dashboard.Tele.Debugging.putNumber("xdistance", currentXdistance);
+    Dashboard.Tele.Debugging.putNumber("ydistance", currentYdistance);
 
 
     atSetpoint = (xcontroller.atSetpoint() && ycontroller.atSetpoint() && rcontroller.atSetpoint());

@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.DashbaordConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.LimelightConstants;
 import frc.robot.Constants.OIConstants;
@@ -30,6 +31,7 @@ import frc.robot.autos.AutoRoutines;
 import frc.robot.autos.DoublePieceAutoFactory;
 import frc.robot.autos.DriveForwardDistance;
 import frc.robot.commands.AlignCone;
+import frc.robot.Dashboard.Arm;
 import frc.robot.commands.Balance;
 import frc.robot.commands.Macros;
 import frc.robot.commands.MoveToTag;
@@ -57,7 +59,7 @@ public class RobotContainer {
   SendableChooser<Command> m_Chooser = new SendableChooser<>();
 
   public RobotContainer() {
-
+    startDashboard();
 
     swerve.setDefaultCommand(new SwerveJoystick(swerve, driverJoystick));
 
@@ -88,6 +90,23 @@ public class RobotContainer {
     SmartDashboard.putData(m_Chooser);
 
     configureButtonBindings();
+  }
+
+  private void startDashboard() {
+    Dashboard.Swerve.Debugging.set(DashbaordConstants.SwerveDebugging);
+    Dashboard.Swerve.Driver.set(DashbaordConstants.SwerveDriver);
+    Dashboard.Elevator.Debugging.set(DashbaordConstants.ElevatorDebugging);
+    Dashboard.Elevator.Driver.set(DashbaordConstants.ElevatorDriver);
+    Dashboard.Intake.Debugging.set(DashbaordConstants.IntakeDebugging);
+    Dashboard.Intake.Driver.set(DashbaordConstants.IntakeDriver);
+    Dashboard.Auto.Debugging.set(DashbaordConstants.AutoDebugging);
+    Dashboard.Auto.Driver.set(DashbaordConstants.AutoDriver);
+    Dashboard.Tele.Debugging.set(DashbaordConstants.TeleDebugging);
+    Dashboard.Tele.Driver.set(DashbaordConstants.TeleDriver);
+    Dashboard.Limelight.Driver.set(DashbaordConstants.LimelightDebugging);
+    Dashboard.Limelight.Driver.set(DashbaordConstants.LimelightDriver);
+    Dashboard.Arm.Driver.set(DashbaordConstants.ArmDebugging);
+    Dashboard.Arm.Driver.set(DashbaordConstants.ArmDriver);
   }
 
 

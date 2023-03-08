@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
@@ -295,6 +296,23 @@ public final class Constants {
         public static double targetXMeters = 0.92;
         public static double targetYMeters = 0;
         public static double targetRDeg = 0;
+    }
+
+    public static final class DashbaordConstants {
+        public static boolean SwerveDebugging = true;
+        public static boolean SwerveDriver = true;
+        public static boolean ArmDebugging = true;
+        public static boolean ArmDriver = true;
+        public static boolean ElevatorDebugging = true;
+        public static boolean ElevatorDriver = true;
+        public static boolean IntakeDebugging = true;
+        public static boolean IntakeDriver = true;
+        public static boolean AutoDebugging = true;
+        public static boolean AutoDriver = true;
+        public static boolean TeleDebugging = true;
+        public static boolean TeleDriver = true;
+        public static boolean LimelightDebugging = true;
+        public static boolean LimelightDriver = true;
     }
 
 }

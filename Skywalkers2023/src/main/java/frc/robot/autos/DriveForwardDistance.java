@@ -4,7 +4,7 @@
 
 package frc.robot.autos;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Dashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -19,9 +19,9 @@ public class DriveForwardDistance extends CommandBase {
     this.distance = distance;
     start = swerve.getPose().getX();
     addRequirements(swerve);
-    SmartDashboard.putNumber("Start X", start);
-    SmartDashboard.putNumber("Current X", swerve.getPose().getX());
-    SmartDashboard.putNumber("Distance Travelled", swerve.getPose().getX() - start);
+    Dashboard.Auto.Debugging.putNumber("Start X", start);
+    Dashboard.Auto.Debugging.putNumber("Current X", swerve.getPose().getX());
+    Dashboard.Auto.Debugging.putNumber("Distance Travelled", swerve.getPose().getX() - start);
     
 
     // Use addRequirements() here to declare subsystem dependencies.
@@ -36,9 +36,9 @@ public class DriveForwardDistance extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("Start X", start);
-    SmartDashboard.putNumber("Current X", swerve.getPose().getX());
-    SmartDashboard.putNumber("Distance Travelled", swerve.getPose().getX() - start);
+    Dashboard.Auto.Debugging.putNumber("Start X", start);
+    Dashboard.Auto.Debugging.putNumber("Current X", swerve.getPose().getX());
+    Dashboard.Auto.Debugging.putNumber("Distance Travelled", swerve.getPose().getX() - start);
     swerve.drive(1, 0, 0);
   }
 

@@ -17,8 +17,8 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Dashboard;
 import frc.robot.Constants.LimelightConstants;
 
 
@@ -167,17 +167,17 @@ public class Limelight extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("RTTX", getRTTX());
-    SmartDashboard.putNumber("RTTY", getRTTY());
-    SmartDashboard.putNumber("RTTA", getRTTA());
-    SmartDashboard.putNumber("TAGID", getId());
+    Dashboard.Limelight.Debugging.putNumber("RTTX", getRTTX());
+    Dashboard.Limelight.Debugging.putNumber("RTTY", getRTTY());
+    Dashboard.Limelight.Debugging.putNumber("RTTA", getRTTA());
+    Dashboard.Limelight.Debugging.putNumber("TAGID", getId());
 
     
     double currentXdistance = (LimelightConstants.RTheight - LimelightConstants.cameraheight)/Math.tan(getRTTY()*Math.PI/180); //radians
     double currentYdistance = Math.tan(getRTTX()*Math.PI/180) * currentXdistance; //+
 
-    SmartDashboard.putNumber("xdist", currentXdistance);
-    SmartDashboard.putNumber("ydist", currentYdistance);
+    Dashboard.Limelight.Debugging.putNumber("xdist", currentXdistance);
+    Dashboard.Limelight.Debugging.putNumber("ydist", currentYdistance);
     
   }
 }
