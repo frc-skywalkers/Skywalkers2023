@@ -4,8 +4,8 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Dashboard;
 import frc.robot.subsystems.SwerveSubsystem;
 
 
@@ -32,7 +32,7 @@ public class TurnAngle extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("Angle Turned", swerve.getHeading() - start);
+    Dashboard.Swerve.Debugging.putNumber("Angle Turned", swerve.getHeading() - start);
     swerve.drive(0, 0, 1.1);
   }
 

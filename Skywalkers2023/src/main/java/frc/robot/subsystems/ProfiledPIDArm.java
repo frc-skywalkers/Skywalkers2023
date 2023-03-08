@@ -13,10 +13,10 @@ import com.ctre.phoenix.sensors.CANCoder;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
+import frc.robot.Dashboard;
 import frc.robot.Constants.ArmConstants;
 
 public class ProfiledPIDArm extends ProfiledPIDSubsystem {
@@ -50,8 +50,8 @@ public class ProfiledPIDArm extends ProfiledPIDSubsystem {
     resetEncoders();
     disable();
 
-    SmartDashboard.putNumber("Desired Arm Position", 0);
-    SmartDashboard.putNumber("Desired Arm Velocity", 0);
+    Dashboard.Arm.Debugging.putNumber("Desired Arm Position", 0);
+    Dashboard.Arm.Debugging.putNumber("Desired Arm Velocity", 0);
     
   }
 
@@ -68,9 +68,9 @@ public class ProfiledPIDArm extends ProfiledPIDSubsystem {
     }
 
     setVoltage(feedforward + output);
-    SmartDashboard.putNumber("Set Arm Voltage", feedforward + output);
-    SmartDashboard.putNumber("Desired Arm Position", setpoint.position);
-    SmartDashboard.putNumber("Desired Arm Velocity", setpoint.velocity);
+    Dashboard.Arm.Debugging.putNumber("Set Arm Voltage", feedforward + output);
+    Dashboard.Arm.Debugging.putNumber("Desired Arm Position", setpoint.position);
+    Dashboard.Arm.Debugging.putNumber("Desired Arm Velocity", setpoint.velocity);
   }
 
   @Override
@@ -81,11 +81,11 @@ public class ProfiledPIDArm extends ProfiledPIDSubsystem {
   @Override
   public void periodic() {
     super.periodic();
-    SmartDashboard.putNumber("Absolute Arm Position", absoluteEncoder.getAbsolutePosition() * 2 * Math.PI /360.0);
-    SmartDashboard.putNumber("Arm Position", getPosition());
-    SmartDashboard.putNumber("Arm Velocity", getVelocity());
-    SmartDashboard.putNumber("Arm Output Voltage", armMotor.getMotorOutputVoltage());
-    SmartDashboard.putBoolean("Arm Goal Reached", this.getController().atGoal());
+    Dashboard.Arm.Debugging.putNumber("Absolute Arm Position", absoluteEncoder.getAbsolutePosition() * 2 * Math.PI /360.0);
+    Dashboard.Arm.Debugging.putNumber("Arm Position", getPosition());
+    Dashboard.Arm.Debugging.putNumber("Arm Velocity", getVelocity());
+    Dashboard.Arm.Debugging.putNumber("Arm Output Voltage", armMotor.getMotorOutputVoltage());
+    Dashboard.Arm.Driver.putBoolean("Arm Goal Reached", this.getController().atGoal());
   }
 
   public CommandBase goToPosition(double position) {
@@ -126,7 +126,7 @@ public class ProfiledPIDArm extends ProfiledPIDSubsystem {
   }
 
   public boolean atGoal() {
-    SmartDashboard.putBoolean("Arm Goal Reached", this.getController().atGoal());
+    Dashboard.Arm.Driver.putBoolean("Arm Goal Reached", this.getController().atGoal());
     return this.getController().atGoal();
   }
 }

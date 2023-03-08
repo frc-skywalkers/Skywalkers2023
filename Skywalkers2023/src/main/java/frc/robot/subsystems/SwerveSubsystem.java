@@ -14,8 +14,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Dashboard;
 import frc.robot.Constants.DriveConstants;
 
 public class SwerveSubsystem extends SubsystemBase {
@@ -114,13 +114,14 @@ public class SwerveSubsystem extends SubsystemBase {
 
     odometer.update(getRotation2d(), getModulePositions());
 
-    SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
+    Dashboard.Swerve.Driver.putString("Robot Location", getPose().getTranslation().toString());
 
-    SmartDashboard.putNumber("Robot X Location", Units.metersToInches(getPose().getTranslation().getX()));
-    SmartDashboard.putNumber("Robot Y Location", Units.metersToInches(getPose().getTranslation().getY()));
-    SmartDashboard.putNumber("Robot Heading", getHeading());
-    SmartDashboard.putBoolean("field Oriented", fieldOriented);
-    SmartDashboard.putNumber("Pitch", getRoll());
+    Dashboard.Swerve.Debugging.putNumber("Robot X Location", Units.metersToInches(getPose().getTranslation().getX()));
+    Dashboard.Swerve.Debugging.putNumber("Robot Y Location", Units.metersToInches(getPose().getTranslation().getY()));
+    Dashboard.Swerve.Debugging.putNumber("Robot Heading", getHeading());
+    Dashboard.Swerve.Debugging.putNumber("Robot Heading", getHeading());
+    Dashboard.Swerve.Driver.putBoolean("Field Oriented", fieldOriented);
+    Dashboard.Swerve.Debugging.putNumber("Pitch", getRoll());
 
   }
 

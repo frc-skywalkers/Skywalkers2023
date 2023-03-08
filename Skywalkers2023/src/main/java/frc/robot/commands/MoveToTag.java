@@ -5,9 +5,9 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.MathUtil;
+import frc.robot.Dashboard;
 import frc.robot.Constants.*;
 import frc.robot.subsystems.*;
 
@@ -58,11 +58,11 @@ public class MoveToTag extends CommandBase {
     double yspeed = -1 * MathUtil.clamp((ycontroller.calculate(currentYDist, targetYDist)), -LimelightConstants.yclamp, LimelightConstants.yclamp);
     double rspeed = -0.5 * MathUtil.clamp((rcontroller.calculate(currentR, targetR)), -LimelightConstants.rclamp, LimelightConstants.rclamp);
     
-    SmartDashboard.putNumber("rspeed", rspeed);
-    SmartDashboard.putNumber("xspeed", xspeed);
-    SmartDashboard.putNumber("yspeed", yspeed);
+    Dashboard.Limelight.Debugging.putNumber("rspeed", rspeed);
+    Dashboard.Limelight.Debugging.putNumber("xspeed", xspeed);
+    Dashboard.Limelight.Debugging.putNumber("yspeed", yspeed);
 
-    SmartDashboard.putBoolean("ydistreached", ydistreached);
+    Dashboard.Limelight.Debugging.putBoolean("ydistreached", ydistreached);
 
     swerveSubsystem.drive(xspeed, yspeed, rspeed); //Have to recheck for swerve subsystem
 

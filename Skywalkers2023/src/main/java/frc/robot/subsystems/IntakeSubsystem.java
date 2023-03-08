@@ -6,8 +6,8 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Dashboard;
 import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
@@ -74,10 +74,10 @@ public class IntakeSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    /*SmartDashboard.putNumber("Velocity", getActualVelocity());
-    SmartDashboard.putNumber("Speed", intakeSpeed);
-    SmartDashboard.putBoolean("Object Held", objectHeld());
-    SmartDashboard.putNumber("Current", intake.getStatorCurrent());
-    System.out.println("Current: " + intake.getStatorCurrent());*/
+    Dashboard.Intake.Debugging.putNumber("Velocity", getActualVelocity());
+    Dashboard.Intake.Debugging.putNumber("Speed", intakeSpeed);
+    Dashboard.Intake.Debugging.putBoolean("Object Held", objectHeld());
+    Dashboard.Intake.Debugging.putNumber("Current", intake.getStatorCurrent());
+    System.out.println("Current: " + intake.getStatorCurrent());
   }
 }
