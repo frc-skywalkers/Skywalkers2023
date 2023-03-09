@@ -54,7 +54,7 @@ public class MoveToTag extends CommandBase {
     double currentYDist = camera.getTX();
     double currentR = camera.getRY();
 
-    double xspeed = -1 * MathUtil.clamp((xcontroller.calculate(currentXDist, targetXDist)), -LimelightConstants.xclamp, LimelightConstants.xclamp);
+    double xspeed = -1 * MathUtil.clamp((xcontroller.calculate(currentXDist, targetXDist-LimelightConstants.limelightOffsetCenter)), -LimelightConstants.xclamp, LimelightConstants.xclamp);
     double yspeed = -1 * MathUtil.clamp((ycontroller.calculate(currentYDist, targetYDist)), -LimelightConstants.yclamp, LimelightConstants.yclamp);
     double rspeed = -0.5 * MathUtil.clamp((rcontroller.calculate(currentR, targetR)), -LimelightConstants.rclamp, LimelightConstants.rclamp);
     

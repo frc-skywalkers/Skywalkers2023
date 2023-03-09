@@ -263,7 +263,8 @@ public final class Constants {
         public static double rtolerance = 5; //degrees
       
         public static double mountingangle = 0; //for adjustable camera
-        public static double cameraheight = Units.inchesToMeters(14); //14-ish inches, to meters
+        public static double limelightheight = Units.inchesToMeters(14); //14-ish inches, to meters
+        public static double limelightOffsetCenter = Units.inchesToMeters(20);
     }
 
 }
