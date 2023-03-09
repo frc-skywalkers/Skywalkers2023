@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -80,7 +81,7 @@ public class SwerveModule extends SubsystemBase {
     turningPidController.enableContinuousInput(-Math.PI, Math.PI);
     // drivingPidController = new PIDController(ModuleConstants.kPDriving, ModuleConstants.kIDriving, ModuleConstants.kDDriving);
     // drivingPidController.enableContinuousInput(-0.8, 0.8);
-    turningPidController.setTolerance(0.04);
+    turningPidController.setTolerance(0.03);
 
     resetEncoders();
   }
@@ -138,8 +139,11 @@ public class SwerveModule extends SubsystemBase {
     }
     state = SwerveModuleState.optimize(state, getState().angle);
     driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond); // goofy ahh way could do pid here as well but idk lmfao
-    // driveMotor.set(drivingPidController.calculate(getDriveVelocity(), state.speedMetersPerSecond));
-    turningMotor.set(turningPidController.calculate(getTurningPosition(), state.angle.getRadians()));
+    // double sgn = Math.abs(state.speedMetersPerSecond) / state.speedMetersPerSecond;
+    // driveMotor.setVoltage(5.0 * sgn);
+    double turnSpeed = turningPidController.calculate(getTurningPosition(), state.angle.getRadians());
+    turnSpeed = MathUtil.clamp(turnSpeed, -0.4, 0.4);
+    turningMotor.set(turnSpeed);
     // SmartDashboard.putNumber(motorId + " goal Angle", state.angle.getRadians());
     // SmartDashboard.putNumber(motorId + " actual Angle", getTurningPosition());
     double dif = state.angle.getRadians() - getTurningPosition();
@@ -161,6 +165,6 @@ public class SwerveModule extends SubsystemBase {
     // SmartDashboard.putNumber(motorId + " drive Position", getDrivePosition());
     SmartDashboard.putNumber(motorId + " turning Position", getTurningPosition());
     SmartDashboard.putNumber(motorId + " absolute Position", getAbsoluteEncoderRad());
-    // SmartDashboard.putNumber(motorId + " drive Speed", getDriveVelocity());
+    SmartDashboard.putNumber(motorId + " drive Speed", getDriveVelocity());
   }
 }
