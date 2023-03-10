@@ -7,12 +7,18 @@ package frc.robot;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
@@ -42,8 +48,8 @@ public class RobotContainer {
   private final CommandXboxController driverJoystick = new CommandXboxController(OIConstants.kDriverControllerPort);
   private final CommandXboxController operatorJoystick = new CommandXboxController(OIConstants.kDriverControllerPort2);
 
-
   public RobotContainer() {
+
 
     swerve.setDefaultCommand(new SwerveJoystick(swerve, driverJoystick));
 
@@ -134,28 +140,31 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return Autos.oneCubeAuto(arm, elevator, intake);
-    // PathPlannerTrajectory examplePath = PathPlanner.loadPath("Simple Path", new PathConstraints(4, 3));
-    // boolean isFirstPath = true;
-    // return new SequentialCommandGroup(
-    //     new InstantCommand(() -> {
-    //       // Reset odometry for the first path you run during auto
-    //       if(isFirstPath){
-    //           this.resetOdometry(traj.getInitialHolonomicPose());
-    //       }
-    //     }),
-    //     new PPSwerveControllerCommand(
-    //         traj, 
-    //         this::getPose, // Pose supplier
-    //         this.kinematics, // SwerveDriveKinematics
-    //         new PIDController(0, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-    //         new PIDController(0, 0, 0), // Y controller (usually the same values as X controller)
-    //         new PIDController(0, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-    //         this::setModuleStates, // Module states consumer
-    //         true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
-    //         this // Requires this drive subsystem
-    //     )
-    // );
+    // return Autos.oneCubeAuto(arm, elevator, intake);
+    PathPlannerTrajectory traj = PathPlanner.loadPath("New Path", new PathConstraints(4, 3));
+    boolean isFirstPath = true;
 
+    // PPSwerveControllerCommand autoDrive = baseSwerveCommand(traj);
+
+    return new SequentialCommandGroup(
+      new InstantCommand(() -> {
+        // Reset odometry for the first path you run during auto
+        if(isFirstPath){
+            swerve.resetOdometry(traj.getInitialHolonomicPose());
+        }
+      }),
+      new PPSwerveControllerCommand(
+          traj, 
+          swerve::getPose, // Pose supplier
+          DriveConstants.kDriveKinematics, // SwerveDriveKinematics
+          new PIDController(1, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+          new PIDController(1, 0, 0), // Y controller (usually the same values as X controller)
+          new PIDController(0.5, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+          swerve::setModuleStates, // Module states consumer
+          true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+          swerve // Requires this drive subsystem
+      )
+
+  );
   }
 }

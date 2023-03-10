@@ -33,6 +33,18 @@ public final class Constants {
                 new TrapezoidProfile.Constraints(
                         kMaxAngularSpeedRadiansPerSecond,
                         kMaxAngularAccelerationRadiansPerSecondSquared);
+
+        // key: 
+        // 0: home position
+        // 1: intake from substation
+        // 2: cone 2nd
+        // 3: cone 3rd
+        // 4: cube 2nd
+        // 5: cube 3rd
+        // 6: ground intake
+
+        public static final double[] armPreset = new double[]{1.33, 0, 0.8, 0.47, 0, 0, -0.19};
+        public static final double[] elevatorPreset = new double[]{0, 1.13, 0.72, 1.38, 0.85, 1.26, 0.10};
     }
 
     public static final class ModuleConstants {

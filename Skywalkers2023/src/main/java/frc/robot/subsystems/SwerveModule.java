@@ -132,13 +132,19 @@ public class SwerveModule extends SubsystemBase {
     turningMotor.set(0);
   }
 
-  public void setDesiredState(SwerveModuleState state) {
+  public void setDesiredState(SwerveModuleState state, boolean closedLoop) {
     if(Math.abs(state.speedMetersPerSecond) < 0.1) {
       stop();
       return;
     }
     state = SwerveModuleState.optimize(state, getState().angle);
-    driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond); // goofy ahh way could do pid here as well but idk lmfao
+    if(!closedLoop) {
+      driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond); // goofy ahh way could do pid here as well but idk lmfao
+    }
+    else {
+      double vel = state.speedMetersPerSecond * ModuleConstants.kVDrive + ModuleConstants.kSDrive;
+      driveMotor.setVoltage(vel);
+    }
     // double sgn = Math.abs(state.speedMetersPerSecond) / state.speedMetersPerSecond;
     // driveMotor.setVoltage(5.0 * sgn);
     double turnSpeed = turningPidController.calculate(getTurningPosition(), state.angle.getRadians());

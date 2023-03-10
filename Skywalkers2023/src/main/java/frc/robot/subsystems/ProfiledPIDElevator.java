@@ -148,7 +148,8 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
 
   public boolean atGoal() {
     SmartDashboard.putBoolean("Elevator Goal Reached", this.getController().atGoal());
-    return this.getController().atGoal();
+    return Math.abs(getPosition() - this.getController().getGoal().position) <= 0.02;
+
   }
 
 }

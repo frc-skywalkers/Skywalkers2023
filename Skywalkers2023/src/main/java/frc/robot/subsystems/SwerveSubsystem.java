@@ -142,10 +142,18 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-    frontLeft.setDesiredState(desiredStates[0]);
-    frontRight.setDesiredState(desiredStates[1]);
-    backLeft.setDesiredState(desiredStates[2]);
-    backRight.setDesiredState(desiredStates[3]);
+    frontLeft.setDesiredState(desiredStates[0], false);
+    frontRight.setDesiredState(desiredStates[1], false);
+    backLeft.setDesiredState(desiredStates[2], false);
+    backRight.setDesiredState(desiredStates[3], false);
+  }
+
+  public void setModuleStatesClosedLoop(SwerveModuleState[] desiredStates) {
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+    frontLeft.setDesiredState(desiredStates[0], true);
+    frontRight.setDesiredState(desiredStates[1], true);
+    backLeft.setDesiredState(desiredStates[2], true);
+    backRight.setDesiredState(desiredStates[3], true);
   }
 
   public void resetEncoders() {
@@ -173,7 +181,7 @@ public class SwerveSubsystem extends SubsystemBase {
     // once one module has been completed, replace mentions of it with the next one you're testing it with
     SwerveModuleState testRun = new SwerveModuleState(1.0, Rotation2d.fromDegrees(90)); // change these values as necessary
     // first is speed in meteres per second, second is angle
-    frontLeft.setDesiredState(testRun);
+    frontLeft.setDesiredState(testRun, false);
   }
 
   public void drive(double xSpeed, double ySpeed, double turningSpeed) {
