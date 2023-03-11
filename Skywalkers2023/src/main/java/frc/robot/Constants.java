@@ -20,13 +20,13 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
 
     public static final class AutoConstants {
-        public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 4;
+        public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond * 2 / 4.000;
         public static final double kMaxAngularSpeedRadiansPerSecond = //
                 DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond / 10;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 2;
         public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI / 4;
-        public static final double kPXController = 1.5;
-        public static final double kPYController = 1.5;
+        public static final double kPXController = 5;
+        public static final double kPYController = 5;
         public static final double kPThetaController = 3;
 
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints = //
@@ -127,9 +127,9 @@ public final class Constants {
         // public static final double kBRAbsEncoderOffsetDeg = 168.8;
 
         public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 2.96;
-        public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 4.409;
-        public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 5.135;
-        public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 4.532;
+        public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 4.377;
+        public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 5.140;
+        public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 4.506;
 
 
 

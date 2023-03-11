@@ -5,6 +5,8 @@
 package frc.robot.autos;
 
 
+import java.util.List;
+
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -13,7 +15,12 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -23,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.commands.Autos;
 import frc.robot.commands.ExtendArmElevatorAutoTest;
 import frc.robot.commands.HomeElevator;
 import frc.robot.commands.IntakePiece;
@@ -51,32 +59,56 @@ public class DoublePieceAutoFactory extends SequentialCommandGroup {
     SequentialCommandGroup scoreFirstCube = new SequentialCommandGroup(new startAuto(arm, elevator),
     new ExtendArmElevatorAutoTest(arm, elevator, AutoConstants.armPreset[scoreID1], AutoConstants.elevatorPreset[scoreID1]),
     new WaitUntilCommand(() -> arm.atGoal() && elevator.atGoal()),
-    new OuttakePiece(intake));
+    new OuttakePiece(intake).withTimeout(2));
+
+    TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
+      AutoConstants.kMaxSpeedMetersPerSecond,
+      AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+              .setKinematics(DriveConstants.kDriveKinematics);
+
+// 2. Generate trajectory
+Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+      new Pose2d(0, 0, new Rotation2d(0)),
+      List.of(
+              new Translation2d(3, 0)),
+      new Pose2d(3, 0, Rotation2d.fromDegrees(180)),
+      trajectoryConfig);
+  // return Autos.followTrajectory(swerve, trajectory);
 
 
-    PathPlannerTrajectory traj = PathPlanner.loadPath(trajPart1, new PathConstraints(4, 3));
-    PPSwerveControllerCommand drive1 = AutoRoutines.baseSwerveCommand(traj, swerve);
+  Trajectory trajectory1 = TrajectoryGenerator.generateTrajectory(
+    new Pose2d(0, 0, new Rotation2d(0)),
+    List.of(
+            new Translation2d(-3, 0)),
+    new Pose2d(-3, 0, Rotation2d.fromDegrees(180)),
+    trajectoryConfig);
+
+
+    // PathPlannerTrajectory traj = PathPlanner.loadPath(trajPart1, new PathConstraints(4, 3));
+    // PPSwerveControllerCommand drive1 = AutoRoutines.baseSwerveCommand(traj, swerve);
+
+
 
 
     ParallelCommandGroup driveToSecondCone = new ParallelCommandGroup(
       new ExtendArmElevatorAutoTest(arm, elevator, AutoConstants.armPreset[6], AutoConstants.elevatorPreset[6]), 
       new IntakePiece(intake),
-      drive1
+      Autos.followTrajectory(swerve, trajectory)
     );
 
-    PathPlannerTrajectory traj2 = PathPlanner.loadPath(trajPart2, new PathConstraints(4, 3));
-    PPSwerveControllerCommand drive2 = AutoRoutines.baseSwerveCommand(traj2, swerve);
+    // PathPlannerTrajectory traj2 = PathPlanner.loadPath(trajPart2, new PathConstraints(4, 3));
+    // PPSwerveControllerCommand drive2 = AutoRoutines.baseSwerveCommand(traj2, swerve);
 
     ParallelCommandGroup driveToConeGrid = new ParallelCommandGroup(
       new ExtendArmElevatorAutoTest(arm, elevator, AutoConstants.armPreset[scoreID2], AutoConstants.elevatorPreset[scoreID2]),
-      drive2
+      Autos.followTrajectory(swerve, trajectory1)
     );
 
     addCommands(      
       scoreFirstCube,
       driveToSecondCone,
       driveToConeGrid,
-      new OuttakePiece(intake),
+      new OuttakePiece(intake).withTimeout(2),
       new ExtendArmElevatorAutoTest(arm, elevator, AutoConstants.armPreset[0], AutoConstants.elevatorPreset[0]),
       new HomeElevator(elevator)
     );

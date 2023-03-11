@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.List;
+
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -11,6 +13,12 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -18,9 +26,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.autos.DoublePieceAutoFactory;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Balance;
 import frc.robot.commands.DriveForwardDistance;
@@ -141,30 +151,49 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // return Autos.oneCubeAuto(arm, elevator, intake);
-    PathPlannerTrajectory traj = PathPlanner.loadPath("New Path", new PathConstraints(4, 3));
+    PathPlannerTrajectory traj = PathPlanner.loadPath("Straight Path", new PathConstraints(2, 1.5));
     boolean isFirstPath = true;
 
     // PPSwerveControllerCommand autoDrive = baseSwerveCommand(traj);
 
-    return new SequentialCommandGroup(
-      new InstantCommand(() -> {
-        // Reset odometry for the first path you run during auto
-        if(isFirstPath){
-            swerve.resetOdometry(traj.getInitialHolonomicPose());
-        }
-      }),
-      new PPSwerveControllerCommand(
-          traj, 
-          swerve::getPose, // Pose supplier
-          DriveConstants.kDriveKinematics, // SwerveDriveKinematics
-          new PIDController(1, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-          new PIDController(1, 0, 0), // Y controller (usually the same values as X controller)
-          new PIDController(0.5, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-          swerve::setModuleStates, // Module states consumer
-          true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
-          swerve // Requires this drive subsystem
-      )
+  //   return new SequentialCommandGroup(
+  //     new InstantCommand(() -> {
+  //       // Reset odometry for the first path you run during auto
+  //       if(isFirstPath){
+  //           swerve.resetEncoders();
+  //           // swerve.resetOdometry(traj.getInitialHolonomicPose());
+  //       }
+  //     }),
+  //     new PPSwerveControllerCommand(
+  //         traj, 
+  //         swerve::getPose, // Pose supplier
+  //         DriveConstants.kDriveKinematics, // SwerveDriveKinematics
+  //         new PIDController(2, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+  //         new PIDController(2, 0, 0), // Y controller (usually the same values as X controller)
+  //         new PIDController(0.5, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+  //         swerve::setModuleStatesClosedLoop, // Module states consumer
+  //         true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+  //         swerve // Requires this drive subsystem
+  //     )
 
-  );
+  // );
+
+    // 1. Create trajectory settings
+    TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
+      AutoConstants.kMaxSpeedMetersPerSecond,
+      AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+              .setKinematics(DriveConstants.kDriveKinematics);
+
+// 2. Generate trajectory
+Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+      new Pose2d(0, 0, new Rotation2d(0)),
+      List.of(
+              new Translation2d(1, -1)),
+      new Pose2d(3, 0, Rotation2d.fromDegrees(0)),
+      trajectoryConfig);
+  // return Autos.followTrajectory(swerve, trajectory);
+    return new DoublePieceAutoFactory(swerve, arm ,elevator, intake, limelight, "BS", "random", 1, 1);
   }
+
+
 }

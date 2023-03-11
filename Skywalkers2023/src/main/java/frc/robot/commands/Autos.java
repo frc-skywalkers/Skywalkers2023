@@ -56,7 +56,7 @@ public final class Autos {
             xController,
             yController,
             thetaController,        
-            swerve::setModuleStates,
+            swerve::setModuleStatesClosedLoop,
             swerve);
 
     // 5. Add some init and wrap-up, and return everything
