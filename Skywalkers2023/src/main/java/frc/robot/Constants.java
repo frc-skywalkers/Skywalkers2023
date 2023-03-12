@@ -47,6 +47,16 @@ public final class Constants {
         public static final double[] elevatorPreset = new double[]{0, 1.13, 0.72, 1.38, 0.85, 1.26, 0.10};
     }
 
+    public static final class Presets {
+        public static final Preset STOW_PRESET = new Preset(1.33, 0);
+        public static final Preset GROUND_INTAKE_PRESET = new Preset(-0.19, 0.10);
+        public static final Preset SUBSTATION_INTAKE_PRESET = new Preset(0, 1.13);
+        public static final Preset CONE_2ND_STAGE_PRESET = new Preset(0.8, 0.72);
+        public static final Preset CONE_3RD_STAGE_PRESET = new Preset(0.47, 1.38);
+        public static final Preset CUBE_2ND_STAGE_PRESET = new Preset(0, 0.85);
+        public static final Preset CUBE_3RD_STAGE_PRESET = new Preset(0, 1.26);   
+    }
+
     public static final class ModuleConstants {
         public static final double kWheelDiameter = Units.inchesToMeters(4); // done
         public static final double kTicksPerRotation = 2048 * 150 / 7; // done
@@ -250,14 +260,10 @@ public final class Constants {
 
         public static final double kCurrentThreshold = 15.00;
 
-        public static final double kHoningSpeed = -0.1;
 
     }
 
-    public static final class SensorConstants {
-        public static final int limitSwitchPort = 0;
-        public static final int beamBreakerPort = 5;
-    }
+
 
     public static final class LimelightConstants{
         public static double kPx = 5; //meters

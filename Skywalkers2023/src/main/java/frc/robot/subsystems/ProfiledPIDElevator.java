@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ElevatorConstants;
 
 public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
@@ -82,9 +83,9 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
 
   public CommandBase goToPosition(double position) {
     return Commands.runOnce(() -> {
-      this.setGoal(position);
-      this.enable();
-    }, this);
+        this.setGoal(position);
+        this.enable();
+      }, this).andThen(new WaitUntilCommand(() -> this.atGoal()));
   }
 
   @Override
