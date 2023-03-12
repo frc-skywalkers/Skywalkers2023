@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ElevatorConstants;
 
 public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
@@ -70,10 +69,10 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
     if (isZeroed) {
       setVoltage(feedforward + output);
     } else {
-      System.out.println("ELEVATOR NOT ZEROED!");
+      // System.out.println("ELEVATOR NOT ZEROED!");
     }
     
-    SmartDashboard.putNumber("Set Voltage", (feedforward + output));
+    // SmartDashboard.putNumber("Set Voltage", (feedforward + output));
   }
 
   @Override
@@ -83,19 +82,19 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
 
   public CommandBase goToPosition(double position) {
     return Commands.runOnce(() -> {
-        this.setGoal(position);
-        this.enable();
-      }, this).andThen(new WaitUntilCommand(() -> this.atGoal()));
+      this.setGoal(position);
+      this.enable();
+    }, this).andThen(Commands.waitUntil(this::atGoal));
   }
 
   @Override
   public void periodic() {
     super.periodic();
-    SmartDashboard.putNumber("Elevator Current", getCurrent());
-    SmartDashboard.putNumber("Elevator Position", getPosition());
-    SmartDashboard.putNumber("Elevator Velocity", getVelocity());
-    SmartDashboard.putNumber("Elevator Voltage", leftElevator.getMotorOutputVoltage());
-    SmartDashboard.putBoolean("Elevator Goal Reached", this.getController().atGoal());
+    // SmartDashboard.putNumber("Elevator Current", getCurrent());
+    // SmartDashboard.putNumber("Elevator Position", getPosition());
+    // SmartDashboard.putNumber("Elevator Velocity", getVelocity());
+    // SmartDashboard.putNumber("Elevator Voltage", leftElevator.getMotorOutputVoltage());
+    // SmartDashboard.putBoolean("Elevator Goal Reached", this.getController().atGoal());
   }
 
   public void setVoltage(double voltage) {
@@ -104,7 +103,7 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
       rightElevator.setVoltage(voltage);
       leftElevator.setVoltage(voltage);
     } else {
-      System.out.println("ELEVATOR NOT ZEROED!");
+      // System.out.println("ELEVATOR NOT ZEROED!");
       stop();
     }
   }
@@ -144,11 +143,11 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
   public void enableSoftLimits() {
     leftElevator.configForwardSoftLimitEnable(true, 0);
     rightElevator.configReverseSoftLimitEnable(true, 0);
-    System.out.println("Enabled");
+    // System.out.println("Enabled");
   }
 
   public boolean atGoal() {
-    SmartDashboard.putBoolean("Elevator Goal Reached", this.getController().atGoal());
+    // SmartDashboard.putBoolean("Elevator Goal Reached", this.getController().atGoal());
     return Math.abs(getPosition() - this.getController().getGoal().position) <= 0.02;
 
   }

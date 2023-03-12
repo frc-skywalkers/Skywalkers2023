@@ -24,7 +24,7 @@ public class HomeElevator extends CommandBase {
   @Override
   public void initialize() {
     elevator.disableSoftLimits();
-    SmartDashboard.putBoolean("Zeroed", false);
+    // SmartDashboard.putBoolean("Zeroed", false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,7 +40,7 @@ public class HomeElevator extends CommandBase {
     elevator.resetEncoders();
     elevator.isZeroed = true;
     elevator.enableSoftLimits();
-    SmartDashboard.putBoolean("Zeroed", true);
+    // SmartDashboard.putBoolean("Zeroed", true);
   }
 
   // Returns true when the command should end.

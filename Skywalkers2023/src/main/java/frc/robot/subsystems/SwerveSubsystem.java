@@ -120,7 +120,7 @@ public class SwerveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
 
-    recalibrate();
+    // recalibrate();
 
     odometer.update(getRotation2d(), getModulePositions());
 
@@ -129,8 +129,8 @@ public class SwerveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Robot X Location", Units.metersToInches(getPose().getTranslation().getX()));
     SmartDashboard.putNumber("Robot Y Location", Units.metersToInches(getPose().getTranslation().getY()));
     SmartDashboard.putNumber("Robot Heading", getHeading());
-    SmartDashboard.putBoolean("field Oriented", fieldOriented);
-    SmartDashboard.putNumber("Pitch", getRoll());
+    // SmartDashboard.putBoolean("field Oriented", fieldOriented);
+    // SmartDashboard.putNumber("Pitch", getRoll());
 
   }
 

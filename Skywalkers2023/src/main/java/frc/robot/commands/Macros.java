@@ -62,14 +62,14 @@ public class Macros {
     return moveToPreset(
       Presets.GROUND_INTAKE_PRESET.kElevatorPos, 
       Presets.GROUND_INTAKE_PRESET.kArmPos)
-      .andThen(new IntakePiece(intake));
+      .andThen(new IntakePiece(intake).unless(() -> !intakeOn));
   }
 
   public CommandBase substationIntake(boolean intakeOn) {
     return moveToPreset(
       Presets.SUBSTATION_INTAKE_PRESET.kElevatorPos, 
       Presets.SUBSTATION_INTAKE_PRESET.kArmPos)
-      .andThen(new IntakePiece(intake));
+      .andThen(new IntakePiece(intake).unless(() -> !intakeOn));
   }
 
   public CommandBase cube2ndStage() {

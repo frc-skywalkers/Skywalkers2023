@@ -19,6 +19,10 @@ public class DriveForwardDistance extends CommandBase {
     this.distance = distance;
     start = swerve.getPose().getX();
     addRequirements(swerve);
+    SmartDashboard.putNumber("Start X", start);
+    SmartDashboard.putNumber("Current X", swerve.getPose().getX());
+    SmartDashboard.putNumber("Distance Travelled", swerve.getPose().getX() - start);
+    
 
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -32,8 +36,10 @@ public class DriveForwardDistance extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    SmartDashboard.putNumber("Start X", start);
+    SmartDashboard.putNumber("Current X", swerve.getPose().getX());
     SmartDashboard.putNumber("Distance Travelled", swerve.getPose().getX() - start);
-    swerve.drive(0.5, 0, 0);
+    swerve.drive(1, 0, 0);
   }
 
   // Called once the command ends or is interrupted.

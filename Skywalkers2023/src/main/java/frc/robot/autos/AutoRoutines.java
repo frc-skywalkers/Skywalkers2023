@@ -60,9 +60,10 @@ public final class AutoRoutines {
   // WORK IN PROGRESS
   public CommandBase chargingStation() {
     return Commands.sequence(
+      macros.home(),
       macros.moveToPreset(0.15, -0.3),
-      new DriveForwardDistance(swerve, 0.5).alongWith(arm.goToPosition(1.33)),
-      new Balance(swerve)
+      new DriveForwardDistance(swerve, 0.5).alongWith(arm.goToPosition(1.33))
+      // new Balance(swerve)
     );
     
   }
@@ -86,14 +87,10 @@ public final class AutoRoutines {
     
     return Commands.sequence(
       oneCubeAuto(),
-      baseSwerveCommand(trajectory, true),
-      macros.groundIntake(true),
+      baseSwerveCommand(trajectory, true).alongWith(macros.groundIntake(true)),
       // Drive forward
       Commands.parallel(
-        Commands.sequence(
-          macros.stow(), 
-          Commands.waitSeconds(2),
-          macros.cube2ndStage()),
+          macros.cube2ndStage(),
           baseSwerveCommand(trajectory2, false)),
       macros.outtake(),
       macros.stow()

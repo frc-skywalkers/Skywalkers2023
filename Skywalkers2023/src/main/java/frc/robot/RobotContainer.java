@@ -23,7 +23,9 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.autos.AutoRoutines;
 import frc.robot.autos.DoublePieceAutoFactory;
+import frc.robot.autos.DriveForwardDistance;
 import frc.robot.commands.Macros;
 import frc.robot.commands.SwerveJoystick;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -44,6 +46,7 @@ public class RobotContainer {
   private final CommandXboxController operatorJoystick = new CommandXboxController(OIConstants.kDriverControllerPort2);
 
   private final Macros macros = new Macros(swerve, elevator, arm, intake, limelight);
+  private final AutoRoutines autoRoutines = new AutoRoutines(swerve, elevator, arm, intake, limelight);
 
   public RobotContainer() {
 
@@ -182,7 +185,9 @@ Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
       new Pose2d(3, 0, Rotation2d.fromDegrees(0)),
       trajectoryConfig);
   // return Autos.followTrajectory(swerve, trajectory);
-    return new DoublePieceAutoFactory(swerve, arm ,elevator, intake, limelight, "BS", "random", 1, 1);
+    // return new DoublePieceAutoFactory(swerve, arm ,elevator, intake, limelight, "BS", "random", 1, 1);
+    return autoRoutines.chargingStation();
+    // return new DriveForwardDistance(swerve, 0.5);
   }
 
 

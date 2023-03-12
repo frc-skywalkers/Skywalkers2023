@@ -51,8 +51,8 @@ public class ProfiledPIDArm extends ProfiledPIDSubsystem {
     resetEncoders();
     disable();
 
-    SmartDashboard.putNumber("Desired Arm Position", 0);
-    SmartDashboard.putNumber("Desired Arm Velocity", 0);
+    // SmartDashboard.putNumber("Desired Arm Position", 0);
+    // SmartDashboard.putNumber("Desired Arm Velocity", 0);
     
   }
 
@@ -69,9 +69,9 @@ public class ProfiledPIDArm extends ProfiledPIDSubsystem {
     }
 
     setVoltage(feedforward + output);
-    SmartDashboard.putNumber("Set Arm Voltage", feedforward + output);
-    SmartDashboard.putNumber("Desired Arm Position", setpoint.position);
-    SmartDashboard.putNumber("Desired Arm Velocity", setpoint.velocity);
+    // SmartDashboard.putNumber("Set Arm Voltage", feedforward + output);
+    // SmartDashboard.putNumber("Desired Arm Position", setpoint.position);
+    // SmartDashboard.putNumber("Desired Arm Velocity", setpoint.velocity);
   }
 
   @Override
@@ -82,18 +82,18 @@ public class ProfiledPIDArm extends ProfiledPIDSubsystem {
   @Override
   public void periodic() {
     super.periodic();
-    SmartDashboard.putNumber("Absolute Arm Position", absoluteEncoder.getAbsolutePosition() * 2 * Math.PI /360.0);
-    SmartDashboard.putNumber("Arm Position", getPosition());
-    SmartDashboard.putNumber("Arm Velocity", getVelocity());
-    SmartDashboard.putNumber("Arm Output Voltage", armMotor.getMotorOutputVoltage());
-    SmartDashboard.putBoolean("Arm Goal Reached", this.getController().atGoal());
+    // SmartDashboard.putNumber("Absolute Arm Position", absoluteEncoder.getAbsolutePosition() * 2 * Math.PI /360.0);
+    // SmartDashboard.putNumber("Arm Position", getPosition());
+    // SmartDashboard.putNumber("Arm Velocity", getVelocity());
+    // SmartDashboard.putNumber("Arm Output Voltage", armMotor.getMotorOutputVoltage());
+    // SmartDashboard.putBoolean("Arm Goal Reached", this.getController().atGoal());
   }
 
   public CommandBase goToPosition(double position) {
     return Commands.runOnce(() -> {
-        this.setGoal(position);
-        this.enable();
-      }, this).andThen(new WaitUntilCommand(() -> this.atGoal()));
+      this.setGoal(position);
+      this.enable();
+    }, this).andThen(Commands.waitUntil(this::atGoal));
   }
 
   public void setVoltage(double voltage) {
@@ -127,7 +127,7 @@ public class ProfiledPIDArm extends ProfiledPIDSubsystem {
   }
 
   public boolean atGoal() {
-    SmartDashboard.putBoolean("Arm Goal Reached", this.getController().atGoal());
+    // SmartDashboard.putBoolean("Arm Goal Reached", this.getController().atGoal());
     return Math.abs(getPosition() - this.getController().getGoal().position) <= 0.03;
   }
 }

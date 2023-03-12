@@ -156,7 +156,7 @@ public class SwerveModule extends SubsystemBase {
     dif = Math.abs(dif);
     while(dif > Math.PI) dif -= 2.0 * Math.PI;
     dif = Math.abs(dif);
-    // SmartDashboard.putNumber(motorId + " dif Angle", dif);
+    SmartDashboard.putNumber(motorId + " dif Angle", dif);
 
   }
 
@@ -170,7 +170,7 @@ public class SwerveModule extends SubsystemBase {
     // This method will be called once per scheduler run
     // SmartDashboard.putNumber(motorId + " drive Position", getDrivePosition());
     SmartDashboard.putNumber(motorId + " turning Position", getTurningPosition());
-    SmartDashboard.putNumber(motorId + " absolute Position", getAbsoluteEncoderRad());
+    // SmartDashboard.putNumber(motorId + " absolute Position", getAbsoluteEncoderRad());
     SmartDashboard.putNumber(motorId + " drive Speed", getDriveVelocity());
   }
 }
