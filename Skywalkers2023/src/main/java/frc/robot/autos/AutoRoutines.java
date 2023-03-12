@@ -4,6 +4,7 @@
 
 package frc.robot.autos;
 
+import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
@@ -20,6 +21,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.ExtendArmElevatorAutoTest;
 import frc.robot.commands.HomeElevator;
+import frc.robot.commands.Macros;
 import frc.robot.commands.OuttakePiece;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Limelight;
@@ -29,30 +31,76 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public final class AutoRoutines {
 
+  private final SwerveSubsystem swerve;
+  private final ProfiledPIDElevator elevator;
+  private final ProfiledPIDArm arm;
+  private final IntakeSubsystem intake;
+  private final Limelight limelight;
+
+  private final Macros macros;
+
+
+  public AutoRoutines(
+      SwerveSubsystem swerve, 
+      ProfiledPIDElevator elevator, 
+      ProfiledPIDArm arm, 
+      IntakeSubsystem intake, 
+      Limelight limelight) {
+    
+    this.swerve = swerve;
+    this.elevator = elevator;
+    this.arm = arm;
+    this.intake = intake;
+    this.limelight = limelight;
+
+    macros = new Macros(swerve, elevator, arm, intake, limelight);
+
+  }
+
   // WORK IN PROGRESS
-  public static CommandBase chargingStation(SwerveSubsystem swerve, ProfiledPIDArm arm, ProfiledPIDElevator elevator) {
+  public CommandBase chargingStation() {
     return Commands.sequence(
-      new ExtendArmElevatorAutoTest(arm, elevator, -0.3, 0.15),
-      new DriveForwardDistance(swerve, 0.5).alongWith(arm.goToPosition(1.33))
+      macros.moveToPreset(0.15, -0.3),
+      new DriveForwardDistance(swerve, 0.5).alongWith(arm.goToPosition(1.33)),
+      new Balance(swerve)
     );
     
   }
 
-  public static CommandBase LeftCubeConeAuto(SwerveSubsystem swerve, ProfiledPIDArm arm, ProfiledPIDElevator elevator, IntakeSubsystem intake, Limelight camera) {
-    return new DoublePieceAutoFactory(swerve, arm, elevator, intake, camera, "Left_2Cube_P1", "Left_2Cube_P2", 5, 3);
+  public CommandBase LeftCubeConeAuto() {
+    return new DoublePieceAutoFactory(swerve, arm, elevator, intake, limelight, "Left_2Cube_P1", "Left_2Cube_P2", 5, 3);
   }
 
-  public static CommandBase oneCubeAuto(ProfiledPIDArm arm, ProfiledPIDElevator elevator, IntakeSubsystem intake) {
+  public CommandBase oneCubeAuto() {
     return Commands.sequence(
-      new HomeElevator(elevator).alongWith(arm.goToPosition(1.33)),
-      new ExtendArmElevatorAutoTest(arm, elevator, 0, 1.26),
-      new WaitUntilCommand(() -> arm.atGoal() && elevator.atGoal()),
-      new OuttakePiece(intake),
-      new ExtendArmElevatorAutoTest(arm, elevator, 1.33, 0)
+      macros.home(),
+      macros.cone3rdStage(),
+      macros.outtake(),
+      macros.stow()
     );
   }
 
-  public static CommandBase followTrajectory(SwerveSubsystem swerve, Trajectory trajectory) {
+  public CommandBase twoCubeAuto() {
+    PathPlannerTrajectory trajectory = PathPlanner.loadPath("Left_2Cube_P1", 2, 3);
+    PathPlannerTrajectory trajectory2 = PathPlanner.loadPath("Left_2Cube_P2", 2, 3);
+    
+    return Commands.sequence(
+      oneCubeAuto(),
+      baseSwerveCommand(trajectory, true),
+      macros.groundIntake(true),
+      // Drive forward
+      Commands.parallel(
+        Commands.sequence(
+          macros.stow(), 
+          Commands.waitSeconds(2),
+          macros.cube2ndStage()),
+          baseSwerveCommand(trajectory2, false)),
+      macros.outtake(),
+      macros.stow()
+    );
+  }
+
+  public CommandBase followTrajectory(Trajectory trajectory) {
 
     // 3. Define PID controllers for tracking trajectory
     PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
@@ -82,7 +130,7 @@ public final class AutoRoutines {
     );
   }
 
-  public static Command baseSwerveCommand(PathPlannerTrajectory trajectory, SwerveSubsystem swerve, boolean isFirstPath) {
+  public Command baseSwerveCommand(PathPlannerTrajectory trajectory, boolean isFirstPath) {
     InstantCommand resetOdom = new InstantCommand(() -> {
       if(isFirstPath) {
         swerve.resetOdometry(trajectory.getInitialHolonomicPose());
@@ -101,19 +149,4 @@ public final class AutoRoutines {
     return Commands.sequence(resetOdom, command);
   }
 
-  
-
-  private AutoRoutines() {
-    throw new UnsupportedOperationException("This is a utility class!");
-  }
-
-  // public static Command Left_2Cube_P1(SwerveSubsystem swerve, ProfiledPIDArm arm, ProfiledPIDElevator elevator,
-  //     IntakeSubsystem intake, Limelight camera) {
-  //   return Commands.sequence(
-  //     new startAuto(arm, elevator),
-  //     new ExtendArmElevatorAutoTest(arm, elevator, AutoConstants.armPreset[5], AutoConstants.elevatorPreset[5]),
-  //     new WaitUntilCommand(() -> arm.atGoal() && elevator.atGoal()),
-  //     new OuttakePiece(intake)
-  //   );
-  // }
 }

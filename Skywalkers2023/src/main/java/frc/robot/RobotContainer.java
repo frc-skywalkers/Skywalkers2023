@@ -9,21 +9,14 @@ import java.util.List;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
-
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoConstants;
@@ -31,16 +24,8 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.autos.DoublePieceAutoFactory;
-import frc.robot.commands.Autos;
-import frc.robot.commands.Balance;
-import frc.robot.commands.DriveForwardDistance;
-import frc.robot.commands.ExtendArmElevatorAutoTest;
-import frc.robot.commands.HomeElevator;
-import frc.robot.commands.IntakePiece;
-import frc.robot.commands.OuttakePiece;
+import frc.robot.commands.Macros;
 import frc.robot.commands.SwerveJoystick;
-import frc.robot.commands.TurnAngle;
-import frc.robot.commands.MoveToTag;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ProfiledPIDArm;
 import frc.robot.subsystems.ProfiledPIDElevator;
@@ -57,6 +42,8 @@ public class RobotContainer {
 
   private final CommandXboxController driverJoystick = new CommandXboxController(OIConstants.kDriverControllerPort);
   private final CommandXboxController operatorJoystick = new CommandXboxController(OIConstants.kDriverControllerPort2);
+
+  private final Macros macros = new Macros(swerve, elevator, arm, intake, limelight);
 
   public RobotContainer() {
 
@@ -97,50 +84,53 @@ public class RobotContainer {
       }, arm, elevator));
 
     // Start --> Home
-    operatorJoystick.start().onTrue(new HomeElevator(elevator).alongWith(
-      arm.goToPosition(1.33)));
+    operatorJoystick.start().onTrue(macros.home());
 
     
     // POV Left --> First Stage / Ground intake height
     operatorJoystick.povLeft().onTrue(
-      new ExtendArmElevatorAutoTest(arm, elevator, -0.19, 0.10)
+      macros.groundIntake(false)
     );
 
     // POV Down --> Stowe
     operatorJoystick.povDown().onTrue(
-      new ExtendArmElevatorAutoTest(arm, elevator, 1.33, 0)
+      macros.stow()
     );
 
     // POV Up --> Substration intake height
     operatorJoystick.povUp().onTrue(
-      new ExtendArmElevatorAutoTest(arm, elevator, 0, 1.13)
+      macros.substationIntake(false)
     );
 
     // X --> Cone 2nd Stage
     operatorJoystick.x().onTrue(
-      new ExtendArmElevatorAutoTest(arm, elevator, 0.8, 0.72)
+      macros.cone2ndStage()
     );
 
     // Y --> Cone 3rd Stage
     operatorJoystick.y().onTrue(
-      new ExtendArmElevatorAutoTest(arm, elevator, 0.47, 1.38)
+      macros.cone3rdStage()
     );
 
     // A --> Cube 2nd Stage
     operatorJoystick.a().onTrue(
-      new ExtendArmElevatorAutoTest(arm, elevator, 0, 0.85)
+      macros.cube2ndStage()
     );
 
     // B --> Cube 3rd Stage
     operatorJoystick.b().onTrue(
-      new ExtendArmElevatorAutoTest(arm, elevator, 0, 1.26)
+      macros.cube3rdStage()
     );
     
     // Right Bumper --> Intake 
-    operatorJoystick.rightBumper().onTrue(new IntakePiece(intake));
+    operatorJoystick.rightBumper().onTrue(
+      macros.intake()
+    );
 
     // Left Bumper --> Outtake
-    operatorJoystick.leftBumper().onTrue(new OuttakePiece(intake).withTimeout(2));
+    operatorJoystick.leftBumper().onTrue(
+      macros.outtake()
+    );
 
     // Back --> Manual Intake Stop
     operatorJoystick.back().onTrue(Commands.runOnce(() -> intake.stop(), intake));

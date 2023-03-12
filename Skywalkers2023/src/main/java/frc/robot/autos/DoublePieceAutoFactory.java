@@ -35,10 +35,10 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.commands.Autos;
 import frc.robot.commands.ExtendArmElevatorAutoTest;
 import frc.robot.commands.HomeElevator;
 import frc.robot.commands.IntakePiece;
+import frc.robot.commands.Macros;
 import frc.robot.commands.OuttakePiece;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Limelight;
@@ -57,11 +57,15 @@ public class DoublePieceAutoFactory extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
 
+    AutoRoutines autoRoutines = new AutoRoutines(swerve, elevator, arm, intake, camera);
+    Macros macros = new Macros(swerve, elevator, arm, intake, camera);
+
     // for this command we start from the left grid cube
     // we score an l3 cube, then we have to go to the left most game piece
     // we intake then move back to the start position
 
-    SequentialCommandGroup scoreFirstCube = new SequentialCommandGroup(new startAuto(arm, elevator),
+    SequentialCommandGroup scoreFirstCube = new SequentialCommandGroup(
+      macros.home(),
     new ExtendArmElevatorAutoTest(arm, elevator, AutoConstants.armPreset[scoreID1], AutoConstants.elevatorPreset[scoreID1]),
     new WaitUntilCommand(() -> arm.atGoal() && elevator.atGoal()),
     new OuttakePiece(intake).withTimeout(2));
@@ -110,11 +114,6 @@ public class DoublePieceAutoFactory extends SequentialCommandGroup {
 
 
 
-    ParallelCommandGroup driveToSecondCone = new ParallelCommandGroup(
-      new ExtendArmElevatorAutoTest(arm, elevator, AutoConstants.armPreset[6], AutoConstants.elevatorPreset[6]), 
-      new IntakePiece(intake),
-      Autos.followTrajectory(swerve, trajectory)
-    );
 
     // PathPlannerTrajectory traj2 = PathPlanner.loadPath(trajPart2, new PathConstraints(4, 3));
     // PPSwerveControllerCommand drive2 = AutoRoutines.baseSwerveCommand(traj2, swerve);
@@ -133,9 +132,9 @@ public class DoublePieceAutoFactory extends SequentialCommandGroup {
     //   new HomeElevator(elevator)
     // );
     addCommands(
-      AutoRoutines.baseSwerveCommand(trajectory, swerve, true),
+      autoRoutines.baseSwerveCommand(trajectory, true),
       new WaitCommand(0.5),
-      AutoRoutines.baseSwerveCommand(trajectory2, swerve, false)
+      autoRoutines.baseSwerveCommand(trajectory2, false)
     ); 
     // new FollowPathWithEvents(, null, null)
   }
