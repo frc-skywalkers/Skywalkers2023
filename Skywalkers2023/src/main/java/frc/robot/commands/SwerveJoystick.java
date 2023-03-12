@@ -29,10 +29,10 @@ public class SwerveJoystick extends CommandBase {
 
   @Override
   public void execute() {
-    double ySpeed = driverJoystick.getRawAxis(OIConstants.kDriverXAxis);
+    double ySpeed = -driverJoystick.getRawAxis(OIConstants.kDriverXAxis);
     double xSpeed = -driverJoystick.getRawAxis(OIConstants.kDriverYAxis);
     
-    double turningSpeed = driverJoystick.getRawAxis(OIConstants.kDriverRotAxis);
+    double turningSpeed = -driverJoystick.getRawAxis(OIConstants.kDriverRotAxis);
     xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
     ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
     turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;

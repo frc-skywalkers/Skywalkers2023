@@ -87,7 +87,7 @@ public class SwerveSubsystem extends SubsystemBase {
     imu.getYawPitchRoll(YPR);
     double ret = YPR[0];
     while(ret >= 360.01) ret -= 360.00;
-    return -ret;
+    return ret;
   }
 
   public double getRoll() {
@@ -100,6 +100,16 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public Pose2d getPose() {
     return odometer.getPoseMeters();
+  }
+
+  public Pose2d invertYPose(Pose2d pose) {
+    return new Pose2d(pose.getX(), pose.getY(), pose.getRotation());
+  }
+
+  public Pose2d getTrajectoryPose() {
+    Pose2d actualPose = getPose();
+    Pose2d dumbPose = new Pose2d(actualPose.getX(), actualPose.getY(), actualPose.getRotation());
+    return dumbPose;
   }
 
   public void resetOdometry(Pose2d pose) {
@@ -133,27 +143,27 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public SwerveModulePosition[] getModulePositions() {
     SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
-    modulePositions[0] = frontLeft.getModulePosition();
-    modulePositions[1] = frontRight.getModulePosition();
-    modulePositions[2] = backLeft.getModulePosition();
-    modulePositions[3] = backRight.getModulePosition();
+    modulePositions[1] = frontLeft.getModulePosition();
+    modulePositions[0] = frontRight.getModulePosition();
+    modulePositions[3] = backLeft.getModulePosition();
+    modulePositions[2] = backRight.getModulePosition();
     return modulePositions;
   }
 
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-    frontLeft.setDesiredState(desiredStates[0], false);
-    frontRight.setDesiredState(desiredStates[1], false);
-    backLeft.setDesiredState(desiredStates[2], false);
-    backRight.setDesiredState(desiredStates[3], false);
+    frontLeft.setDesiredState(desiredStates[1], false);
+    frontRight.setDesiredState(desiredStates[0], false);
+    backLeft.setDesiredState(desiredStates[3], false);
+    backRight.setDesiredState(desiredStates[2], false);
   }
 
   public void setModuleStatesClosedLoop(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-    frontLeft.setDesiredState(desiredStates[0], true);
-    frontRight.setDesiredState(desiredStates[1], true);
-    backLeft.setDesiredState(desiredStates[2], true);
-    backRight.setDesiredState(desiredStates[3], true);
+    frontLeft.setDesiredState(desiredStates[1], true);
+    frontRight.setDesiredState(desiredStates[0], true);
+    backLeft.setDesiredState(desiredStates[3], true);
+    backRight.setDesiredState(desiredStates[2], true);
   }
 
   public void resetEncoders() {

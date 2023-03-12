@@ -5,6 +5,8 @@
 package frc.robot.autos;
 
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 import com.pathplanner.lib.PathConstraints;
@@ -21,12 +23,15 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
@@ -66,22 +71,37 @@ public class DoublePieceAutoFactory extends SequentialCommandGroup {
       AutoConstants.kMaxAccelerationMetersPerSecondSquared)
               .setKinematics(DriveConstants.kDriveKinematics);
 
+  // Path path1 = Filesystem.getDeployDirectory().toPath().resolve("Left_2Cube_P1.wpilib.json");
+  // Path path2 = Filesystem.getDeployDirectory().toPath().resolve("Left_2Cube_P2.wpilib.json");
+
+  // Trajectory trajectory = new Trajectory();
+  // Trajectory trajectory2 = new Trajectory();
+
+  PathPlannerTrajectory trajectory = PathPlanner.loadPath("Left_2Cube_P1", 2, 3);
+  PathPlannerTrajectory trajectory2 = PathPlanner.loadPath("Left_2Cube_P2", 2, 3);
+
+  // try {
+  //   trajectory = TrajectoryUtil.fromPathweaverJson(path1);
+  //   trajectory2 = TrajectoryUtil.fromPathweaverJson(path2);
+  // } catch (IOException e) {
+  //   e.printStackTrace();
+  // }
 // 2. Generate trajectory
-Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-      new Pose2d(0, 0, new Rotation2d(0)),
-      List.of(
-              new Translation2d(3, 0)),
-      new Pose2d(3, 0, Rotation2d.fromDegrees(180)),
-      trajectoryConfig);
+// trajectory = TrajectoryGenerator.generateTrajectory(
+//       new Pose2d(0, 0, new Rotation2d(0)),
+//       List.of(
+//               new Translation2d(-3, 0)),
+//       new Pose2d(-3, 0, Rotation2d.fromDegrees(180)),
+//       trajectoryConfig);
   // return Autos.followTrajectory(swerve, trajectory);
 
 
-  Trajectory trajectory1 = TrajectoryGenerator.generateTrajectory(
-    new Pose2d(0, 0, new Rotation2d(0)),
-    List.of(
-            new Translation2d(-3, 0)),
-    new Pose2d(-3, 0, Rotation2d.fromDegrees(180)),
-    trajectoryConfig);
+  // trajectory2 = TrajectoryGenerator.generateTrajectory(
+  //   new Pose2d(-3, 0, new Rotation2d(180)),
+  //   List.of(
+  //           new Translation2d(0, 0)),
+  //   new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
+  //   trajectoryConfig);
 
 
     // PathPlannerTrajectory traj = PathPlanner.loadPath(trajPart1, new PathConstraints(4, 3));
@@ -99,20 +119,25 @@ Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
     // PathPlannerTrajectory traj2 = PathPlanner.loadPath(trajPart2, new PathConstraints(4, 3));
     // PPSwerveControllerCommand drive2 = AutoRoutines.baseSwerveCommand(traj2, swerve);
 
-    ParallelCommandGroup driveToConeGrid = new ParallelCommandGroup(
-      new ExtendArmElevatorAutoTest(arm, elevator, AutoConstants.armPreset[scoreID2], AutoConstants.elevatorPreset[scoreID2]),
-      Autos.followTrajectory(swerve, trajectory1)
-    );
+    // ParallelCommandGroup driveToConeGrid = new ParallelCommandGroup(
+    //   new ExtendArmElevatorAutoTest(arm, elevator, AutoConstants.armPreset[scoreID2], AutoConstants.elevatorPreset[scoreID2]),
+    //   Autos.followTrajectory(swerve, trajectory2)
+    // );
 
-    addCommands(      
-      scoreFirstCube,
-      driveToSecondCone,
-      driveToConeGrid,
-      new OuttakePiece(intake).withTimeout(2),
-      new ExtendArmElevatorAutoTest(arm, elevator, AutoConstants.armPreset[0], AutoConstants.elevatorPreset[0]),
-      new HomeElevator(elevator)
-    );
-      // new FollowPathWithEvents(, null, null)
+    // addCommands(      
+    //   scoreFirstCube,
+    //   driveToSecondCone,
+    //   driveToConeGrid,
+    //   new OuttakePiece(intake).withTimeout(2),
+    //   new ExtendArmElevatorAutoTest(arm, elevator, AutoConstants.armPreset[0], AutoConstants.elevatorPreset[0]),
+    //   new HomeElevator(elevator)
+    // );
+    addCommands(
+      AutoRoutines.baseSwerveCommand(trajectory, swerve, true),
+      new WaitCommand(0.5),
+      AutoRoutines.baseSwerveCommand(trajectory2, swerve, false)
+    ); 
+    // new FollowPathWithEvents(, null, null)
   }
 
   // zero then score first piece

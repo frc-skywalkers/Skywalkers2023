@@ -13,6 +13,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.AutoConstants;
@@ -68,7 +69,7 @@ public final class AutoRoutines {
             xController,
             yController,
             thetaController,        
-            swerve::setModuleStates,
+            swerve::setModuleStatesClosedLoop,
             swerve);
 
     // 5. Add some init and wrap-up, and return everything
@@ -81,9 +82,23 @@ public final class AutoRoutines {
     );
   }
 
-  public static PPSwerveControllerCommand baseSwerveCommand(PathPlannerTrajectory trajectory, SwerveSubsystem swerve) {
-    PPSwerveControllerCommand command = new PPSwerveControllerCommand(trajectory, swerve::getPose, DriveConstants.kDriveKinematics, new PIDController(1, 0, 0), new PIDController(1, 0, 0), new PIDController(2, 0, 0), swerve::setModuleStatesClosedLoop, swerve);
-    return command;
+  public static Command baseSwerveCommand(PathPlannerTrajectory trajectory, SwerveSubsystem swerve, boolean isFirstPath) {
+    InstantCommand resetOdom = new InstantCommand(() -> {
+      if(isFirstPath) {
+        swerve.resetOdometry(trajectory.getInitialHolonomicPose());
+        swerve.resetOdometry(trajectory.getInitialHolonomicPose());
+      }
+    });
+    PPSwerveControllerCommand command = new PPSwerveControllerCommand(
+      trajectory, 
+      swerve::getTrajectoryPose, 
+      DriveConstants.kDriveKinematics, 
+      new PIDController(3, 0, 0), 
+      new PIDController(3, 0, 0), 
+      new PIDController(3, 0, 0), 
+      swerve::setModuleStatesClosedLoop, 
+      swerve);
+    return Commands.sequence(resetOdom, command);
   }
 
   

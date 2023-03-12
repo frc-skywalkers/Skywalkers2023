@@ -150,13 +150,13 @@ public class SwerveModule extends SubsystemBase {
     double turnSpeed = turningPidController.calculate(getTurningPosition(), state.angle.getRadians());
     turnSpeed = MathUtil.clamp(turnSpeed, -0.4, 0.4);
     turningMotor.set(turnSpeed);
-    // SmartDashboard.putNumber(motorId + " goal Angle", state.angle.getRadians());
+    SmartDashboard.putNumber(motorId + " goal Angle", state.angle.getRadians());
     // SmartDashboard.putNumber(motorId + " actual Angle", getTurningPosition());
     double dif = state.angle.getRadians() - getTurningPosition();
     dif = Math.abs(dif);
     while(dif > Math.PI) dif -= 2.0 * Math.PI;
     dif = Math.abs(dif);
-    SmartDashboard.putNumber(motorId + " dif Angle", dif);
+    // SmartDashboard.putNumber(motorId + " dif Angle", dif);
 
   }
 
