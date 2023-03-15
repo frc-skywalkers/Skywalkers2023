@@ -82,11 +82,12 @@ public class ProfiledPIDArm extends ProfiledPIDSubsystem {
   @Override
   public void periodic() {
     super.periodic();
-    // SmartDashboard.putNumber("Absolute Arm Position", absoluteEncoder.getAbsolutePosition() * 2 * Math.PI /360.0);
-    // SmartDashboard.putNumber("Arm Position", getPosition());
-    // SmartDashboard.putNumber("Arm Velocity", getVelocity());
-    // SmartDashboard.putNumber("Arm Output Voltage", armMotor.getMotorOutputVoltage());
-    // SmartDashboard.putBoolean("Arm Goal Reached", this.getController().atGoal());
+    SmartDashboard.putNumber("Absolute Arm Position", absoluteEncoder.getAbsolutePosition() * 2 * Math.PI /360.0);
+    SmartDashboard.putNumber("Abs Enc Deg", absoluteEncoder.getAbsolutePosition());
+    SmartDashboard.putNumber("Arm Position", getPosition());
+    SmartDashboard.putNumber("Arm Velocity", getVelocity());
+    SmartDashboard.putNumber("Arm Output Voltage", armMotor.getMotorOutputVoltage());
+    SmartDashboard.putBoolean("Arm Goal Reached", this.getController().atGoal());
   }
 
   public CommandBase goToPosition(double position) {

@@ -147,46 +147,8 @@ public class RobotContainer {
     PathPlannerTrajectory traj = PathPlanner.loadPath("Straight Path", new PathConstraints(2, 1.5));
     boolean isFirstPath = true;
 
-    // PPSwerveControllerCommand autoDrive = baseSwerveCommand(traj);
-
-  //   return new SequentialCommandGroup(
-  //     new InstantCommand(() -> {
-  //       // Reset odometry for the first path you run during auto
-  //       if(isFirstPath){
-  //           swerve.resetEncoders();
-  //           // swerve.resetOdometry(traj.getInitialHolonomicPose());
-  //       }
-  //     }),
-  //     new PPSwerveControllerCommand(
-  //         traj, 
-  //         swerve::getPose, // Pose supplier
-  //         DriveConstants.kDriveKinematics, // SwerveDriveKinematics
-  //         new PIDController(2, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-  //         new PIDController(2, 0, 0), // Y controller (usually the same values as X controller)
-  //         new PIDController(0.5, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-  //         swerve::setModuleStatesClosedLoop, // Module states consumer
-  //         true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
-  //         swerve // Requires this drive subsystem
-  //     )
-
-  // );
-
-    // 1. Create trajectory settings
-    TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
-      AutoConstants.kMaxSpeedMetersPerSecond,
-      AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-              .setKinematics(DriveConstants.kDriveKinematics);
-
-// 2. Generate trajectory
-Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-      new Pose2d(0, 0, new Rotation2d(0)),
-      List.of(
-              new Translation2d(1, -1)),
-      new Pose2d(3, 0, Rotation2d.fromDegrees(0)),
-      trajectoryConfig);
-  // return Autos.followTrajectory(swerve, trajectory);
-    // return new DoublePieceAutoFactory(swerve, arm ,elevator, intake, limelight, "BS", "random", 1, 1);
-    return autoRoutines.chargingStation();
+    return new DoublePieceAutoFactory(swerve, arm ,elevator, intake, limelight, "BS", "random", 1, 1);
+    // return autoRoutines.chargingStation();
     // return new DriveForwardDistance(swerve, 0.5);
   }
 
