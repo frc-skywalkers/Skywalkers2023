@@ -45,8 +45,8 @@ public class ProfiledPIDArm extends ProfiledPIDSubsystem {
     absoluteEncoder.configMagnetOffset(ArmConstants.kAbsEncoderOffset);
     absoluteEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
 
-    armMotor.configForwardSoftLimitThreshold(1.35 / ArmConstants.kPositionConversionFactor);
-    armMotor.configForwardSoftLimitEnable(true);
+    // armMotor.configForwardSoftLimitThreshold(1.35 / ArmConstants.kPositionConversionFactor);
+    // armMotor.configForwardSoftLimitEnable(true);
 
     resetEncoders();
     disable();

@@ -27,6 +27,7 @@ import frc.robot.autos.AutoRoutines;
 import frc.robot.autos.DoublePieceAutoFactory;
 import frc.robot.autos.DriveForwardDistance;
 import frc.robot.commands.Macros;
+import frc.robot.commands.MoveToTag;
 import frc.robot.commands.SwerveJoystick;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ProfiledPIDArm;
@@ -72,7 +73,7 @@ public class RobotContainer {
 
     driverJoystick.y().onTrue(Commands.runOnce(() -> swerve.reset(), swerve));
     driverJoystick.b().onTrue(Commands.runOnce(() -> swerve.toggleField(), swerve));
-    // driverJoystick.x().onTrue(new MoveToTag(swerve, limelight, 1, 0, 0));
+    driverJoystick.x().onTrue(new MoveToTag(swerve, limelight, 0.79, 0, 0));
 
     // driverJoystick.a().onTrue(new Balance(swerve));
     driverJoystick.rightBumper().onTrue(Commands.runOnce(swerve::stopModules, swerve));

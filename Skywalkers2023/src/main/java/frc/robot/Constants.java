@@ -139,7 +139,7 @@ public final class Constants {
         public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 2.96;
         public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 4.377;
         public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 5.140;
-        public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 4.506;
+        public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 1.69;
 
 
 
@@ -161,7 +161,7 @@ public final class Constants {
 
     public static final class IntakeConstants {
         public static final int kIntakePort = 22; // ??
-        public static final double kMaxIntakeSpeed = 0.6; // ??
+        public static final double kMaxIntakeSpeed = 0.4; // ??
         public static final double kMaxOuttakeSpeed = -0.15; // ??
         public static final double kHoldSpeed = 0.05;
         public static final boolean kIntakeInverted = false; // ?
@@ -228,7 +228,7 @@ public final class Constants {
         public static final int kArmTicksPerRotation = 2048; // ??
         public static final double kArmGearRatio = 180.00 * 2.0; // ???
 
-        public static final double kAbsEncoderOffset = -58.45;
+        public static final double kAbsEncoderOffset = -115.6;
 
 
         public static final double kPositionConversionFactor = 2 * Math.PI / (kArmTicksPerRotation * kArmGearRatio);
@@ -288,6 +288,7 @@ public final class Constants {
       
         public static double mountingangle = 0; //for adjustable camera
         public static double cameraheight = Units.inchesToMeters(14); //14-ish inches, to meters
+        public static double limelightOffsetCenter = Units.inchesToMeters(10.5);
     }
 
 }

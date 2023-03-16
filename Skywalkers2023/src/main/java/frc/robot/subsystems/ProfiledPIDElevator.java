@@ -90,11 +90,11 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
   @Override
   public void periodic() {
     super.periodic();
-    // SmartDashboard.putNumber("Elevator Current", getCurrent());
-    // SmartDashboard.putNumber("Elevator Position", getPosition());
-    // SmartDashboard.putNumber("Elevator Velocity", getVelocity());
-    // SmartDashboard.putNumber("Elevator Voltage", leftElevator.getMotorOutputVoltage());
-    // SmartDashboard.putBoolean("Elevator Goal Reached", this.getController().atGoal());
+    SmartDashboard.putNumber("Elevator Current", getCurrent());
+    SmartDashboard.putNumber("Elevator Position", getPosition());
+    SmartDashboard.putNumber("Elevator Velocity", getVelocity());
+    SmartDashboard.putNumber("Elevator Voltage", leftElevator.getMotorOutputVoltage());
+    SmartDashboard.putBoolean("Elevator Goal Reached", this.getController().atGoal());
   }
 
   public void setVoltage(double voltage) {
