@@ -99,7 +99,7 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
 
   public void setVoltage(double voltage) {
     if (isZeroed) {
-      voltage = MathUtil.clamp(voltage, -6, 6);
+      voltage = MathUtil.clamp(voltage, -8, 8);
       rightElevator.setVoltage(voltage);
       leftElevator.setVoltage(voltage);
     } else {

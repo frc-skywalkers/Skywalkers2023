@@ -33,7 +33,7 @@ public class ProfiledPIDArm extends ProfiledPIDSubsystem {
             ArmConstants.kIArm,
             ArmConstants.kDArm,
 
-            new TrapezoidProfile.Constraints(0.75, 1.00)));
+            new TrapezoidProfile.Constraints(1.25, 1.75)));
 
     this.getController().setTolerance(0.03);
 
@@ -98,7 +98,7 @@ public class ProfiledPIDArm extends ProfiledPIDSubsystem {
   }
 
   public void setVoltage(double voltage) {
-    voltage = MathUtil.clamp(voltage, -5, 5);
+    voltage = MathUtil.clamp(voltage, -6, 6);
     armMotor.setVoltage(voltage);
   }
 
