@@ -21,8 +21,10 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.ExtendArmElevatorAutoTest;
 import frc.robot.commands.HomeElevator;
+import frc.robot.commands.IntakePiece;
 import frc.robot.commands.Macros;
 import frc.robot.commands.OuttakePiece;
+import frc.robot.commands.SwerveDriveTimed;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.ProfiledPIDArm;
@@ -86,11 +88,15 @@ public final class AutoRoutines {
     PathPlannerTrajectory trajectory2 = PathPlanner.loadPath("Left_2Cube_P2", 2, 3);
     
     return Commands.sequence(
-      oneCubeAuto(),
-      baseSwerveCommand(trajectory, true).alongWith(macros.groundIntake(true)),
+      macros.home(),
+      macros.cube3rdStage(),
+      macros.outtake(),
+      Commands.parallel(
+        baseSwerveCommand(trajectory, true), 
+        macros.groundIntake(true)),
       // Drive forward
       Commands.parallel(
-          macros.cube2ndStage(),
+          Commands.waitSeconds(1.0).andThen(macros.cone3rdStage()),
           baseSwerveCommand(trajectory2, false)),
       macros.outtake(),
       macros.stow()
@@ -138,12 +144,27 @@ public final class AutoRoutines {
       trajectory, 
       swerve::getTrajectoryPose, 
       DriveConstants.kDriveKinematics, 
-      new PIDController(3, 0, 0), 
-      new PIDController(3, 0, 0), 
+      new PIDController(5, 0, 0), 
+      new PIDController(5, 0, 0), 
       new PIDController(3, 0, 0), 
       swerve::setModuleStatesClosedLoop, 
       swerve);
     return Commands.sequence(resetOdom, command);
+  }
+
+  public CommandBase DiagnosticTest() {
+    return Commands.sequence(      
+      new HomeElevator(elevator), 
+      new SwerveDriveTimed(swerve, 1.00, 0, 0, 2.00), 
+      new SwerveDriveTimed(swerve, 0, 1, 0, 2.000),
+      new SwerveDriveTimed(swerve, 0.00, 0.00, 1.00, 2.000),
+      macros.stow(),
+      macros.cube3rdStage(),
+      macros.cone3rdStage(),
+      macros.stow(),
+      new IntakePiece(intake),
+      new OuttakePiece(intake)
+    );
   }
 
 }

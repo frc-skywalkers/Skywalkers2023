@@ -142,8 +142,16 @@ public class SwerveModule extends SubsystemBase {
       driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond); // goofy ahh way could do pid here as well but idk lmfao
     }
     else {
-      double vel = state.speedMetersPerSecond * ModuleConstants.kVDrive + ModuleConstants.kSDrive;
-      driveMotor.setVoltage(vel);
+      double vol;
+      double desiredSpeed = state.speedMetersPerSecond;
+      if(desiredSpeed > 0.00) {
+        vol = state.speedMetersPerSecond * ModuleConstants.kVDrive + ModuleConstants.kSDrive;
+      }
+      else {
+        vol = state.speedMetersPerSecond * ModuleConstants.kVDrive - ModuleConstants.kSDrive;
+      }
+
+      driveMotor.setVoltage(vol);
     }
     // double sgn = Math.abs(state.speedMetersPerSecond) / state.speedMetersPerSecond;
     // driveMotor.setVoltage(5.0 * sgn);

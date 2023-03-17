@@ -20,11 +20,11 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
 
     public static final class AutoConstants {
-        public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond * 2 / 4.000;
+        public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond * 4 / 5.000;
         public static final double kMaxAngularSpeedRadiansPerSecond = //
                 DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond / 10;
         public static final double kMaxAccelerationMetersPerSecondSquared = 2;
-        public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI / 4;
+        public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI / 3;
         public static final double kPXController = 5;
         public static final double kPYController = 5;
         public static final double kPThetaController = 3;
@@ -139,7 +139,7 @@ public final class Constants {
         public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 2.96;
         public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 4.377;
         public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 5.140;
-        public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 1.69;
+        public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 4.493;
 
 
 
@@ -195,8 +195,8 @@ public final class Constants {
         public static final double kBottomLimit = 0.0;
         public static final double kTopLimit = 1.45;
 
-        public static final double kMaxVel = 0.75;
-        public static final double kMaxAcc = 1.9;
+        public static final double kMaxVel = 1.1;
+        public static final double kMaxAcc = 1.75;
 
         public static final double kVUp = 6.17;
         public static final double kSUp = 0.999;
