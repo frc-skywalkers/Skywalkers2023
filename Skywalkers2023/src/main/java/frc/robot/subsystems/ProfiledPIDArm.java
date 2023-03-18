@@ -33,7 +33,7 @@ public class ProfiledPIDArm extends ProfiledPIDSubsystem {
             ArmConstants.kIArm,
             ArmConstants.kDArm,
 
-            new TrapezoidProfile.Constraints(2.25, 2.5)));
+            new TrapezoidProfile.Constraints(2.75, 3.50)));
 
     this.getController().setTolerance(0.03);
 
@@ -129,6 +129,6 @@ public class ProfiledPIDArm extends ProfiledPIDSubsystem {
 
   public boolean atGoal() {
     // SmartDashboard.putBoolean("Arm Goal Reached", this.getController().atGoal());
-    return Math.abs(getPosition() - this.getController().getGoal().position) <= 0.03;
+    return Math.abs(getPosition() - this.getController().getGoal().position) <= 0.07;
   }
 }

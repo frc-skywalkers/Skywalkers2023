@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+//import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
@@ -19,7 +22,13 @@ public class Limelight extends SubsystemBase {
   double[] cameratotarget = new double[6];
 
   public Limelight() {
+    //CameraServer.startAutomaticCapture(0);
 
+    CameraServer.startAutomaticCapture(1); //LL2
+
+    UsbCamera LL3 = CameraServer.startAutomaticCapture(0);
+    LL3.setBrightness(50); //idk
+    LL3.setExposureManual(15);
   }
 
   public int getId() {
@@ -65,5 +74,6 @@ public class Limelight extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+
   }
 }

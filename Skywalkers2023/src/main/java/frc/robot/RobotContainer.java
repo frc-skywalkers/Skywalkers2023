@@ -147,9 +147,11 @@ public class RobotContainer {
     // return Autos.oneCubeAuto(arm, elevator, intake);
     PathPlannerTrajectory traj = PathPlanner.loadPath("Straight Path", new PathConstraints(2, 1.5));
     boolean isFirstPath = true;
-    return autoRoutines.twoCubeAuto();
+    return autoRoutines.chargingStation();
+    // return autoRoutines.oneCubeAuto();
+    // return autoRoutines.oneCubeAuto();
     // return new DoublePieceAutoFactory(swerve, arm ,elevator, intake, limelight, "BS", "random", 1, 1);
-    // return autoRoutines.chargingStation();
+    // return autoRoutines.oneCubeAuto();
     // return new DriveForwardDistance(swerve, 0.5);
   }
 

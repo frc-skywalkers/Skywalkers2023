@@ -61,11 +61,14 @@ public final class AutoRoutines {
 
   // WORK IN PROGRESS
   public CommandBase chargingStation() {
+
+    PathPlannerTrajectory trajectory = PathPlanner.loadPath("charge_station_P1", 2.5, 3);
+    PathPlannerTrajectory trajectory2 = PathPlanner.loadPath("charge_station_P2", 2.5, 3);
+
     return Commands.sequence(
-      macros.home(),
-      macros.moveToPreset(0.15, -0.3),
-      new DriveForwardDistance(swerve, 0.5).alongWith(arm.goToPosition(1.33))
-      // new Balance(swerve)
+      oneCubeAuto(),
+      baseSwerveCommand(trajectory, true),
+      new Balance(swerve)
     );
     
   }
@@ -77,27 +80,28 @@ public final class AutoRoutines {
   public CommandBase oneCubeAuto() {
     return Commands.sequence(
       macros.home(),
-      macros.cone3rdStage(),
+      macros.cube3rdStage(),
       macros.outtake(),
       macros.stow()
     );
   }
 
   public CommandBase twoCubeAuto() {
-    PathPlannerTrajectory trajectory = PathPlanner.loadPath("Left_2Cube_P1", 2, 3);
-    PathPlannerTrajectory trajectory2 = PathPlanner.loadPath("Left_2Cube_P2", 2, 3);
+    PathPlannerTrajectory trajectory = PathPlanner.loadPath("Left_2Cube_P1", 0.5, 0.75);
+    PathPlannerTrajectory trajectory2 = PathPlanner.loadPath("Left_2Cube_P2", 0.5, 0.75);
     
     return Commands.sequence(
       macros.home(),
       macros.cube3rdStage(),
       macros.outtake(),
+      macros.stow(),
       Commands.parallel(
         baseSwerveCommand(trajectory, true), 
-        macros.groundIntake(true)),
-      // Drive forward
+        Commands.waitSeconds(1.5).andThen(macros.groundIntake(true))),
       Commands.parallel(
-          Commands.waitSeconds(1.0).andThen(macros.cone3rdStage()),
-          baseSwerveCommand(trajectory2, false)),
+        macros.stow(),
+        Commands.waitSeconds(1).andThen(baseSwerveCommand(trajectory2, false))),
+      macros.cone3rdStage(),
       macros.outtake(),
       macros.stow()
     );
@@ -136,6 +140,8 @@ public final class AutoRoutines {
   public Command baseSwerveCommand(PathPlannerTrajectory trajectory, boolean isFirstPath) {
     InstantCommand resetOdom = new InstantCommand(() -> {
       if(isFirstPath) {
+        swerve.reset();
+        swerve.reset();
         swerve.resetOdometry(trajectory.getInitialHolonomicPose());
         swerve.resetOdometry(trajectory.getInitialHolonomicPose());
       }

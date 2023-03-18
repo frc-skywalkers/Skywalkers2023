@@ -101,7 +101,7 @@ public class Macros {
   }
 
   public CommandBase outtake() {
-    return new OuttakePiece(intake).withTimeout(2);
+    return new OuttakePiece(intake).withTimeout(1);
   }
 
 

@@ -13,7 +13,7 @@ public class Balance extends CommandBase {
   /** Creates a new Balance. */
 
   SwerveSubsystem swerve;
-  PIDController controller = new PIDController(0, 0, 0);
+  PIDController controller = new PIDController(0.05, 0, 0);
 
   public Balance(SwerveSubsystem swerve) {
     this.swerve = swerve;
@@ -31,7 +31,7 @@ public class Balance extends CommandBase {
   @Override
   public void execute() {
     double xSpeed = controller.calculate(swerve.getRoll());
-    xSpeed = -MathUtil.clamp(xSpeed, -0.5, 0.5);
+    xSpeed = -MathUtil.clamp(xSpeed, -1, 1);
     swerve.drive(xSpeed, 0, 0);
   }
 

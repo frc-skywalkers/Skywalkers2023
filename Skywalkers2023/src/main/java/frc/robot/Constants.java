@@ -20,7 +20,7 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
 
     public static final class AutoConstants {
-        public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond * 4 / 5.000;
+        public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond;
         public static final double kMaxAngularSpeedRadiansPerSecond = //
                 DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond / 10;
         public static final double kMaxAccelerationMetersPerSecondSquared = 2;
@@ -54,7 +54,7 @@ public final class Constants {
         public static final Preset CONE_2ND_STAGE_PRESET = new Preset(0.8, 0.72);
         public static final Preset CONE_3RD_STAGE_PRESET = new Preset(0.47, 1.38);
         public static final Preset CUBE_2ND_STAGE_PRESET = new Preset(0, 0.85);
-        public static final Preset CUBE_3RD_STAGE_PRESET = new Preset(0, 1.26);   
+        public static final Preset CUBE_3RD_STAGE_PRESET = new Preset(0, 1.27);   
     }
 
     public static final class ModuleConstants {
@@ -206,7 +206,7 @@ public final class Constants {
         
         
 
-        public static final double kP = 20.00;
+        public static final double kP = 30.00;
         public static final double kI = 0.00;
         public static final double kD = 0.00;
 
@@ -239,7 +239,7 @@ public final class Constants {
 
         // feedback
 
-        public static final double kPArm = 15.00;
+        public static final double kPArm = 20.00;
         public static final double kIArm = 0.0;
         public static final double kDArm = 0.00;
 
