@@ -63,12 +63,23 @@ public final class AutoRoutines {
   public CommandBase chargingStation() {
 
     PathPlannerTrajectory trajectory = PathPlanner.loadPath("charge_station_P1", 2.5, 3);
-    PathPlannerTrajectory trajectory2 = PathPlanner.loadPath("charge_station_P2", 2.5, 3);
+    // PathPlannerTrajectory trajectory2 = PathPlanner.loadPath("charge_station_P2", 2.5, 3);
 
     return Commands.sequence(
       oneCubeAuto(),
       baseSwerveCommand(trajectory, true),
       new Balance(swerve)
+    );
+    
+  }
+
+  public CommandBase Cube_Mobility() {
+
+    PathPlannerTrajectory trajectory = PathPlanner.loadPath("1_Cube_Mobility", 2.5, 3);
+
+    return Commands.sequence(
+      oneCubeAuto(),
+      baseSwerveCommand(trajectory, true)
     );
     
   }

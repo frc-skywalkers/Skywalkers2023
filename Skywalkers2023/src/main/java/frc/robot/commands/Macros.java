@@ -97,7 +97,7 @@ public class Macros {
   }
 
   public CommandBase intake() {
-    return new IntakePiece(intake);
+    return new IntakePiece(intake).andThen(() -> intake.holdObject());
   }
 
   public CommandBase outtake() {

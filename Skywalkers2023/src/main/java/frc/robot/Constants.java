@@ -163,7 +163,7 @@ public final class Constants {
         public static final int kIntakePort = 22; // ??
         public static final double kMaxIntakeSpeed = 0.4; // ??
         public static final double kMaxOuttakeSpeed = -0.15; // ??
-        public static final double kHoldSpeed = 0.05;
+        public static final double kHoldSpeed = 0.07;
         public static final boolean kIntakeInverted = false; // ?
         public static final int kIntakeTicksPerRotation = 4096; // ??
         public static final double kExpectedFullVelocity = 50; // ?? in rotations per cycle
@@ -195,7 +195,7 @@ public final class Constants {
         public static final double kBottomLimit = 0.0;
         public static final double kTopLimit = 1.45;
 
-        public static final double kMaxVel = 1.1;
+        public static final double kMaxVel = 1.5;
         public static final double kMaxAcc = 1.75;
 
         public static final double kVUp = 6.17;

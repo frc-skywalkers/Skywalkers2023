@@ -16,6 +16,8 @@ public class IntakeSubsystem extends SubsystemBase {
   private double intakeSpeed = 0;
   public boolean stop = false;
 
+  public boolean outtake = false;
+
   public IntakeSubsystem() {
     intake.configFactoryDefault();
   }
@@ -70,6 +72,10 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public boolean objectOut() {
     return getActualCurrent() < IntakeConstants.kObjectOutThreshold * IntakeConstants.kMaxIntakeSpeed;
+  }
+
+  public void holdObject() {
+    intake.setVoltage(IntakeConstants.kHoldSpeed * 12.0000);
   }
 
   @Override

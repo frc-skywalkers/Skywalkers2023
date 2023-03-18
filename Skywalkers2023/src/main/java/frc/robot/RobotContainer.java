@@ -26,6 +26,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.autos.AutoRoutines;
 import frc.robot.autos.DoublePieceAutoFactory;
 import frc.robot.autos.DriveForwardDistance;
+import frc.robot.commands.Balance;
 import frc.robot.commands.Macros;
 import frc.robot.commands.MoveToTag;
 import frc.robot.commands.SwerveJoystick;
@@ -148,6 +149,8 @@ public class RobotContainer {
     PathPlannerTrajectory traj = PathPlanner.loadPath("Straight Path", new PathConstraints(2, 1.5));
     boolean isFirstPath = true;
     return autoRoutines.chargingStation();
+    //return new Balance(swerve);
+    // return autoRoutines.Cube_Mobility();
     // return autoRoutines.oneCubeAuto();
     // return autoRoutines.oneCubeAuto();
     // return new DoublePieceAutoFactory(swerve, arm ,elevator, intake, limelight, "BS", "random", 1, 1);
