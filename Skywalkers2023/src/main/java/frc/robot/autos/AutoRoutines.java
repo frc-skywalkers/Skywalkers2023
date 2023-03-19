@@ -10,6 +10,9 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -66,19 +69,43 @@ public final class AutoRoutines {
     // PathPlannerTrajectory trajectory2 = PathPlanner.loadPath("charge_station_P2", 2.5, 3);
 
     return Commands.sequence(
-      oneCubeAuto(),
+      cube3rdAuto(),
       baseSwerveCommand(trajectory, true),
       new Balance(swerve)
     );
     
   }
 
-  public CommandBase Cube_Mobility() {
+  public CommandBase coneChargingStation() {
 
-    PathPlannerTrajectory trajectory = PathPlanner.loadPath("1_Cube_Mobility", 2.5, 3);
+    PathPlannerTrajectory trajectory = PathPlanner.loadPath("charge_station_P1", 2.5, 3);
+    // PathPlannerTrajectory trajectory2 = PathPlanner.loadPath("charge_station_P2", 2.5, 3);
 
     return Commands.sequence(
-      oneCubeAuto(),
+      cone2ndAuto(),
+      baseSwerveCommand(trajectory, true),
+      new Balance(swerve)
+    );
+    
+  }
+
+  public CommandBase cube3rdMobilityRight() {
+
+    PathPlannerTrajectory trajectory = PathPlanner.loadPath("1_Cube_Mobility_Right", 2.5, 3);
+
+    return Commands.sequence(
+      cube3rdAuto(),
+      baseSwerveCommand(trajectory, true)
+    );
+    
+  }
+
+  public CommandBase cube3rdMobilityLeft() {
+
+    PathPlannerTrajectory trajectory = PathPlanner.loadPath("1_Cube_Mobility_Left", 2.5, 3);
+
+    return Commands.sequence(
+      cube3rdAuto(),
       baseSwerveCommand(trajectory, true)
     );
     
@@ -88,7 +115,7 @@ public final class AutoRoutines {
     return new DoublePieceAutoFactory(swerve, arm, elevator, intake, limelight, "Left_2Cube_P1", "Left_2Cube_P2", 5, 3);
   }
 
-  public CommandBase oneCubeAuto() {
+  public CommandBase cube3rdAuto() {
     return Commands.sequence(
       macros.home(),
       macros.cube3rdStage(),
@@ -97,9 +124,51 @@ public final class AutoRoutines {
     );
   }
 
+  public CommandBase cone2ndAuto() {
+    return cube2ndAuto();
+  } 
+
+  public CommandBase cube2ndAuto() {
+    return Commands.sequence(
+      macros.home(),
+      macros.cube2ndStage(),
+      macros.outtake(),
+      macros.stow()
+    );
+  }
+
+  public CommandBase Cone3rdBalance() {
+    PathPlannerTrajectory trajectory = PathPlanner.loadPath("charge_station_P1", 2.5, 3);
+
+    return Commands.sequence(
+      cone3rdAuto(),
+      baseSwerveCommand(trajectory, true),
+      new Balance(swerve)
+    );
+  }
+
+  public CommandBase Cube2ndBalance() {
+    PathPlannerTrajectory trajectory = PathPlanner.loadPath("charge_station_P1", 2.5, 3);
+
+    return Commands.sequence(
+      cube2ndAuto(),
+      baseSwerveCommand(trajectory, true),
+      new Balance(swerve)
+    );
+  }
+  
+  public CommandBase cone3rdAuto() {
+    return Commands.sequence(
+      macros.home(),
+      macros.cone3rdStage(),
+      macros.outtake(),
+      macros.stow()
+    );
+  }
+
   public CommandBase twoCubeAuto() {
-    PathPlannerTrajectory trajectory = PathPlanner.loadPath("Left_2Cube_P1", 0.5, 0.75);
-    PathPlannerTrajectory trajectory2 = PathPlanner.loadPath("Left_2Cube_P2", 0.5, 0.75);
+    PathPlannerTrajectory trajectory = PathPlanner.loadPath("Left_2Cube_P1", 2.0, 2.75);
+    PathPlannerTrajectory trajectory2 = PathPlanner.loadPath("Left_2Cube_P2", 2.5, 2.75);
     
     return Commands.sequence(
       macros.home(),

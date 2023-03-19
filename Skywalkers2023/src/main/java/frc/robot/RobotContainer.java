@@ -15,6 +15,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -50,6 +52,8 @@ public class RobotContainer {
   private final Macros macros = new Macros(swerve, elevator, arm, intake, limelight);
   private final AutoRoutines autoRoutines = new AutoRoutines(swerve, elevator, arm, intake, limelight);
 
+  SendableChooser<Command> m_Chooser = new SendableChooser<>();
+
   public RobotContainer() {
 
 
@@ -65,6 +69,21 @@ public class RobotContainer {
       double speed = -operatorJoystick.getRightY() * ArmConstants.kMaxArmSpeed;
       arm.setSpeed(speed);
     }, arm).unless(arm::isEnabled));
+
+    m_Chooser.setDefaultOption("3rd Stage Cube Balance", autoRoutines.chargingStation());
+    m_Chooser.addOption("3rd Stage Cone Balance", autoRoutines.Cone3rdBalance());
+    m_Chooser.addOption("2nd Stage Cone Balance", autoRoutines.coneChargingStation());
+    m_Chooser.addOption("2nd Stage Cube Balance", autoRoutines.Cube2ndBalance());
+
+    m_Chooser.addOption("3rd Stage Cube", autoRoutines.cube3rdAuto());
+    m_Chooser.addOption("3rd Stage Cone", autoRoutines.cone3rdAuto());
+    m_Chooser.addOption("2nd Stage Cone", autoRoutines.cone2ndAuto());
+    m_Chooser.addOption("2nd Stage Cube", autoRoutines.cube2ndAuto());
+
+    m_Chooser.addOption("2 Cube Auto", autoRoutines.twoCubeAuto());
+
+
+    SmartDashboard.putData(m_Chooser);
 
     configureButtonBindings();
   }
@@ -145,17 +164,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    // return Autos.oneCubeAuto(arm, elevator, intake);
-    PathPlannerTrajectory traj = PathPlanner.loadPath("Straight Path", new PathConstraints(2, 1.5));
-    boolean isFirstPath = true;
-    return autoRoutines.chargingStation();
-    //return new Balance(swerve);
-    // return autoRoutines.Cube_Mobility();
-    // return autoRoutines.oneCubeAuto();
-    // return autoRoutines.oneCubeAuto();
-    // return new DoublePieceAutoFactory(swerve, arm ,elevator, intake, limelight, "BS", "random", 1, 1);
-    // return autoRoutines.oneCubeAuto();
-    // return new DriveForwardDistance(swerve, 0.5);
+    return m_Chooser.getSelected();
   }
 
 

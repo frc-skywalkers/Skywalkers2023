@@ -50,9 +50,9 @@ public final class Constants {
     public static final class Presets {
         public static final Preset STOW_PRESET = new Preset(1.33, 0);
         public static final Preset GROUND_INTAKE_PRESET = new Preset(-0.19, 0.10);
-        public static final Preset SUBSTATION_INTAKE_PRESET = new Preset(0, 1.13);
-        public static final Preset CONE_2ND_STAGE_PRESET = new Preset(0.8, 0.72);
-        public static final Preset CONE_3RD_STAGE_PRESET = new Preset(0.47, 1.38);
+        public static final Preset SUBSTATION_INTAKE_PRESET = new Preset(0.0, 1.13);
+        public static final Preset CONE_2ND_STAGE_PRESET = new Preset(0.8, 0.8);
+        public static final Preset CONE_3RD_STAGE_PRESET = new Preset(0.52, 1.13);
         public static final Preset CUBE_2ND_STAGE_PRESET = new Preset(0, 0.85);
         public static final Preset CUBE_3RD_STAGE_PRESET = new Preset(0, 1.27);   
     }
@@ -155,7 +155,7 @@ public final class Constants {
 
         public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3; // ????
         
-        public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond*3/5; // ?????
+        public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond * 3.000 / 5.0000 * 1.05; // ?????
         public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond/4; //????
     }
 
