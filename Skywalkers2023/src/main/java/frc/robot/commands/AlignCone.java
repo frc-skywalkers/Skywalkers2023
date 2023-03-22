@@ -13,28 +13,27 @@ import edu.wpi.first.math.MathUtil;
 import frc.robot.Constants.*;
 import frc.robot.subsystems.*;
 
-public class MoveToTag extends CommandBase {
-  /** Creates a new MoveToTag. */
+public class AlignCone extends CommandBase {
 
-  private final PIDController xcontroller = new PIDController(LimelightConstants.kPx, LimelightConstants.kIx, LimelightConstants.kDx);
-  private final PIDController ycontroller = new PIDController(LimelightConstants.kPy, LimelightConstants.kIy, LimelightConstants.kDy);
-  private final PIDController rcontroller = new PIDController(LimelightConstants.kPr, LimelightConstants.kIr, LimelightConstants.kDr);
+  private final PIDController xcontroller = new PIDController(0.05, 0, 0); //all in degrees
+  private final PIDController ycontroller = new PIDController(0.05, 0, 0);
+  private final PIDController rcontroller = new PIDController(0.05, 0, 0);
 
   private final double targetXDist;
   private final double targetYDist;
-  private final double targetR;
-  
+  private final double targetR; 
+
   double xspeed;
-  double rspeed;
   double yspeed;
+  double rspeed;
 
   SwerveSubsystem swerveSubsystem;
   Limelight camera;
 
-  boolean ydistreached;
   boolean atSetpoint;
+  boolean ydistreached;
 
-  public MoveToTag(SwerveSubsystem swerveSubsystem, Limelight camera, double targetXDist, double targetYDist, double targetR) {
+  public AlignCone(SwerveSubsystem swerveSubsystem, Limelight camera, double targetXDist, double targetYDist, double targetR) { //meters, meters, degrees
     this.targetXDist = targetXDist;
     this.targetYDist = targetYDist;
     this.targetR = targetR;
@@ -43,10 +42,8 @@ public class MoveToTag extends CommandBase {
     this.camera = camera;
     addRequirements(swerveSubsystem);
     addRequirements(camera);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
-  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     xcontroller.setTolerance(LimelightConstants.xtolerance);
@@ -55,29 +52,25 @@ public class MoveToTag extends CommandBase {
     ydistreached = false;
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double currentXDist = camera.getTZ(); //
-    double currentYDist = camera.getTX();
-    double currentR = camera.getRY();
+    double currentXAngle = -camera.getRTTX(); //+-?
+    double currentYAngle = camera.getRTTY();
+    //double currentR = camera.getRTTS(); //+-?
+    double currentR = swerveSubsystem.getHeading(); //
 
-    xspeed = -1 * MathUtil.clamp((xcontroller.calculate(currentXDist, targetXDist - LimelightConstants.limelightOffsetCenter)), -LimelightConstants.xclamp, LimelightConstants.xclamp);
-    yspeed = -1 * MathUtil.clamp((ycontroller.calculate(currentYDist, targetYDist)), -LimelightConstants.yclamp, LimelightConstants.yclamp);
+    double targetYAngle = Math.atan((LimelightConstants.RTheight - LimelightConstants.cameraheight)/targetYDist);
+    double targetXAngle = Math.atan(((targetXDist + LimelightConstants.limelightOffsetCenter)/targetYDist)); //offset to left side, still - for tags
+
+    xspeed = -1 * MathUtil.clamp((xcontroller.calculate(currentXAngle, targetXAngle)), -LimelightConstants.xclamp, LimelightConstants.xclamp);
+    yspeed = -1 * MathUtil.clamp((ycontroller.calculate(currentYAngle, targetYAngle)), -LimelightConstants.yclamp, LimelightConstants.yclamp);
     rspeed = -0.5 * MathUtil.clamp((rcontroller.calculate(currentR, targetR)), -LimelightConstants.rclamp, LimelightConstants.rclamp);
     
-    SmartDashboard.putNumber("rspeed", rspeed);
-    SmartDashboard.putNumber("xspeed", xspeed);
-    SmartDashboard.putNumber("yspeed", yspeed);
-
-    SmartDashboard.putBoolean("ydistreached", ydistreached);
-
-    swerveSubsystem.drive(xspeed, yspeed, rspeed); //Have to recheck for swerve subsystem
 
     //stopping individually since command only ends with all 3
     if (xcontroller.atSetpoint()){
-      ydistreached = true;
       xspeed = 0;
+      ydistreached = true;
     }
     if (ycontroller.atSetpoint()){
       yspeed = 0;
@@ -89,15 +82,26 @@ public class MoveToTag extends CommandBase {
     //stopping abrupt movement at end
     if (Math.abs(xspeed) < 0.02){
       xspeed = 0;
+      //swerveSubsystem.drive(0, yspeed, rspeed);
     }
     if (Math.abs(yspeed) < 0.02){
       yspeed = 0;
+      //swerveSubsystem.drive(xspeed, 0, rspeed);
     }
     if (Math.abs(rspeed) < 0.02){
       rspeed = 0;
+      //swerveSubsystem.drive(xspeed, yspeed, 0);
     }
+ 
+    //may have to add min speed
+    SmartDashboard.putNumber("rspeed", rspeed);
+    SmartDashboard.putBoolean("ydistreached", ydistreached);
+    SmartDashboard.putNumber("xspeed", xspeed);
+    SmartDashboard.putNumber("yspeed", yspeed);
 
     atSetpoint = (xcontroller.atSetpoint() && ycontroller.atSetpoint() && rcontroller.atSetpoint());
+
+    swerveSubsystem.drive(xspeed, yspeed, rspeed); //xspeed is forward? yspeed is sideways, rspeed is rotational?
 
     //+y = right
     //+x = forward
@@ -105,8 +109,7 @@ public class MoveToTag extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

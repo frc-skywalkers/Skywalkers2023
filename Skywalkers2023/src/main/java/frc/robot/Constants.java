@@ -287,7 +287,9 @@ public final class Constants {
         public static double rtolerance = 5; //degrees
       
         public static double mountingangle = 0; //for adjustable camera
-        public static double cameraheight = Units.inchesToMeters(14); //14-ish inches, to meters
+        public static double cameraheight = Units.inchesToMeters(14); //14-ish inches, to meters, REDO
+        public static double RTheight = Units.inchesToMeters(24.125); //game manual
+
         public static double limelightOffsetCenter = Units.inchesToMeters(10.5);
     }
 

@@ -93,7 +93,9 @@ public class RobotContainer {
 
     driverJoystick.y().onTrue(Commands.runOnce(() -> swerve.reset(), swerve));
     driverJoystick.b().onTrue(Commands.runOnce(() -> swerve.toggleField(), swerve));
-    driverJoystick.x().onTrue(new MoveToTag(swerve, limelight, 0.79, 0, 0));
+
+    driverJoystick.x().toggleOnTrue(new MoveToTag(swerve, limelight, 0.79, 0, 0));
+    
 
     // driverJoystick.a().onTrue(new Balance(swerve));
     driverJoystick.rightBumper().onTrue(Commands.runOnce(swerve::stopModules, swerve));
