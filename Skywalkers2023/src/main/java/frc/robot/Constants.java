@@ -276,21 +276,21 @@ public final class Constants {
         public static double kIy = 0;
         public static double kIr = 0;
       
-        public static double xclamp = 0.5; //slides sideways very slowly
-        public static double yclamp = 0.5;
+        public static double xclamp = 0.6; //slides sideways very slowly
+        public static double yclamp = 0.6;
         public static double rclamp = 0.4;
       
         //public static double tagheight = 0.49; //19.3 inches to meters
       
-        public static double xtolerance = 0.05; 
-        public static double ytolerance = 0.03; 
-        public static double rtolerance = 5; //degrees
+        public static double xtolerance = 2; 
+        public static double ytolerance = 2; 
+        public static double rtolerance = 2; //degrees
       
         public static double mountingangle = 0; //for adjustable camera
-        public static double cameraheight = Units.inchesToMeters(14); //14-ish inches, to meters, REDO
+        public static double cameraheight = Units.inchesToMeters(19); //14-ish inches, to meters, REDO
         public static double RTheight = Units.inchesToMeters(24.125); //game manual
 
-        public static double limelightOffsetCenter = Units.inchesToMeters(10.5);
+        public static double limelightOffsetCenter = Units.inchesToMeters(9.25);
     }
 
 }

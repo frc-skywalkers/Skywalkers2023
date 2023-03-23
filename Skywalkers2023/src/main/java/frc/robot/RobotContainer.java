@@ -28,6 +28,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.autos.AutoRoutines;
 import frc.robot.autos.DoublePieceAutoFactory;
 import frc.robot.autos.DriveForwardDistance;
+import frc.robot.commands.AlignCone;
 import frc.robot.commands.Balance;
 import frc.robot.commands.Macros;
 import frc.robot.commands.MoveToTag;
@@ -94,7 +95,7 @@ public class RobotContainer {
     driverJoystick.y().onTrue(Commands.runOnce(() -> swerve.reset(), swerve));
     driverJoystick.b().onTrue(Commands.runOnce(() -> swerve.toggleField(), swerve));
 
-    driverJoystick.x().toggleOnTrue(new MoveToTag(swerve, limelight, 0.79, 0, 0));
+    driverJoystick.x().toggleOnTrue(new AlignCone(swerve, limelight, 0.5, 0, 0));
     
 
     // driverJoystick.a().onTrue(new Balance(swerve));

@@ -53,6 +53,12 @@ public class MoveToTag extends CommandBase {
     ycontroller.setTolerance(LimelightConstants.ytolerance);
     rcontroller.setTolerance(LimelightConstants.rtolerance);
     ydistreached = false;
+
+    /* 
+    if (swerveSubsystem.getFieldOriented()){
+      swerveSubsystem.toggleField();
+    }
+    */
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -106,6 +112,11 @@ public class MoveToTag extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    /* 
+    if (!swerveSubsystem.getFieldOriented()){
+      swerveSubsystem.toggleField();
+    }
+    */
   }
 
   // Returns true when the command should end.

@@ -15,9 +15,9 @@ import frc.robot.subsystems.*;
 
 public class AlignCone extends CommandBase {
 
-  private final PIDController xcontroller = new PIDController(0.05, 0, 0); //all in degrees
-  private final PIDController ycontroller = new PIDController(0.05, 0, 0);
-  private final PIDController rcontroller = new PIDController(0.05, 0, 0);
+  private final PIDController xcontroller = new PIDController(0.15, 0, 0); //all in degrees
+  private final PIDController ycontroller = new PIDController(0.15, 0, 0);
+  private final PIDController rcontroller = new PIDController(0.15, 0, 0);
 
   private final double targetXDist;
   private final double targetYDist;
@@ -32,6 +32,7 @@ public class AlignCone extends CommandBase {
 
   boolean atSetpoint;
   boolean ydistreached;
+  boolean xdistreached;
 
   public AlignCone(SwerveSubsystem swerveSubsystem, Limelight camera, double targetXDist, double targetYDist, double targetR) { //meters, meters, degrees
     this.targetXDist = targetXDist; //forward
@@ -50,11 +51,18 @@ public class AlignCone extends CommandBase {
     ycontroller.setTolerance(LimelightConstants.ytolerance);
     rcontroller.setTolerance(LimelightConstants.rtolerance);
     ydistreached = false;
+    xdistreached = false;
+
+    /* 
+    if (swerveSubsystem.getFieldOriented()){
+      swerveSubsystem.toggleField();
+    }
+    */
   }
 
   @Override
   public void execute() {
-    double currentYAngle = -camera.getRTTX(); //limelight and swerve directions swapped, ref frame (robot to the right +)
+    double currentYAngle = camera.getRTTX(); //limelight and swerve directions swapped, ref frame (robot to the right +)
     double currentXAngle = camera.getRTTY(); 
     //double currentR = camera.getRTTS(); //
     double currentR = swerveSubsystem.getHeading(); //
@@ -62,29 +70,30 @@ public class AlignCone extends CommandBase {
     double targetXAngle = Math.atan((LimelightConstants.RTheight - LimelightConstants.cameraheight)/targetXDist) - LimelightConstants.mountingangle; //upwards angle
     double targetYAngle = Math.atan(((targetYDist - LimelightConstants.limelightOffsetCenter)/targetXDist)); //+-?
 
-    xspeed = -1 * MathUtil.clamp((xcontroller.calculate(currentXAngle, targetXAngle)), -LimelightConstants.xclamp, LimelightConstants.xclamp);
+    xspeed = 1 * MathUtil.clamp((xcontroller.calculate(currentXAngle, targetXAngle)), -LimelightConstants.xclamp, LimelightConstants.xclamp);
     yspeed = 1 * MathUtil.clamp((ycontroller.calculate(currentYAngle, targetYAngle)), -LimelightConstants.yclamp, LimelightConstants.yclamp); //-
     rspeed = -0.5 * MathUtil.clamp((rcontroller.calculate(currentR, targetR)), -LimelightConstants.rclamp, LimelightConstants.rclamp);
     
 
     if (xcontroller.atSetpoint()){
-      xspeed = 0;
-      ydistreached = true;
+      xspeed = -0.5;
+      xdistreached = true;
     }
     if (ycontroller.atSetpoint()){
-      yspeed = 0;
+      yspeed = -0.5;
+      ydistreached = true;
     }
     if (rcontroller.atSetpoint()){
       rspeed = 0;
     }
 
-    if (Math.abs(xspeed) < 0.02){
-      xspeed = 0;
+    if (Math.abs(xspeed) < 0.2){
+      xspeed = -0.5;
     }
-    if (Math.abs(yspeed) < 0.02){
-      yspeed = 0;
+    if (Math.abs(yspeed) < 0.2){
+      yspeed = -0.5;
     }
-    if (Math.abs(rspeed) < 0.02){
+    if (Math.abs(rspeed) < 0.2){
       rspeed = 0;
     }
  
@@ -94,19 +103,28 @@ public class AlignCone extends CommandBase {
     SmartDashboard.putNumber("xspeed", xspeed);
     SmartDashboard.putNumber("yspeed", yspeed);
 
+    SmartDashboard.putNumber("xerror", targetXAngle-currentXAngle);
+    SmartDashboard.putNumber("yerror", targetYAngle-currentYAngle);
+
     atSetpoint = (xcontroller.atSetpoint() && ycontroller.atSetpoint() && rcontroller.atSetpoint());
 
-    swerveSubsystem.drive(xspeed, yspeed, rspeed); //xspeed is forward? yspeed is sideways, rspeed is rotational?
+    swerveSubsystem.drive(xspeed+0.5, yspeed+0.5, 0); //xspeed is forward? yspeed is sideways, rspeed is rotational?
 
     //+y = right
     //+x = forward
   }
 
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    /* 
+    if (!swerveSubsystem.getFieldOriented()){
+      swerveSubsystem.toggleField();
+    }
+    */
+  }
 
   @Override
   public boolean isFinished() {
-    return ((atSetpoint) || (xspeed == 0 && yspeed == 0 && rspeed == 0));
+    return ((atSetpoint) || (xspeed == -0.5 && yspeed == -0.5 && rspeed == -0.5));
   }
 }
