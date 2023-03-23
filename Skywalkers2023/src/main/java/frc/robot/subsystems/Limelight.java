@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 public class Limelight extends SubsystemBase {
-  /** Creates a new Limelight. */
 
   NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
   int targetID;
@@ -51,11 +50,32 @@ public class Limelight extends SubsystemBase {
     limelightTable.getEntry("pipeline").setNumber(0);
     cameratotarget = limelightTable.getEntry("targetpose_cameraspace").getDoubleArray(new double[6]); //x, y, z, in meters. roll, pitch, yaw in degrees  (translation + rotation)
     return (cameratotarget);
+
+    /*
+     * (TY, TZ, TX, RY, RZ, RX)
+     * left/right
+     * up/down
+     * front/back
+     * rotation about left/right (y) axis, pitch
+     * rotation about up/down (z) axis, yaw
+     * rotation about front/back (x) axis, roll
+     */
   }
 
   public Transform3d CamtoTarget() { //order maybe incorrect??
     var t = getCamtoTarget();
-    return new Transform3d(new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)), new Pose3d(t[0], t[1], t[2], new Rotation3d(t[3], t[4], t[5])));
+    /*
+     * (x, y, z, roll, pitch, yaw) 
+     * forward/backward, along length of field
+     * left/right, along width of field
+     * up/down
+     * rotation about left/right axis
+     * rotation about forward/backward axis
+     * rotation about up/down (z) axis, yaw
+     * 
+     * field orientation (x and y) switched, ordering switched
+     */
+    return new Transform3d(new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)), new Pose3d(t[2], t[0], t[1], new Rotation3d(t[3], t[5], t[4])));
   }
 
   public static final Pose3d[] blueGameAprilTags = { //copied, check all
@@ -71,57 +91,57 @@ public class Limelight extends SubsystemBase {
     new Pose3d(1.03, 1.07, 0.46, new Rotation3d(0, 0, 0))
   };
 
-  public Pose3d robotpose() {
+  public Pose3d campose() {
     var targetPose = blueGameAprilTags[getId()];
-    return targetPose.transformBy(CamtoTarget().inverse());
+    return targetPose.transformBy(CamtoTarget().inverse()); //target to camera
   }
 
-  public double getTX(){ //front/back, used for ycontroller
+  public double getTY(){ //left right, y controller
     limelightTable.getEntry("pipeline").setNumber(0);
-    cameratotarget = limelightTable.getEntry("targetpose_cameraspace").getDoubleArray(new double[6]); //x, y, z, in meters. roll, pitch, yaw in degrees  (translation + rotation)
+    cameratotarget = limelightTable.getEntry("targetpose_cameraspace").getDoubleArray(new double[6]); //z(up/down), y(left/right), x(forward/backward), rx?, ry(left/right), rz?
     return (cameratotarget[0]);
   }
 
-  public double getTY(){ //up/down, not used
+  public double getTZ(){ //up down, not used
     limelightTable.getEntry("pipeline").setNumber(0);
-    cameratotarget = limelightTable.getEntry("targetpose_cameraspace").getDoubleArray(new double[6]); //x, y, z, in meters. roll, pitch, yaw in degrees  (translation + rotation)
+    cameratotarget = limelightTable.getEntry("targetpose_cameraspace").getDoubleArray(new double[6]); 
     return (cameratotarget[1]);
   }
 
-  public double getTZ(){ //left/right, used for xcontroller
+  public double getTX(){  //front back, x controller
     limelightTable.getEntry("pipeline").setNumber(0);
-    cameratotarget = limelightTable.getEntry("targetpose_cameraspace").getDoubleArray(new double[6]); //x, y, z, in meters. roll, pitch, yaw in degrees  (translation + rotation)
+    cameratotarget = limelightTable.getEntry("targetpose_cameraspace").getDoubleArray(new double[6]); 
     return (cameratotarget[2]);
   }
 
-  public double getRX(){ //not used
+  public double getRY(){ 
     limelightTable.getEntry("pipeline").setNumber(0);
-    cameratotarget = limelightTable.getEntry("targetpose_cameraspace").getDoubleArray(new double[6]); //x, y, z, in meters. roll, pitch, yaw in degrees  (translation + rotation)
+    cameratotarget = limelightTable.getEntry("targetpose_cameraspace").getDoubleArray(new double[6]); 
     return (cameratotarget[3]);
   }
 
-  public double getRY(){ //left/right, used for rcontroller
+  public double getRZ(){ //rotation used
     limelightTable.getEntry("pipeline").setNumber(0);
-    cameratotarget = limelightTable.getEntry("targetpose_cameraspace").getDoubleArray(new double[6]); //x, y, z, in meters. roll, pitch, yaw in degrees  (translation + rotation)
+    cameratotarget = limelightTable.getEntry("targetpose_cameraspace").getDoubleArray(new double[6]); 
     return (cameratotarget[4]);
   }
 
-  public double getRZ(){ //not used
+  public double getRX(){
     limelightTable.getEntry("pipeline").setNumber(0);
-    cameratotarget = limelightTable.getEntry("targetpose_cameraspace").getDoubleArray(new double[6]); //x, y, z, in meters. roll, pitch, yaw in degrees  (translation + rotation)
+    cameratotarget = limelightTable.getEntry("targetpose_cameraspace").getDoubleArray(new double[6]); 
     return (cameratotarget[5]);
   }
 
   //retroreflective tape pipeline
 
-  public double getRTTX(){
+  public double getRTTX(){ //left/right
     limelightTable.getEntry("pipeline").setNumber(1);
     NetworkTableEntry tx = limelightTable.getEntry("tx");
     double x = tx.getDouble(0.0);
     return x;
   }
 
-  public double getRTTY(){
+  public double getRTTY(){ //up/down
     limelightTable.getEntry("pipeline").setNumber(1);
     NetworkTableEntry ty = limelightTable.getEntry("ty");
     double y = ty.getDouble(0.0);

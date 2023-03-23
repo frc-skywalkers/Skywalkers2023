@@ -58,12 +58,12 @@ public class MoveToTag extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double currentXDist = camera.getTZ(); //
-    double currentYDist = camera.getTX();
-    double currentR = camera.getRY();
+    double currentXDist = camera.getTX(); 
+    double currentYDist = camera.getTY();
+    double currentR = camera.getRZ();
 
-    xspeed = -1 * MathUtil.clamp((xcontroller.calculate(currentXDist, targetXDist - LimelightConstants.limelightOffsetCenter)), -LimelightConstants.xclamp, LimelightConstants.xclamp);
-    yspeed = -1 * MathUtil.clamp((ycontroller.calculate(currentYDist, targetYDist)), -LimelightConstants.yclamp, LimelightConstants.yclamp);
+    xspeed = -1 * MathUtil.clamp((xcontroller.calculate(currentXDist, targetXDist)), -LimelightConstants.xclamp, LimelightConstants.xclamp);
+    yspeed = -1 * MathUtil.clamp((ycontroller.calculate(currentYDist, targetYDist - LimelightConstants.limelightOffsetCenter)), -LimelightConstants.yclamp, LimelightConstants.yclamp);
     rspeed = -0.5 * MathUtil.clamp((rcontroller.calculate(currentR, targetR)), -LimelightConstants.rclamp, LimelightConstants.rclamp);
     
     SmartDashboard.putNumber("rspeed", rspeed);
@@ -76,10 +76,10 @@ public class MoveToTag extends CommandBase {
 
     //stopping individually since command only ends with all 3
     if (xcontroller.atSetpoint()){
-      ydistreached = true;
       xspeed = 0;
     }
     if (ycontroller.atSetpoint()){
+      ydistreached = true;
       yspeed = 0;
     }
     if (rcontroller.atSetpoint()){

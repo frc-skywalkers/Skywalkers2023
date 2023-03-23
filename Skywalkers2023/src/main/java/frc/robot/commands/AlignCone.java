@@ -34,8 +34,8 @@ public class AlignCone extends CommandBase {
   boolean ydistreached;
 
   public AlignCone(SwerveSubsystem swerveSubsystem, Limelight camera, double targetXDist, double targetYDist, double targetR) { //meters, meters, degrees
-    this.targetXDist = targetXDist;
-    this.targetYDist = targetYDist;
+    this.targetXDist = targetXDist; //forward
+    this.targetYDist = targetYDist; //sideways
     this.targetR = targetR;
 
     this.swerveSubsystem = swerveSubsystem;
@@ -54,20 +54,19 @@ public class AlignCone extends CommandBase {
 
   @Override
   public void execute() {
-    double currentXAngle = -camera.getRTTX(); //+-?
-    double currentYAngle = camera.getRTTY();
-    //double currentR = camera.getRTTS(); //+-?
+    double currentYAngle = -camera.getRTTX(); //limelight and swerve directions swapped, ref frame (robot to the right +)
+    double currentXAngle = camera.getRTTY(); 
+    //double currentR = camera.getRTTS(); //
     double currentR = swerveSubsystem.getHeading(); //
 
-    double targetYAngle = Math.atan((LimelightConstants.RTheight - LimelightConstants.cameraheight)/targetYDist);
-    double targetXAngle = Math.atan(((targetXDist + LimelightConstants.limelightOffsetCenter)/targetYDist)); //offset to left side, still - for tags
+    double targetXAngle = Math.atan((LimelightConstants.RTheight - LimelightConstants.cameraheight)/targetXDist) - LimelightConstants.mountingangle; //upwards angle
+    double targetYAngle = Math.atan(((targetYDist - LimelightConstants.limelightOffsetCenter)/targetXDist)); //+-?
 
     xspeed = -1 * MathUtil.clamp((xcontroller.calculate(currentXAngle, targetXAngle)), -LimelightConstants.xclamp, LimelightConstants.xclamp);
-    yspeed = -1 * MathUtil.clamp((ycontroller.calculate(currentYAngle, targetYAngle)), -LimelightConstants.yclamp, LimelightConstants.yclamp);
+    yspeed = 1 * MathUtil.clamp((ycontroller.calculate(currentYAngle, targetYAngle)), -LimelightConstants.yclamp, LimelightConstants.yclamp); //-
     rspeed = -0.5 * MathUtil.clamp((rcontroller.calculate(currentR, targetR)), -LimelightConstants.rclamp, LimelightConstants.rclamp);
     
 
-    //stopping individually since command only ends with all 3
     if (xcontroller.atSetpoint()){
       xspeed = 0;
       ydistreached = true;
@@ -79,18 +78,14 @@ public class AlignCone extends CommandBase {
       rspeed = 0;
     }
 
-    //stopping abrupt movement at end
     if (Math.abs(xspeed) < 0.02){
       xspeed = 0;
-      //swerveSubsystem.drive(0, yspeed, rspeed);
     }
     if (Math.abs(yspeed) < 0.02){
       yspeed = 0;
-      //swerveSubsystem.drive(xspeed, 0, rspeed);
     }
     if (Math.abs(rspeed) < 0.02){
       rspeed = 0;
-      //swerveSubsystem.drive(xspeed, yspeed, 0);
     }
  
     //may have to add min speed
@@ -107,11 +102,9 @@ public class AlignCone extends CommandBase {
     //+x = forward
   }
 
-  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return ((atSetpoint) || (xspeed == 0 && yspeed == 0 && rspeed == 0));
