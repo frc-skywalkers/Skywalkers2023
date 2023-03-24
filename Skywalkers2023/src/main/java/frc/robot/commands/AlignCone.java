@@ -15,8 +15,8 @@ import frc.robot.subsystems.*;
 
 public class AlignCone extends CommandBase {
 
-  private final PIDController xcontroller = new PIDController(0.15, 0, 0); //all in degrees
-  private final PIDController ycontroller = new PIDController(0.15, 0, 0);
+  private final PIDController xcontroller = new PIDController(8, 0, 0); //all in degrees
+  private final PIDController ycontroller = new PIDController(8, 0, 0);
   private final PIDController rcontroller = new PIDController(0.15, 0, 0);
 
   private final double targetXDist;
@@ -26,6 +26,8 @@ public class AlignCone extends CommandBase {
   double xspeed;
   double yspeed;
   double rspeed;
+  double minxspeed;
+  double minyspeed;
 
   SwerveSubsystem swerveSubsystem;
   Limelight camera;
@@ -35,8 +37,8 @@ public class AlignCone extends CommandBase {
   boolean xdistreached;
 
   public AlignCone(SwerveSubsystem swerveSubsystem, Limelight camera, double targetXDist, double targetYDist, double targetR) { //meters, meters, degrees
-    this.targetXDist = targetXDist; //forward
-    this.targetYDist = targetYDist; //sideways
+    this.targetXDist = targetXDist; //positive forward
+    this.targetYDist = targetYDist; //positive when robot to the right
     this.targetR = targetR;
 
     this.swerveSubsystem = swerveSubsystem;
@@ -62,25 +64,35 @@ public class AlignCone extends CommandBase {
 
   @Override
   public void execute() {
-    double currentYAngle = camera.getRTTX(); //limelight and swerve directions swapped, ref frame (robot to the right +)
+    double currentYAngle = camera.getRTTX(); //-, limelight and swerve directions swapped, ref frame (robot to the right +)
     double currentXAngle = camera.getRTTY(); 
     //double currentR = camera.getRTTS(); //
     double currentR = swerveSubsystem.getHeading(); //
 
-    double targetXAngle = Math.atan((LimelightConstants.RTheight - LimelightConstants.cameraheight)/targetXDist) - LimelightConstants.mountingangle; //upwards angle
-    double targetYAngle = Math.atan(((targetYDist - LimelightConstants.limelightOffsetCenter)/targetXDist)); //+-?
+    double currentXdistance = (LimelightConstants.RTheight - LimelightConstants.cameraheight)/Math.tan(currentXAngle*Math.PI/180); //radians
+    double currentYdistance = Math.tan(currentYAngle*Math.PI/180) * currentXdistance; //+
 
-    xspeed = 1 * MathUtil.clamp((xcontroller.calculate(currentXAngle, targetXAngle)), -LimelightConstants.xclamp, LimelightConstants.xclamp);
-    yspeed = 1 * MathUtil.clamp((ycontroller.calculate(currentYAngle, targetYAngle)), -LimelightConstants.yclamp, LimelightConstants.yclamp); //-
-    rspeed = -0.5 * MathUtil.clamp((rcontroller.calculate(currentR, targetR)), -LimelightConstants.rclamp, LimelightConstants.rclamp);
+    //double targetXAngle = Math.atan((LimelightConstants.RTheight - LimelightConstants.cameraheight)/targetXDist) - LimelightConstants.mountingangle; //upwards angle
+    //double targetYAngle = Math.atan(((targetYDist - LimelightConstants.limelightOffsetCenter)/targetXDist)); //+-?
+
+    double robottargetY = targetYDist + LimelightConstants.limelightOffsetCenter;
+
+    xspeed = 1 * MathUtil.clamp((xcontroller.calculate(currentXdistance, targetXDist)), -LimelightConstants.xclamp, LimelightConstants.xclamp);
+    yspeed = 1 * MathUtil.clamp((ycontroller.calculate(currentYdistance, robottargetY)), -LimelightConstants.yclamp, LimelightConstants.yclamp); //-
+    rspeed = 0;
+
+    //rspeed = -0.5 * MathUtil.clamp((rcontroller.calculate(currentR, targetR)), -LimelightConstants.rclamp, LimelightConstants.rclamp);
     
+    minxspeed = 0.5 * (xspeed/Math.abs(xspeed));
+    minyspeed = 0.5 * (yspeed/Math.abs(yspeed));
+
 
     if (xcontroller.atSetpoint()){
-      xspeed = -0.5;
+      xspeed = -minxspeed;
       xdistreached = true;
     }
     if (ycontroller.atSetpoint()){
-      yspeed = -0.5;
+      yspeed = -minyspeed;
       ydistreached = true;
     }
     if (rcontroller.atSetpoint()){
@@ -88,16 +100,17 @@ public class AlignCone extends CommandBase {
     }
 
     if (Math.abs(xspeed) < 0.2){
-      xspeed = -0.5;
+      xspeed = -minxspeed;
     }
     if (Math.abs(yspeed) < 0.2){
-      yspeed = -0.5;
+      yspeed = -minyspeed;
     }
     if (Math.abs(rspeed) < 0.2){
       rspeed = 0;
     }
  
     //may have to add min speed
+    /* 
     SmartDashboard.putNumber("rspeed", rspeed);
     SmartDashboard.putBoolean("ydistreached", ydistreached);
     SmartDashboard.putNumber("xspeed", xspeed);
@@ -105,12 +118,16 @@ public class AlignCone extends CommandBase {
 
     SmartDashboard.putNumber("xerror", targetXAngle-currentXAngle);
     SmartDashboard.putNumber("yerror", targetYAngle-currentYAngle);
+    */
+    SmartDashboard.putNumber("xdistance", currentXdistance);
+    SmartDashboard.putNumber("ydistance", currentYdistance);
+
 
     atSetpoint = (xcontroller.atSetpoint() && ycontroller.atSetpoint() && rcontroller.atSetpoint());
 
-    swerveSubsystem.drive(xspeed+0.5, yspeed+0.5, 0); //xspeed is forward? yspeed is sideways, rspeed is rotational?
+    swerveSubsystem.drive(0, yspeed+minyspeed, 0); //xspeed is forward? yspeed is sideways, rspeed is rotational?
 
-    //+y = right
+    //+y = right?
     //+x = forward
   }
 
@@ -125,6 +142,6 @@ public class AlignCone extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return ((atSetpoint) || (xspeed == -0.5 && yspeed == -0.5 && rspeed == -0.5));
+    return ((atSetpoint) || (xspeed == -minxspeed && yspeed == -minyspeed && rspeed == 0));
   }
 }

@@ -19,6 +19,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.LimelightConstants;
 
 
 
@@ -60,6 +61,8 @@ public class Limelight extends SubsystemBase {
      * rotation about up/down (z) axis, yaw
      * rotation about front/back (x) axis, roll
      */
+
+     //tx: left/right, ty: up/down, tz: forward/backward
   }
 
   public Transform3d CamtoTarget() { //order maybe incorrect??
@@ -75,13 +78,13 @@ public class Limelight extends SubsystemBase {
      * 
      * field orientation (x and y) switched, ordering switched
      */
-    return new Transform3d(new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)), new Pose3d(t[2], t[0], t[1], new Rotation3d(t[3], t[5], t[4])));
+    return new Transform3d(new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)), new Pose3d(t[2], t[0], t[1], new Rotation3d(t[5], t[3], t[4])));
   }
 
   public static final Pose3d[] blueGameAprilTags = { //copied, check all
-    // new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)),
-    new Pose3d(15.51, 1.07, 0.46, new Rotation3d(0, 0, Math.PI)),
-    new Pose3d(15.51, 2.74, 0.46, new Rotation3d(0, 0, Math.PI)),
+     new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)),
+    //new Pose3d(15.51, 1.07, 0.46, new Rotation3d(0, 0, Math.PI)),
+    new Pose3d(15.51, 2.74, 0.46, new Rotation3d(0, 0, Math.PI)), //field layout
     new Pose3d(15.51, 4.42, 0.46, new Rotation3d(0, 0, Math.PI)),
     new Pose3d(16.18, 6.75, 0.69, new Rotation3d(0, 0, Math.PI)),
     new Pose3d(0.36, 6.75, 0.69, new Rotation3d(0, 0, 0)),
@@ -168,5 +171,13 @@ public class Limelight extends SubsystemBase {
     SmartDashboard.putNumber("RTTY", getRTTY());
     SmartDashboard.putNumber("RTTA", getRTTA());
     SmartDashboard.putNumber("TAGID", getId());
+
+    
+    double currentXdistance = (LimelightConstants.RTheight - LimelightConstants.cameraheight)/Math.tan(getRTTY()*Math.PI/180); //radians
+    double currentYdistance = Math.tan(getRTTX()*Math.PI/180) * currentXdistance; //+
+
+    SmartDashboard.putNumber("xdist", currentXdistance);
+    SmartDashboard.putNumber("ydist", currentYdistance);
+    
   }
 }

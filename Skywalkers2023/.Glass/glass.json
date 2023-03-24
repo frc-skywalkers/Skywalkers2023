@@ -71,14 +71,14 @@
     "Plot <1>": {
       "plots": [
         {
-          "height": 463
+          "height": 0
         }
       ]
     },
     "Plot <2>": {
       "plots": [
         {
-          "height": 332,
+          "height": 520,
           "series": [
             {
               "color": [
@@ -91,10 +91,7 @@
             }
           ]
         }
-      ],
-      "window": {
-        "visible": false
-      }
+      ]
     },
     "Plot <3>": {
       "plots": [

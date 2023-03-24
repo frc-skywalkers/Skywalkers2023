@@ -78,7 +78,6 @@ public class SwerveSubsystem extends SubsystemBase {
   public SwerveSubsystem() {
     camera = new Limelight();
     poseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics, getRotation2d(), getModulePositions(), new Pose2d(), VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)), VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
-    poseEstimator.addVisionMeasurement(camera.campose().toPose2d(), Timer.getFPGATimestamp() - 0.3);
 
     new Thread(() -> {
       try {
@@ -141,6 +140,14 @@ public class SwerveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Robot X Location", Units.metersToInches(getPose().getTranslation().getX()));
     SmartDashboard.putNumber("Robot Y Location", Units.metersToInches(getPose().getTranslation().getY()));
     SmartDashboard.putNumber("Robot Heading", getHeading());
+
+    Pose2d estimatedPose = camera.campose().toPose2d();
+
+    SmartDashboard.putNumber("Estimated X Location", estimatedPose.getX());
+    SmartDashboard.putNumber("Estimated Y Location", estimatedPose.getY());
+
+    poseEstimator.addVisionMeasurement(estimatedPose, Timer.getFPGATimestamp() - 0.3);
+
     // SmartDashboard.putBoolean("field Oriented", fieldOriented);
     // SmartDashboard.putNumber("Pitch", getRoll());
 
