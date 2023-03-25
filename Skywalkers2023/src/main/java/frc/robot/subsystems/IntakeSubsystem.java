@@ -58,20 +58,28 @@ public class IntakeSubsystem extends SubsystemBase {
     return intake.getStatorCurrent();
   }
 
-  public boolean objectHeld() {
-    // double expected = getExpectedVelocity();
-    // double actual = getActualVelocity();
-    // double ratio = Math.abs(expected/actual);
-    // return ratio > IntakeConstants.kObjectHeldRatioThreshold;
-    return getActualCurrent() > IntakeConstants.kObjectHeldThreshold * IntakeConstants.kMaxIntakeSpeed;
+  public boolean objectHeld(boolean intaking) {
+    if(intaking == true) {
+      return getActualCurrent() > IntakeConstants.kObjectHeldThreshold * Math.abs(IntakeConstants.kMaxIntakeSpeed);
+    } else {
+      return getActualCurrent() > IntakeConstants.kObjectHeldThreshold * Math.abs(IntakeConstants.kMaxOuttakeSpeed);
+    }
   }
 
-  public boolean speedUp() {
-    return getActualCurrent() > IntakeConstants.kSpeedUpThreshold * IntakeConstants.kMaxIntakeSpeed;
+  public boolean speedUp(boolean intaking) {
+    if(intaking == true) {
+      return getActualCurrent() > IntakeConstants.kSpeedUpThreshold * Math.abs(IntakeConstants.kMaxIntakeSpeed);
+    } else {
+      return getActualCurrent() > IntakeConstants.kSpeedUpThreshold * Math.abs(IntakeConstants.kMaxOuttakeSpeed);
+    }
   }
 
-  public boolean objectOut() {
-    return getActualCurrent() < IntakeConstants.kObjectOutThreshold * IntakeConstants.kMaxIntakeSpeed;
+  public boolean objectOut(boolean intaking) {
+    if(intaking == true) {
+      return getActualCurrent() < IntakeConstants.kObjectOutThreshold * Math.abs(IntakeConstants.kMaxIntakeSpeed);
+    } else {
+      return getActualCurrent() < IntakeConstants.kObjectOutThreshold * Math.abs(IntakeConstants.kMaxOuttakeSpeed);
+    }
   }
 
   public void holdObject() {
@@ -80,10 +88,9 @@ public class IntakeSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    /*SmartDashboard.putNumber("Velocity", getActualVelocity());
-    SmartDashboard.putNumber("Speed", intakeSpeed);
-    SmartDashboard.putBoolean("Object Held", objectHeld());
-    SmartDashboard.putNumber("Current", intake.getStatorCurrent());
-    System.out.println("Current: " + intake.getStatorCurrent());*/
+    SmartDashboard.putNumber("Intake Velocity", getActualVelocity());
+    SmartDashboard.putNumber("Intake Speed", intakeSpeed);
+    SmartDashboard.putBoolean("Intake Object Held", objectHeld(true));
+    SmartDashboard.putNumber("Intake Current", intake.getStatorCurrent());
   }
 }

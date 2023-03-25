@@ -77,22 +77,23 @@ public class AlignCone extends CommandBase {
 
     double robottargetY = targetYDist + LimelightConstants.limelightOffsetCenter;
 
-    xspeed = 1 * MathUtil.clamp((xcontroller.calculate(currentXdistance, targetXDist)), -LimelightConstants.xclamp, LimelightConstants.xclamp);
-    yspeed = 1 * MathUtil.clamp((ycontroller.calculate(currentYdistance, robottargetY)), -LimelightConstants.yclamp, LimelightConstants.yclamp); //-
-    rspeed = 0;
-
-    //rspeed = -0.5 * MathUtil.clamp((rcontroller.calculate(currentR, targetR)), -LimelightConstants.rclamp, LimelightConstants.rclamp);
+    //xspeed = -1 * MathUtil.clamp((xcontroller.calculate(currentXdistance, targetXDist)), -LimelightConstants.xclamp, LimelightConstants.xclamp);
+    //yspeed = 1 * MathUtil.clamp((ycontroller.calculate(currentYdistance, robottargetY)), -LimelightConstants.yclamp, LimelightConstants.yclamp); //-
+    //rspeed = 0;
+    xspeed = 0;
+    yspeed = 0;
+    rspeed = 0.5 * MathUtil.clamp((rcontroller.calculate(currentR, targetR)), -LimelightConstants.rclamp, LimelightConstants.rclamp);
     
-    minxspeed = 0.5 * (xspeed/Math.abs(xspeed));
-    minyspeed = 0.5 * (yspeed/Math.abs(yspeed));
+    //minxspeed = 0.5 * (xspeed/Math.abs(xspeed));
+    //minyspeed = 0.5 * (yspeed/Math.abs(yspeed));
 
 
     if (xcontroller.atSetpoint()){
-      xspeed = -minxspeed;
+      xspeed = 0;
       xdistreached = true;
     }
     if (ycontroller.atSetpoint()){
-      yspeed = -minyspeed;
+      yspeed = 0;
       ydistreached = true;
     }
     if (rcontroller.atSetpoint()){
@@ -100,32 +101,36 @@ public class AlignCone extends CommandBase {
     }
 
     if (Math.abs(xspeed) < 0.2){
-      xspeed = -minxspeed;
+      xspeed =0;
     }
     if (Math.abs(yspeed) < 0.2){
-      yspeed = -minyspeed;
+      yspeed = 0;
     }
+    /* 
     if (Math.abs(rspeed) < 0.2){
       rspeed = 0;
     }
+    */
  
     //may have to add min speed
-    /* 
+    
     SmartDashboard.putNumber("rspeed", rspeed);
-    SmartDashboard.putBoolean("ydistreached", ydistreached);
+    SmartDashboard.putNumber("currentxdist", currentXdistance);
+    SmartDashboard.putNumber("currentydist", currentYdistance);
+
     SmartDashboard.putNumber("xspeed", xspeed);
     SmartDashboard.putNumber("yspeed", yspeed);
 
-    SmartDashboard.putNumber("xerror", targetXAngle-currentXAngle);
-    SmartDashboard.putNumber("yerror", targetYAngle-currentYAngle);
-    */
+    //SmartDashboard.putNumber("xerror", targetXAngle-currentXAngle);
+    //SmartDashboard.putNumber("yerror", targetYAngle-currentYAngle);
+    
     SmartDashboard.putNumber("xdistance", currentXdistance);
     SmartDashboard.putNumber("ydistance", currentYdistance);
 
 
     atSetpoint = (xcontroller.atSetpoint() && ycontroller.atSetpoint() && rcontroller.atSetpoint());
 
-    swerveSubsystem.drive(0, yspeed+minyspeed, 0); //xspeed is forward? yspeed is sideways, rspeed is rotational?
+    swerveSubsystem.drive(xspeed, yspeed, rspeed); //xspeed is forward? yspeed is sideways, rspeed is rotational?
 
     //+y = right?
     //+x = forward
@@ -142,6 +147,6 @@ public class AlignCone extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return ((atSetpoint) || (xspeed == -minxspeed && yspeed == -minyspeed && rspeed == 0));
+    return ((atSetpoint) || (xspeed == 0 && yspeed == 0 && rspeed == 0));
   }
 }

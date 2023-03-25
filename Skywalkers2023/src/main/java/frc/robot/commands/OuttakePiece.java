@@ -40,13 +40,13 @@ public class OuttakePiece extends CommandBase {
   @Override
   public void execute() {
     if(stage == 0) {
-      if(!intake.objectOut()) { //waits for the spike when the piece is still stuck
+      if(!intake.objectOut(false)) { //waits for the spike when the piece is still stuck
         stage = 1;
       } else {
         intake.moveOut();
       }
     } else {
-      if(intake.objectOut()) { // now it waits for spike to lower, i.e. object out 
+      if(intake.objectOut(false)) { // now it waits for spike to lower, i.e. object out 
         stage = -1;
         intake.stop();
         outFail.stop();

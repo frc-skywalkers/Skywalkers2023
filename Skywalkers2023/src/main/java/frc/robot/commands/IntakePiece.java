@@ -43,7 +43,7 @@ public class IntakePiece extends CommandBase {
   @Override
   public void execute() {
     if(stage == 0) {
-      if(intake.speedUp()) { // waits for power to go up
+      if(intake.speedUp(true)) { // waits for power to go up
         stage = 1;
         speedUp.stop();
       } else {
@@ -58,7 +58,7 @@ public class IntakePiece extends CommandBase {
           }
       }
     } else { //starts checking for game pieces once its speed up
-      if(intake.objectHeld()) { // waits for spike when object is intaked
+      if(intake.objectHeld(true)) { // waits for spike when object is intaked
         intake.stop();
         finished = true;
         stage = -1;

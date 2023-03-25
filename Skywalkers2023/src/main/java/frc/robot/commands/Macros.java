@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.LimelightConstants;
 import frc.robot.Constants.Presets;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Limelight;
@@ -101,7 +102,21 @@ public class Macros {
   }
 
   public CommandBase outtake() {
-    return new OuttakePiece(intake).withTimeout(1);
+    return new OuttakePiece(intake).withTimeout(3);
+  }
+
+  public CommandBase alignCone2ndStage() {
+    return new AlignCone(swerve, limelight, LimelightConstants.targetXMeters, LimelightConstants.targetYMeters, LimelightConstants.targetRDeg);
+  }
+
+  public CommandBase scoreCone2ndStage() {
+    return Commands.sequence(
+      alignCone2ndStage(),
+      cone2ndStage(),
+      moveToPreset(Presets.CONE_2ND_STAGE_PRESET.kElevatorPos, 0),
+      outtake(),
+      stow()
+    );
   }
 
 

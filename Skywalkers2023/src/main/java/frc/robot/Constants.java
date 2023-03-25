@@ -48,7 +48,7 @@ public final class Constants {
     }
 
     public static final class Presets {
-        public static final Preset STOW_PRESET = new Preset(1.33, 0);
+        public static final Preset STOW_PRESET = new Preset(1.13, 0);
         public static final Preset GROUND_INTAKE_PRESET = new Preset(-0.19, 0.10);
         public static final Preset SUBSTATION_INTAKE_PRESET = new Preset(0.0, 1.13);
         public static final Preset CONE_2ND_STAGE_PRESET = new Preset(0.8, 0.8);
@@ -276,9 +276,9 @@ public final class Constants {
         public static double kIy = 0;
         public static double kIr = 0;
       
-        public static double xclamp = 0.6; //maximum clamped speed is 0.6 + 0.5 (min)
-        public static double yclamp = 0.6;
-        public static double rclamp = 0.4;
+        public static double xclamp = 0.8; //maximum clamped speed is 0.6 + 0.5 (min)
+        public static double yclamp = 0.8;
+        public static double rclamp = 0.6;
       
         //public static double tagheight = 0.49; //19.3 inches to meters
       
@@ -287,10 +287,14 @@ public final class Constants {
         public static double rtolerance = 2; //degrees
       
         public static double mountingangle = 0; //for adjustable camera
-        public static double cameraheight = Units.inchesToMeters(19); //14-ish inches, to meters, REDO
-        public static double RTheight = Units.inchesToMeters(33); //game manual 24.125
+        public static double cameraheight = Units.inchesToMeters(17.5); //14-ish inches, to meters, REDO
+        public static double RTheight = Units.inchesToMeters(22.55); //game manual 24.125
 
-        public static double limelightOffsetCenter = Units.inchesToMeters(9.25);
+        public static double limelightOffsetCenter = Units.inchesToMeters(10.5);
+
+        public static double targetXMeters = 0.92;
+        public static double targetYMeters = 0;
+        public static double targetRDeg = 0;
     }
 
 }

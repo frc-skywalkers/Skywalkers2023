@@ -44,7 +44,7 @@
     "Plot <0>": {
       "plots": [
         {
-          "height": 0,
+          "height": -12,
           "series": [
             {
               "color": [
@@ -78,7 +78,7 @@
     "Plot <2>": {
       "plots": [
         {
-          "height": 520,
+          "height": 676,
           "series": [
             {
               "color": [
@@ -96,17 +96,8 @@
     "Plot <3>": {
       "plots": [
         {
-          "height": 0,
+          "height": 598,
           "series": [
-            {
-              "color": [
-                0.2980392277240753,
-                0.44705885648727417,
-                0.6901960968971252,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/Set Voltage"
-            },
             {
               "color": [
                 0.8666667342185974,
@@ -133,6 +124,51 @@
                 1.0
               ],
               "id": "NT:/SmartDashboard/Desired Arm Position"
+            },
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Set Voltage"
+            },
+            {
+              "color": [
+                0.5058823823928833,
+                0.44705885648727417,
+                0.7019608020782471,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Intake Current"
+            },
+            {
+              "color": [
+                0.5764706134796143,
+                0.4705882668495178,
+                0.3764706254005432,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Intake Object Held"
+            },
+            {
+              "color": [
+                0.8549020290374756,
+                0.545098066329956,
+                0.7647059559822083,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Intake Speed"
+            },
+            {
+              "color": [
+                0.5490196347236633,
+                0.5490196347236633,
+                0.5490196347236633,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Intake Velocity"
             }
           ]
         }

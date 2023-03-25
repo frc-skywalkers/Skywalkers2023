@@ -59,7 +59,7 @@ public class SwerveJoystick extends CommandBase {
     
     swerveSubsystem.drive(xSpeed, ySpeed, turningSpeed);
 
-    // SmartDashboard.putNumber("Joystick Turning Speed", turningSpeed);
+    SmartDashboard.putNumber("Joystick Turning Speed", turningSpeed);
   }
 
   @Override
