@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc.robot.Dashboard;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.Dashboard;
 import frc.robot.Constants.ArmConstants;
 
 public class ProfiledPIDArm extends ProfiledPIDSubsystem {

@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.DashbaordConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DashbaordConstants;
@@ -59,6 +60,7 @@ public class RobotContainer {
   SendableChooser<Command> m_Chooser = new SendableChooser<>();
 
   public RobotContainer() {
+    startDashboard();
     startDashboard();
 
     swerve.setDefaultCommand(new SwerveJoystick(swerve, driverJoystick));

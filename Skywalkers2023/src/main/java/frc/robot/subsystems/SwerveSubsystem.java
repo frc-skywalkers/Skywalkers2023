@@ -148,10 +148,8 @@ public class SwerveSubsystem extends SubsystemBase {
 
     poseEstimator.addVisionMeasurement(estimatedPose, Timer.getFPGATimestamp() - 0.3);
 
-    // Swerve.Debugging.putNumber("Robot Heading", getHeading());
     Dashboard.Swerve.Driver.putBoolean("Field Oriented", fieldOriented);
-    // Dashboard.Swerve.Debugging.putNumber("Pitch", getRoll());
-
+    
   }
 
   public void stopModules() {
