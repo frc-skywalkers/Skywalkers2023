@@ -32,7 +32,7 @@ public class SwerveDriveTimed extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    startTime = t.getFPGATimestamp();
+    startTime = Timer.getFPGATimestamp();
     swerve.reset();
     swerve.reset();
   }
@@ -52,6 +52,6 @@ public class SwerveDriveTimed extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return t.getFPGATimestamp() - startTime >= runTime;
+    return Timer.getFPGATimestamp() - startTime >= runTime;
   }
 }

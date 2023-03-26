@@ -72,7 +72,7 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
       // System.out.println("ELEVATOR NOT ZEROED!");
     }
     
-    Dashboard.Elevator.Debugging.putNumber("Set Voltage", (feedforward + output));
+    //Dashboard.Elevator.Debugging.putNumber("Set Voltage", (feedforward + output));
   }
 
   @Override
