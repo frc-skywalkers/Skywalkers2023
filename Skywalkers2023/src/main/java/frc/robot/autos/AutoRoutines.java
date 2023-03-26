@@ -4,8 +4,11 @@
 
 package frc.robot.autos;
 
+import java.util.HashMap;
+
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.FollowPathWithEvents;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -74,6 +77,27 @@ public final class AutoRoutines {
       new Balance(swerve)
     );
     
+  }
+
+  public CommandBase leftConeCubeAuto() {
+    PathPlannerTrajectory trajectory = PathPlanner.loadPath("Left_Cone_Cube_Auto", 2.5, 3);
+
+    HashMap<String, Command> eventMap = new HashMap<>();
+    eventMap.put("intakeDown", macros.groundIntake(true));
+    eventMap.put("stow", macros.stow());
+    eventMap.put("prepareScore", macros.cube3rdStage());
+
+    FollowPathWithEvents grabConeAndPrepareToScore = new FollowPathWithEvents(
+      baseSwerveCommand(trajectory, true), 
+      trajectory.getMarkers(), 
+      eventMap);
+
+    return Commands.sequence(
+      cone2ndAuto(),
+      grabConeAndPrepareToScore,
+      macros.outtake(),
+      macros.stow()
+    );
   }
 
   public CommandBase coneChargingStation() {
@@ -184,36 +208,6 @@ public final class AutoRoutines {
       macros.cone3rdStage(),
       macros.outtake(),
       macros.stow()
-    );
-  }
-
-  public CommandBase followTrajectory(Trajectory trajectory) {
-
-    // 3. Define PID controllers for tracking trajectory
-    PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
-    PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
-    ProfiledPIDController thetaController = new ProfiledPIDController(
-            AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-    // 4. Construct command to follow trajectory
-    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-            trajectory, 
-            swerve::getPose,
-            DriveConstants.kDriveKinematics,
-            xController,
-            yController,
-            thetaController,        
-            swerve::setModuleStatesClosedLoop,
-            swerve);
-
-    // 5. Add some init and wrap-up, and return everything
-    return Commands.sequence(
-      Commands.runOnce(
-        () -> swerve.resetOdometry(trajectory.getInitialPose()), swerve),
-      swerveControllerCommand,
-      Commands.runOnce(
-        () -> swerve.stopModules(), swerve)
     );
   }
 

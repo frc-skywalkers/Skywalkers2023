@@ -34,6 +34,7 @@ import frc.robot.commands.Balance;
 import frc.robot.commands.Macros;
 import frc.robot.commands.MoveToTag;
 import frc.robot.commands.SwerveJoystick;
+import frc.robot.commands.TurnAngle;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ProfiledPIDArm;
 import frc.robot.subsystems.ProfiledPIDElevator;
@@ -69,6 +70,7 @@ public class RobotContainer {
     
     arm.setDefaultCommand(Commands.run(() -> {
       double speed = -operatorJoystick.getRightY() * ArmConstants.kMaxArmSpeed;
+      speed = Math.abs(speed) > OIConstants.kDeadband ? speed : 0.0;
       arm.setSpeed(speed);
     }, arm).unless(arm::isEnabled));
 
@@ -96,7 +98,7 @@ public class RobotContainer {
     driverJoystick.y().onTrue(Commands.runOnce(() -> swerve.reset(), swerve));
     driverJoystick.b().onTrue(Commands.runOnce(() -> swerve.toggleField(), swerve));
 
-    driverJoystick.x().toggleOnTrue(macros.alignCone2ndStage());
+    driverJoystick.x().onTrue(macros.scoreCone3rdStage());
     driverJoystick.leftBumper().onTrue(Commands.runOnce(() -> swerve.stopModules(), swerve));
     
 

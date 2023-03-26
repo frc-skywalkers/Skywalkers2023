@@ -4,45 +4,67 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.LimelightConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 
 
 public class TurnAngle extends CommandBase {
   /** Creates a new DriveForwardDistance. */
-  private final SwerveSubsystem swerve;
-  private double target;
-  private double start;
-  public TurnAngle(SwerveSubsystem swerve, double target) {
-    this.swerve = swerve;
-    this.target = target;
-    start = swerve.getHeading();
-    addRequirements(swerve);
+  private final PIDController rcontroller = new PIDController(0.15, 0, 0);
 
-    // Use addRequirements() here to declare subsystem dependencies.
+  private final double targetR; 
+
+  SwerveSubsystem swerveSubsystem;
+
+  boolean atSetpoint;
+
+  double rspeed;
+  double currentR;
+
+  public TurnAngle(SwerveSubsystem swerveSubsystem, double targetR) { //meters, meters, degrees
+    this.targetR = targetR;
+
+    this.swerveSubsystem = swerveSubsystem;
+    addRequirements(swerveSubsystem);
   }
 
-  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    rcontroller.setTolerance(LimelightConstants.rtolerance);
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("Angle Turned", swerve.getHeading() - start);
-    swerve.drive(0, 0, 1.1);
+    currentR = swerveSubsystem.getHeading(); //
+
+    rspeed = 0.5 * MathUtil.clamp((rcontroller.calculate(currentR, targetR)), -LimelightConstants.rclamp, LimelightConstants.rclamp);
+    
+    rspeed += 0.5 * Math.signum(rspeed);
+
+    if (rcontroller.atSetpoint()){
+      rspeed = 0;
+    }
+
+    
+    SmartDashboard.putNumber("rspeed", rspeed);
+
+
+    atSetpoint = rcontroller.atSetpoint();
+
+    swerveSubsystem.drive(0, 0, rspeed);
   }
 
-  // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    swerveSubsystem.stopModules();
+  }
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return swerve.getHeading() - start >= target;
+    return ((Math.abs(targetR - currentR) < LimelightConstants.rtolerance) || (rspeed == 0));
   }
 }
