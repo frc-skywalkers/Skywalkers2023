@@ -57,7 +57,7 @@ public class AlignCone extends CommandBase {
     rcontroller.setTolerance(LimelightConstants.rtolerance);
     ydistreached = false;
     xdistreached = false;
-
+    swerveSubsystem.toggleField();
     /* 
     if (swerveSubsystem.getFieldOriented()){
       swerveSubsystem.toggleField();
@@ -116,6 +116,7 @@ public class AlignCone extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     swerveSubsystem.stopModules();
+    swerveSubsystem.toggleField();
   }
 
   @Override

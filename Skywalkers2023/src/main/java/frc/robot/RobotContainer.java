@@ -171,7 +171,8 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return m_Chooser.getSelected();
+    // return m_Chooser.getSelected();
+    return autoRoutines.leftConeCubeAuto();
   }
 
 

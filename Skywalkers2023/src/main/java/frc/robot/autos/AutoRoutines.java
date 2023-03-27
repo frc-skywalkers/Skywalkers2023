@@ -4,8 +4,10 @@
 
 package frc.robot.autos;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
@@ -80,7 +82,7 @@ public final class AutoRoutines {
   }
 
   public CommandBase leftConeCubeAuto() {
-    PathPlannerTrajectory trajectory = PathPlanner.loadPath("Left_Cone_Cube_Auto", 2.5, 3);
+    PathPlannerTrajectory trajectory = PathPlanner.loadPath("Left_Cone_Cube_Auto", 1, 1.5);
 
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("intakeDown", macros.groundIntake(true));
@@ -93,12 +95,40 @@ public final class AutoRoutines {
       eventMap);
 
     return Commands.sequence(
-      cone2ndAuto(),
+      cone3rdAuto(),
       grabConeAndPrepareToScore,
       macros.outtake(),
       macros.stow()
     );
   }
+
+  // public CommandBase leftConeCubeAutoPathGroup() {
+  //   // PathPlannerTrajectory trajectory = PathPlanner.loadPath("Left_Cone_Cube_Auto", 2, 2);
+
+  //   ArrayList<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("Left_Cone_Cube_Auto_dupl",
+  //     new PathConstraints(1, 1.5),
+  //     new PathConstraints(2.5, 3),
+  //     new PathConstraints(2.5, 3),
+  //     new PathConstraints(1, 1.5)
+  //   );
+
+    // HashMap<String, Command> eventMap = new HashMap<>();
+    // eventMap.put("intakeDown", Commands.print("First Marker"));
+    // eventMap.put("stow", Commands.print("Second Marker"));
+    // eventMap.put("prepareScore", Commands.print("Third Marker"));
+
+    // FollowPathWithEvents grabConeAndPrepareToScore = new FollowPathWithEvents(
+    //   baseSwerveCommand(trajectory, true), 
+    //   trajectory.getMarkers(), 
+    //   eventMap);
+
+    // return Commands.sequence(
+    //   // cone2ndAuto(),
+    //   grabConeAndPrepareToScore
+    //   // macros.outtake(),
+    //   // macros.stow()
+    // );
+  // }
 
   public CommandBase coneChargingStation() {
 
@@ -224,8 +254,8 @@ public final class AutoRoutines {
       trajectory, 
       swerve::getTrajectoryPose, 
       DriveConstants.kDriveKinematics, 
-      new PIDController(5, 0, 0), 
-      new PIDController(5, 0, 0), 
+      new PIDController(6.5, 0, 0), 
+      new PIDController(6.5, 0, 0), 
       new PIDController(3, 0, 0), 
       swerve::setModuleStatesClosedLoop, 
       swerve);

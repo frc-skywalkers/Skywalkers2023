@@ -30,16 +30,27 @@ public class TurnAngle extends CommandBase {
 
     this.swerveSubsystem = swerveSubsystem;
     addRequirements(swerveSubsystem);
+
+    rcontroller.setTolerance(LimelightConstants.rtolerance);
+    rcontroller.enableContinuousInput(-180, 180);
   }
 
   @Override
   public void initialize() {
-    rcontroller.setTolerance(LimelightConstants.rtolerance);
+    
   }
 
   @Override
   public void execute() {
     currentR = swerveSubsystem.getHeading(); //
+
+    if (currentR > 180) {
+      currentR -= 360;
+    }
+
+    if (currentR < -180) {
+      currentR += 360;
+    }
 
     rspeed = 0.5 * MathUtil.clamp((rcontroller.calculate(currentR, targetR)), -LimelightConstants.rclamp, LimelightConstants.rclamp);
     

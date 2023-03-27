@@ -198,6 +198,10 @@ public class SwerveSubsystem extends SubsystemBase {
     resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
   }
 
+  public void setHeading(double heading) {
+    imu.setYaw(heading);
+  }
+
   public void recalibrate() {
     frontLeft.recalibrateAbsoluteEncoderRad();
     frontRight.recalibrateAbsoluteEncoderRad();
