@@ -297,4 +297,20 @@ public final class Constants {
         public static double targetRDeg = 0;
     }
 
+    public static final class DashbaordConstants {
+        public static boolean SwerveDebugging = true;
+        public static boolean SwerveDriver = true;
+        public static boolean ArmDebugging = true;
+        public static boolean ArmDriver = true;
+        public static boolean ElevatorDebugging = true;
+        public static boolean ElevatorDriver = true;
+        public static boolean IntakeDebugging = true;
+        public static boolean IntakeDriver = true;
+        public static boolean AutoDebugging = true;
+        public static boolean AutoDriver = true;
+        public static boolean TeleDebugging = true;
+        public static boolean TeleDriver = true;
+        public static boolean LimelightDebugging = true;
+        public static boolean LimelightDriver = true;
+    }
 }

@@ -5,8 +5,8 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Dashboard;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 
@@ -47,7 +47,7 @@ public class IntakePiece extends CommandBase {
         stage = 1;
         speedUp.stop();
       } else {
-        SmartDashboard.putNumber("Trying speedup", speedUp.get()); //keeps trying for set amount time, if it doesn't work, it stops
+        Dashboard.Intake.Debugging.putNumber("Trying speedup", speedUp.get()); //keeps trying for set amount time, if it doesn't work, it stops
           if(speedUp.get() > IntakeConstants.kSpeedUpFailTime) {
             stage = -1;
             intake.stop();
@@ -66,7 +66,7 @@ public class IntakePiece extends CommandBase {
         intake.moveIn();
       }
     }
-    SmartDashboard.putNumber("Intake Step", stage);
+    Dashboard.Intake.Debugging.putNumber("Intake Step", stage);
   }
 
   // Called once the command ends or is interrupted.

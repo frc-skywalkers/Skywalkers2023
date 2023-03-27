@@ -7,12 +7,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import java.security.DrbgParameters.Reseed;
 
 import edu.wpi.first.math.MathUtil;
+import frc.robot.Dashboard;
 import frc.robot.Constants.*;
 import frc.robot.subsystems.*;
 
@@ -98,13 +98,17 @@ public class AlignCone extends CommandBase {
       yspeed = 0;
     }
     
-    SmartDashboard.putNumber("currentxdist", currentXdistance);
-    SmartDashboard.putNumber("currentydist", currentYdistance);
+    Dashboard.Tele.Debugging.putNumber("currentxdist", currentXdistance);
+    Dashboard.Tele.Debugging.putNumber("currentydist", currentYdistance);
 
-    SmartDashboard.putNumber("xspeed", xspeed);
-    SmartDashboard.putNumber("yspeed", yspeed);
-    SmartDashboard.putNumber("xdistance", currentXdistance);
-    SmartDashboard.putNumber("ydistance", currentYdistance);
+    Dashboard.Tele.Debugging.putNumber("xspeed", xspeed);
+    Dashboard.Tele.Debugging.putNumber("yspeed", yspeed);
+
+    //Dashboard.Tele.Debugging.putNumber("xerror", targetXAngle-currentXAngle);
+    //Dashboard.Tele.Debugging.putNumber("yerror", targetYAngle-currentYAngle);
+    
+    Dashboard.Tele.Debugging.putNumber("xdistance", currentXdistance);
+    Dashboard.Tele.Debugging.putNumber("ydistance", currentYdistance);
 
 
     atSetpoint = (xcontroller.atSetpoint() && ycontroller.atSetpoint() && rcontroller.atSetpoint());
