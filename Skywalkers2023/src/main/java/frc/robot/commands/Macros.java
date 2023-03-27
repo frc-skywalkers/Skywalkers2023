@@ -6,7 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants.LimelightConstants;
+import frc.robot.Constants.LimelightConstants.*;
 import frc.robot.Constants.Presets;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Limelight;
@@ -106,7 +106,7 @@ public class Macros {
   }
 
   public CommandBase alignCone2ndStage() {
-    return new AlignCone(swerve, limelight, LimelightConstants.targetXMeters, LimelightConstants.targetYMeters, LimelightConstants.targetRDeg);
+    return new AlignCone(swerve, limelight, SecondStageConeConstants.targetXMeters, SecondStageConeConstants.targetYMeters, SecondStageConeConstants.targetRDeg);
   }
 
   public CommandBase scoreCone2ndStage() {
