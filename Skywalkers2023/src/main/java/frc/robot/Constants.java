@@ -164,17 +164,16 @@ public final class Constants {
         public static final double kMaxIntakeSpeed = 0.4; // ??
         public static final double kMaxOuttakeSpeed = -0.15; // ??
         public static final double kHoldSpeed = 0.07;
-        public static final boolean kIntakeInverted = false; // ?
-        public static final int kIntakeTicksPerRotation = 4096; // ??
-        public static final double kExpectedFullVelocity = 50; // ?? in rotations per cycle
-        public static final double kObjectHeldRatioThreshold = 3.0; // ?? modify as needed
-        public static final double kCurrentThreshold = 15.00;
 
         public static double kSpeedUpFailTime = 0.75; //seconds it tries to speed up
         public static double kOutFailTime = 0.75; //seconds it tries to outtake
-        public static double kObjectHeldThreshold = 300; //proportional to max intake speed, current values found at 0.3
-        public static double kSpeedUpThreshold = 100;
-        public static double kObjectOutThreshold = 166;
+
+        public static double pieceHeldThreshold = 500;
+        
+        public static double threshold(double speed) {
+            speed = Math.abs(speed);
+            return (-2077.380952 * Math.sqrt(speed)) + (23166.07143 * speed) - 1603.75;
+        }
     }
 
     public static final class ElevatorConstants {

@@ -4,18 +4,14 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Dashboard;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakePiece extends CommandBase {
   private final IntakeSubsystem intake;
 
   private boolean finished = false;
-
-  private Timer speedUp = new Timer();
 
   private int stage;
 
@@ -34,8 +30,6 @@ public class IntakePiece extends CommandBase {
     stage = 0;
     finished = false;
     intake.moveIn();
-    speedUp.reset();
-    speedUp.start();
     intake.stop = false;
   }
 
@@ -43,22 +37,11 @@ public class IntakePiece extends CommandBase {
   @Override
   public void execute() {
     if(stage == 0) {
-      if(intake.speedUp(true)) { // waits for power to go up
+      if(intake.intakeEmpty()) { // waits for power to go up
         stage = 1;
-        speedUp.stop();
-      } else {
-        Dashboard.Intake.Debugging.putNumber("Trying speedup", speedUp.get()); //keeps trying for set amount time, if it doesn't work, it stops
-          if(speedUp.get() > IntakeConstants.kSpeedUpFailTime) {
-            stage = -1;
-            intake.stop();
-            speedUp.stop();
-            finished = true;
-          } else {
-            intake.moveIn();
-          }
       }
     } else { //starts checking for game pieces once its speed up
-      if(intake.objectHeld(true)) { // waits for spike when object is intaked
+      if(intake.pieceHeld()) { // waits for spike when object is intaked
         intake.stop();
         finished = true;
         stage = -1;

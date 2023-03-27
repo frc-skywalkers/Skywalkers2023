@@ -51,35 +51,19 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public double getActualVelocity() {
-    return intake.getSelectedSensorVelocity();
+    return Math.abs(intake.getSelectedSensorVelocity());
   }
 
   public double getActualCurrent() {
     return intake.getStatorCurrent();
   }
 
-  public boolean objectHeld(boolean intaking) {
-    if(intaking == true) {
-      return getActualCurrent() > IntakeConstants.kObjectHeldThreshold * Math.abs(IntakeConstants.kMaxIntakeSpeed);
-    } else {
-      return getActualCurrent() > IntakeConstants.kObjectHeldThreshold * Math.abs(IntakeConstants.kMaxOuttakeSpeed);
-    }
+  public boolean intakeEmpty() {
+    return getActualVelocity() > IntakeConstants.threshold(intakeSpeed);
   }
 
-  public boolean speedUp(boolean intaking) {
-    if(intaking == true) {
-      return getActualCurrent() > IntakeConstants.kSpeedUpThreshold * Math.abs(IntakeConstants.kMaxIntakeSpeed);
-    } else {
-      return getActualCurrent() > IntakeConstants.kSpeedUpThreshold * Math.abs(IntakeConstants.kMaxOuttakeSpeed);
-    }
-  }
-
-  public boolean objectOut(boolean intaking) {
-    if(intaking == true) {
-      return getActualCurrent() < IntakeConstants.kObjectOutThreshold * Math.abs(IntakeConstants.kMaxIntakeSpeed);
-    } else {
-      return getActualCurrent() < IntakeConstants.kObjectOutThreshold * Math.abs(IntakeConstants.kMaxOuttakeSpeed);
-    }
+  public boolean pieceHeld() {
+    return getActualVelocity() < IntakeConstants.pieceHeldThreshold;
   }
 
   public void holdObject() {
@@ -90,7 +74,7 @@ public class IntakeSubsystem extends SubsystemBase {
   public void periodic() {
     Dashboard.Intake.Debugging.putNumber("Intake Velocity", getActualVelocity());
     Dashboard.Intake.Debugging.putNumber("Intake Speed", intakeSpeed);
-    Dashboard.Intake.Debugging.putBoolean("Intake Object Held", objectHeld(true));
+    Dashboard.Intake.Debugging.putBoolean("Intake Object Held", pieceHeld());
     Dashboard.Intake.Debugging.putNumber("Intake Current", intake.getStatorCurrent());
     System.out.println("Current: " + intake.getStatorCurrent());
   }
