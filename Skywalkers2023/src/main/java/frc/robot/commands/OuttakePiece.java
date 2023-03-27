@@ -5,8 +5,8 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Dashboard;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 
@@ -52,7 +52,7 @@ public class OuttakePiece extends CommandBase {
         outFail.stop();
         finished = true;
       } else { //sometimes it fails when the cone is stuck, this to prevent damage to the motors
-        SmartDashboard.putNumber("Trying outtake", outFail.get());
+        Dashboard.Intake.Debugging.putNumber("Trying outtake", outFail.get());
         if(outFail.get() > IntakeConstants.kOutFailTime) {
           stage = -1;
           intake.stop();
@@ -63,7 +63,7 @@ public class OuttakePiece extends CommandBase {
         }
       }
     }
-    SmartDashboard.putNumber("Outtake Step", stage);
+    Dashboard.Intake.Debugging.putNumber("Outtake Step", stage);
   }
 
   // Called once the command ends or is interrupted.

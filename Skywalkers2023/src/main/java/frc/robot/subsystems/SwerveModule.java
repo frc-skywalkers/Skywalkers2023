@@ -13,8 +13,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Dashboard;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
 
@@ -114,7 +114,7 @@ public class SwerveModule extends SubsystemBase {
   public double recalibrateAbsoluteEncoderRad() {
     double angle = absoluteEncoder.getAbsolutePosition() * 2.0 * Math.PI / 360.000; // might need to correct??????
     if (absoluteEncoderReversed) angle *= -1.0;
-    SmartDashboard.putNumber("test " + motorId, angle);
+    Dashboard.Swerve.Debugging.putNumber("test " + motorId, angle);
     return angle;
   }
 
@@ -158,13 +158,13 @@ public class SwerveModule extends SubsystemBase {
     double turnSpeed = turningPidController.calculate(getTurningPosition(), state.angle.getRadians());
     turnSpeed = MathUtil.clamp(turnSpeed, -0.4, 0.4);
     turningMotor.set(turnSpeed);
-    SmartDashboard.putNumber(motorId + " goal Angle", state.angle.getRadians());
+    Dashboard.Swerve.Debugging.putNumber(motorId + " goal Angle", state.angle.getRadians());
     // SmartDashboard.putNumber(motorId + " actual Angle", getTurningPosition());
     double dif = state.angle.getRadians() - getTurningPosition();
     dif = Math.abs(dif);
     while(dif > Math.PI) dif -= 2.0 * Math.PI;
     dif = Math.abs(dif);
-    SmartDashboard.putNumber(motorId + " dif Angle", dif);
+    Dashboard.Swerve.Debugging.putNumber(motorId + " dif Angle", dif);
 
   }
 
@@ -177,8 +177,8 @@ public class SwerveModule extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     // SmartDashboard.putNumber(motorId + " drive Position", getDrivePosition());
-    SmartDashboard.putNumber(motorId + " turning Position", getTurningPosition());
-    // SmartDashboard.putNumber(motorId + " absolute Position", getAbsoluteEncoderRad());
-    SmartDashboard.putNumber(motorId + " drive Speed", getDriveVelocity());
+    Dashboard.Swerve.Debugging.putNumber(motorId + " turning Position", getTurningPosition());
+    Dashboard.Swerve.Debugging.putNumber(motorId + " absolute Position", getAbsoluteEncoderRad());
+    Dashboard.Swerve.Debugging.putNumber(motorId + " drive Speed", getDriveVelocity());
   }
 }

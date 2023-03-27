@@ -14,10 +14,10 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
+import frc.robot.Dashboard;
 import frc.robot.Constants.ElevatorConstants;
 
 public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
@@ -72,7 +72,7 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
       // System.out.println("ELEVATOR NOT ZEROED!");
     }
     
-    // SmartDashboard.putNumber("Set Voltage", (feedforward + output));
+    //Dashboard.Elevator.Debugging.putNumber("Set Voltage", (feedforward + output));
   }
 
   @Override
@@ -90,11 +90,11 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
   @Override
   public void periodic() {
     super.periodic();
-    SmartDashboard.putNumber("Elevator Current", getCurrent());
-    SmartDashboard.putNumber("Elevator Position", getPosition());
-    SmartDashboard.putNumber("Elevator Velocity", getVelocity());
-    SmartDashboard.putNumber("Elevator Voltage", leftElevator.getMotorOutputVoltage());
-    SmartDashboard.putBoolean("Elevator Goal Reached", this.getController().atGoal());
+    Dashboard.Elevator.Debugging.putNumber("Elevator Current", getCurrent());
+    Dashboard.Elevator.Debugging.putNumber("Elevator Position", getPosition());
+    Dashboard.Elevator.Debugging.putNumber("Elevator Velocity", getVelocity());
+    Dashboard.Elevator.Debugging.putNumber("Elevator Voltage", leftElevator.getMotorOutputVoltage());
+    Dashboard.Elevator.Driver.putBoolean("Elevator Goal Reached", this.getController().atGoal());
   }
 
   public void setVoltage(double voltage) {
@@ -147,7 +147,7 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
   }
 
   public boolean atGoal() {
-    // SmartDashboard.putBoolean("Elevator Goal Reached", this.getController().atGoal());
+    // Dashboard.Elevator.Driver.putBoolean("Elevator Goal Reached", this.getController().atGoal());
     return Math.abs(getPosition() - this.getController().getGoal().position) <= 0.07;
 
   }

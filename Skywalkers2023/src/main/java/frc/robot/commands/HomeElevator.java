@@ -4,8 +4,8 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Dashboard;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.ProfiledPIDElevator;
 
@@ -24,7 +24,7 @@ public class HomeElevator extends CommandBase {
   @Override
   public void initialize() {
     elevator.disableSoftLimits();
-    // SmartDashboard.putBoolean("Zeroed", false);
+    Dashboard.Elevator.Driver.putBoolean("Zeroed", false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,7 +40,7 @@ public class HomeElevator extends CommandBase {
     elevator.resetEncoders();
     elevator.isZeroed = true;
     elevator.enableSoftLimits();
-    // SmartDashboard.putBoolean("Zeroed", true);
+    Dashboard.Elevator.Driver.putBoolean("Zeroed", true);
   }
 
   // Returns true when the command should end.
