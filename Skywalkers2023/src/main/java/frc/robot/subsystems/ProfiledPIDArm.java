@@ -44,7 +44,7 @@ public class ProfiledPIDArm extends ProfiledPIDSubsystem {
     absoluteEncoder.configMagnetOffset(ArmConstants.kAbsEncoderOffset);
     absoluteEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
 
-    // armMotor.configForwardSoftLimitThreshold(1.35 / ArmConstants.kPositionConversionFactor);
+    armMotor.configForwardSoftLimitThreshold(1.35 / ArmConstants.kPositionConversionFactor);
     // armMotor.configForwardSoftLimitEnable(true);
 
     resetEncoders();
@@ -97,7 +97,7 @@ public class ProfiledPIDArm extends ProfiledPIDSubsystem {
   }
 
   public void setVoltage(double voltage) {
-    voltage = MathUtil.clamp(voltage, -6, 6);
+    voltage = MathUtil.clamp(voltage, -12, 12);
     armMotor.setVoltage(voltage);
   }
 

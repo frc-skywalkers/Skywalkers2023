@@ -102,7 +102,7 @@ public class Macros {
   }
 
   public CommandBase outtake() {
-    return new OuttakePiece(intake).withTimeout(3);
+    return new OuttakePiece(intake).withTimeout(1);
   }
 
   public CommandBase alignCone2ndStage() {
@@ -111,9 +111,20 @@ public class Macros {
 
   public CommandBase scoreCone2ndStage() {
     return Commands.sequence(
+      new TurnAngle(swerve, 0),
       alignCone2ndStage(),
       cone2ndStage(),
       moveToPreset(Presets.CONE_2ND_STAGE_PRESET.kElevatorPos, 0),
+      outtake(),
+      stow()
+    );
+  }
+
+  public CommandBase scoreCone3rdStage() {
+    return Commands.sequence(
+      new TurnAngle(swerve, 0),
+      alignCone2ndStage(),
+      cone3rdStage(),
       outtake(),
       stow()
     );

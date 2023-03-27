@@ -68,6 +68,33 @@
         }
       ]
     },
+    "Plot <10>": {
+      "plots": [
+        {
+          "height": 862,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Robot X Location"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Robot Y Location"
+            }
+          ]
+        }
+      ]
+    },
     "Plot <1>": {
       "plots": [
         {
@@ -78,7 +105,7 @@
     "Plot <2>": {
       "plots": [
         {
-          "height": 676,
+          "height": 828,
           "series": [
             {
               "color": [
@@ -87,7 +114,7 @@
                 0.6901960968971252,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Elevator Velocity"
+              "id": "NT:/SmartDashboard/Robot Heading"
             }
           ]
         }

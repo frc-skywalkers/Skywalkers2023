@@ -4,8 +4,13 @@
 
 package frc.robot.autos;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.FollowPathWithEvents;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -70,6 +75,55 @@ public final class AutoRoutines {
     );
     
   }
+
+  public CommandBase leftConeCubeAuto() {
+    PathPlannerTrajectory trajectory = PathPlanner.loadPath("Left_Cone_Cube_Auto", 1, 1.5);
+
+    HashMap<String, Command> eventMap = new HashMap<>();
+    eventMap.put("intakeDown", macros.groundIntake(true));
+    eventMap.put("stow", macros.stow());
+    eventMap.put("prepareScore", macros.cube3rdStage());
+
+    FollowPathWithEvents grabConeAndPrepareToScore = new FollowPathWithEvents(
+      baseSwerveCommand(trajectory, true), 
+      trajectory.getMarkers(), 
+      eventMap);
+
+    return Commands.sequence(
+      cone3rdAuto(),
+      grabConeAndPrepareToScore,
+      macros.outtake(),
+      macros.stow()
+    );
+  }
+
+  // public CommandBase leftConeCubeAutoPathGroup() {
+  //   // PathPlannerTrajectory trajectory = PathPlanner.loadPath("Left_Cone_Cube_Auto", 2, 2);
+
+  //   ArrayList<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("Left_Cone_Cube_Auto_dupl",
+  //     new PathConstraints(1, 1.5),
+  //     new PathConstraints(2.5, 3),
+  //     new PathConstraints(2.5, 3),
+  //     new PathConstraints(1, 1.5)
+  //   );
+
+    // HashMap<String, Command> eventMap = new HashMap<>();
+    // eventMap.put("intakeDown", Commands.print("First Marker"));
+    // eventMap.put("stow", Commands.print("Second Marker"));
+    // eventMap.put("prepareScore", Commands.print("Third Marker"));
+
+    // FollowPathWithEvents grabConeAndPrepareToScore = new FollowPathWithEvents(
+    //   baseSwerveCommand(trajectory, true), 
+    //   trajectory.getMarkers(), 
+    //   eventMap);
+
+    // return Commands.sequence(
+    //   // cone2ndAuto(),
+    //   grabConeAndPrepareToScore
+    //   // macros.outtake(),
+    //   // macros.stow()
+    // );
+  // }
 
   public CommandBase coneChargingStation() {
 
@@ -182,36 +236,6 @@ public final class AutoRoutines {
     );
   }
 
-  public CommandBase followTrajectory(Trajectory trajectory) {
-
-    // 3. Define PID controllers for tracking trajectory
-    PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
-    PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
-    ProfiledPIDController thetaController = new ProfiledPIDController(
-            AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-    // 4. Construct command to follow trajectory
-    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-            trajectory, 
-            swerve::getPose,
-            DriveConstants.kDriveKinematics,
-            xController,
-            yController,
-            thetaController,        
-            swerve::setModuleStatesClosedLoop,
-            swerve);
-
-    // 5. Add some init and wrap-up, and return everything
-    return Commands.sequence(
-      Commands.runOnce(
-        () -> swerve.resetOdometry(trajectory.getInitialPose()), swerve),
-      swerveControllerCommand,
-      Commands.runOnce(
-        () -> swerve.stopModules(), swerve)
-    );
-  }
-
   public Command baseSwerveCommand(PathPlannerTrajectory trajectory, boolean isFirstPath) {
     InstantCommand resetOdom = new InstantCommand(() -> {
       if(isFirstPath) {
@@ -225,8 +249,8 @@ public final class AutoRoutines {
       trajectory, 
       swerve::getTrajectoryPose, 
       DriveConstants.kDriveKinematics, 
-      new PIDController(5, 0, 0), 
-      new PIDController(5, 0, 0), 
+      new PIDController(6.5, 0, 0), 
+      new PIDController(6.5, 0, 0), 
       new PIDController(3, 0, 0), 
       swerve::setModuleStatesClosedLoop, 
       swerve);

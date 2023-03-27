@@ -220,7 +220,7 @@ public final class Constants {
     public static final class ArmConstants {
         public static final int kArmPort = 23; // ???
         public static final int kArmAbsoluteEncoderPort = 16;
-        public static final double kMaxArmSpeed = 0.5; // ??
+        public static final double kMaxArmSpeed = 1; // ??
         public static final boolean kArmInverted = true; // ??
         public static final boolean kArmAbsEncoderInverted = true;
         // public static final boolean kEncoderInverted = true;
@@ -268,7 +268,7 @@ public final class Constants {
     public static final class LimelightConstants{
         public static double kPx = 5; //meters
         public static double kPy = 5; //meters
-        public static double kPr = 0.05; //degrees
+        public static double kPr = 0.2; //degrees
         public static double kDx = 0;
         public static double kDy = 0;
         public static double kDr = 0;
@@ -278,7 +278,7 @@ public final class Constants {
       
         public static double xclamp = 0.8; //maximum clamped speed is 0.6 + 0.5 (min)
         public static double yclamp = 0.8;
-        public static double rclamp = 0.6;
+        public static double rclamp = 2;
       
         //public static double tagheight = 0.49; //19.3 inches to meters
       
