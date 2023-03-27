@@ -289,12 +289,16 @@ public final class Constants {
         public static double mountingangle = 0; //for adjustable camera
         public static double cameraheight = Units.inchesToMeters(17.5); //14-ish inches, to meters, REDO
         public static double RTheight = Units.inchesToMeters(22.55); //game manual 24.125
+        public static double objectHeight = Units.inchesToMeters(0);
 
         public static double limelightOffsetCenter = Units.inchesToMeters(10.5);
 
-        public static double targetXMeters = 0.92;
-        public static double targetYMeters = 0;
-        public static double targetRDeg = 0;
+        public static final class SecondStageConeConstants{
+            public static double targetXMeters = 0.92;
+            public static double targetYMeters = 0;
+            public static double targetRDeg = 0;
+        }
+        
     }
 
     public static final class DashbaordConstants {

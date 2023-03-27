@@ -164,6 +164,20 @@ public class Limelight extends SubsystemBase {
     return s;
   }
 
+  public double getObjectTX(){
+    limelightTable.getEntry("pipeline").setNumber(2);
+    NetworkTableEntry tx = limelightTable.getEntry("tx");
+    double x = tx.getDouble(0.0);
+    return x;
+  }
+
+  public double getObjectTY(){
+    limelightTable.getEntry("pipeline").setNumber(2);
+    NetworkTableEntry ty = limelightTable.getEntry("ty");
+    double y = ty.getDouble(0.0);
+    return y;
+  }
+
   @Override
   public void periodic() {
 
