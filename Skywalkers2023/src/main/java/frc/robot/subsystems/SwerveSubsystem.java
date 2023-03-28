@@ -71,6 +71,9 @@ public class SwerveSubsystem extends SubsystemBase {
   private boolean fieldOriented = true;
 
   private final SwerveDrivePoseEstimator poseEstimator;
+
+  private double resetX = 0.00;
+  private double resetY = 0.00;
     
   
 
@@ -124,6 +127,8 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public void resetOdometry(Pose2d pose) {
     odometer.resetPosition(getRotation2d(), getModulePositions(), pose);
+    resetX = pose.getX();
+    resetY = pose.getY();
   }
 
  
@@ -136,8 +141,8 @@ public class SwerveSubsystem extends SubsystemBase {
 
     Dashboard.Swerve.Driver.putString("Robot Location", getPose().getTranslation().toString());
 
-    Dashboard.Swerve.Debugging.putNumber("Robot X Location", Units.metersToInches(getPose().getTranslation().getX()));
-    Dashboard.Swerve.Debugging.putNumber("Robot Y Location", Units.metersToInches(getPose().getTranslation().getY()));
+    Dashboard.Swerve.Debugging.putNumber("Robot X Location", getPose().getTranslation().getX());
+    Dashboard.Swerve.Debugging.putNumber("Robot Y Location", getPose().getTranslation().getY());
     Dashboard.Swerve.Debugging.putNumber("Robot Heading", getHeading());
 
     Pose2d estimatedPose = camera.campose().toPose2d();
@@ -149,7 +154,10 @@ public class SwerveSubsystem extends SubsystemBase {
 
     Dashboard.Swerve.Driver.putBoolean("Field Oriented", fieldOriented);
     
-  }
+    Dashboard.Swerve.Debugging.putNumber("Robot X Reset", resetX);
+    Dashboard.Swerve.Debugging.putNumber("Robot Y Reset", resetY);
+
+  } 
 
   public void stopModules() {
     frontLeft.stop();
@@ -194,6 +202,12 @@ public class SwerveSubsystem extends SubsystemBase {
     resetEncoders();
     zeroHeading();
     resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
+  }
+
+  public void reset(double heading) {
+    resetEncoders();
+    zeroHeading();
+    resetOdometry(new Pose2d(0, 0, new Rotation2d(Math.toRadians(heading))));
   }
 
   public void setHeading(double heading) {
