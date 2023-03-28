@@ -16,6 +16,7 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -90,10 +91,14 @@ public final class AutoRoutines {
       eventMap);
 
     return Commands.sequence(
-      cone3rdAuto(),
+      // cone3rdAuto(),
+      macros.home(),
       grabConeAndPrepareToScore,
-      macros.outtake(),
-      macros.stow()
+      // macros.outtake(),
+      // macros.stow(),
+      Commands.runOnce(() -> swerve.reset(swerve.getHeading() + 180)).andThen(Commands.runOnce(() -> SmartDashboard.putString("Reset", "RESET!"))),
+      Commands.runOnce(() -> swerve.reset(swerve.getHeading() + 180))
+      
     );
   }
 

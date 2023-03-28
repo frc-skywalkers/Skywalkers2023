@@ -92,6 +92,6 @@ public class IntakeSubsystem extends SubsystemBase {
     Dashboard.Intake.Debugging.putNumber("Intake Speed", intakeSpeed);
     Dashboard.Intake.Debugging.putBoolean("Intake Object Held", objectHeld(true));
     Dashboard.Intake.Debugging.putNumber("Intake Current", intake.getStatorCurrent());
-    System.out.println("Current: " + intake.getStatorCurrent());
+    // System.out.println("Current: " + intake.getStatorCurrent());
   }
 }
