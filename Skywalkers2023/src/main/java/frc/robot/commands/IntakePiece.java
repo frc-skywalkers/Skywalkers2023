@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Dashboard;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakePiece extends CommandBase {
@@ -37,7 +38,7 @@ public class IntakePiece extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    piece = intake.getPiece();
+    piece = intake.getSelectedPiece();
     stage = 0;
     finished = false;
     intake.moveIn(piece);

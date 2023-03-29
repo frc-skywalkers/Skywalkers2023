@@ -17,7 +17,7 @@ public class OuttakePiece extends CommandBase {
   /** Creates a new IntakeMotor. */
   public OuttakePiece(IntakeSubsystem rIntake) {
     intake = rIntake;
-    piece = intake.getPiece();
+    piece = intake.getCurrentPiece();
     addRequirements(rIntake);
     // Use addRequirements() here to declare subsystem dependencies.
   }
