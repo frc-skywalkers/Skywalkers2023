@@ -248,6 +248,7 @@ public final class AutoRoutines {
         swerve.reset();
         swerve.resetOdometry(trajectory.getInitialHolonomicPose());
         swerve.resetOdometry(trajectory.getInitialHolonomicPose());
+        SmartDashboard.putBoolean("Auto Reset", true);
       }
     });
     PPSwerveControllerCommand command = new PPSwerveControllerCommand(
@@ -259,7 +260,10 @@ public final class AutoRoutines {
       new PIDController(3, 0, 0), 
       swerve::setModuleStatesClosedLoop, 
       swerve);
-    return Commands.sequence(resetOdom, command);
+    return Commands.sequence(
+      resetOdom, 
+      command,
+      Commands.runOnce(() -> SmartDashboard.putBoolean("Auto Reset", false)));
   }
 
   public CommandBase DiagnosticTest() {
