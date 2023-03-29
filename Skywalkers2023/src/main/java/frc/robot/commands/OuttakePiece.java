@@ -17,17 +17,11 @@ public class OuttakePiece extends CommandBase {
   /** Creates a new IntakeMotor. */
   public OuttakePiece(IntakeSubsystem rIntake) {
     intake = rIntake;
-    piece = intake.lastIntaked;
+    piece = intake.getPiece();
     addRequirements(rIntake);
     // Use addRequirements() here to declare subsystem dependencies.
   }
    
-  public OuttakePiece(IntakeSubsystem rIntake, int rPiece) {
-    intake = rIntake;
-    piece = rPiece;
-    addRequirements(rIntake);
-  }
-
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {

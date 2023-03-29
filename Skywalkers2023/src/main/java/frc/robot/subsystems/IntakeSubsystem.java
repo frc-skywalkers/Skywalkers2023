@@ -14,7 +14,8 @@ public class IntakeSubsystem extends SubsystemBase {
   public final static int conePiece = -1;
   public final static int cubePiece = 1;
 
-  public int lastIntaked = 0;
+  public int lastIntaked = 1;
+  public int intakeMode = cubePiece;
 
   private final boolean differentialIntake = IntakeConstants.differentialIntake;
 
@@ -81,6 +82,20 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void holdObject() {
     intake.setVoltage(IntakeConstants.kHoldSpeed * 12.0000);
+  }
+
+
+
+  public int getPiece() {
+    return intakeMode;
+  }
+
+  public void setCone() {
+    intakeMode = conePiece;
+  }
+
+  public void setCube() {
+    intakeMode = cubePiece;
   }
 
   @Override

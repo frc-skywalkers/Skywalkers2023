@@ -19,10 +19,11 @@ public class IntakePiece extends CommandBase {
 
   //private CommandXboxController controller;
   /** Creates a new IntakeMotor. */
-  public IntakePiece(IntakeSubsystem rIntake, int rPiece) {
+  public IntakePiece(IntakeSubsystem rIntake) {
     //controller = Controller;
     intake = rIntake;
-    piece = rPiece;
+    // piece = rPiece;
+    piece = intake.getPiece();
     addRequirements(rIntake);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -34,6 +35,7 @@ public class IntakePiece extends CommandBase {
     finished = false;
     intake.moveIn(piece);
     intake.stop = false;
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
