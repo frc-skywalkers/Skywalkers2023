@@ -14,7 +14,8 @@ public class IntakeSubsystem extends SubsystemBase {
   public final static int conePiece = 1;
   public final static int cubePiece = -1;
 
-  public int currentPiece = -1;
+  public Piece currentPiece = Piece.NONE;
+  public Piece desiredPiece = Piece.CUBE;
 
   private final boolean differentialIntake = IntakeConstants.differentialIntake;
 
@@ -23,6 +24,18 @@ public class IntakeSubsystem extends SubsystemBase {
   public boolean stop = false;
 
   public boolean outtake = false;
+
+  public enum Piece {
+    NONE(0),
+    CONE(1),
+    CUBE(-1);
+
+    public int multiplier;
+
+    Piece(int m) {
+      multiplier = m;
+    }
+  }
 
   public IntakeSubsystem() {
     intake.configFactoryDefault();
@@ -39,14 +52,14 @@ public class IntakeSubsystem extends SubsystemBase {
     intake.setVoltage(voltage);
   }
 
-  public void moveIn(int piece) {
-    setSpeed(IntakeConstants.kMaxIntakeSpeed * piece);
-    intakeSpeed = IntakeConstants.kMaxIntakeSpeed * piece;
+  public void moveIn(Piece piece) {
+    setSpeed(IntakeConstants.kMaxIntakeSpeed * piece.multiplier);
+    intakeSpeed = IntakeConstants.kMaxIntakeSpeed * piece.multiplier;
   }
 
-  public void moveOut(int piece) {
-    setSpeed(IntakeConstants.kMaxOuttakeSpeed * piece);
-    intakeSpeed = IntakeConstants.kMaxOuttakeSpeed * piece;
+  public void moveOut(Piece piece) {
+    setSpeed(IntakeConstants.kMaxOuttakeSpeed * piece.multiplier);
+    intakeSpeed = IntakeConstants.kMaxOuttakeSpeed * piece.multiplier;
   }
 
   public void stop() {
@@ -72,21 +85,19 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void holdObject() {
-    intake.setVoltage(IntakeConstants.kHoldSpeed * 12.0000);
+    intake.setVoltage(IntakeConstants.kHoldSpeed * 12.0000 * currentPiece.multiplier);
   }
 
+  public Piece getDesiredPiece() {
+    return desiredPiece;
+  }
 
+  public void setDesiredPiece(Piece p) {
+    desiredPiece = p;
+  }
 
-  public int getPiece() {
+  public Piece getPiece() {
     return currentPiece;
-  }
-
-  public void setCone() {
-    currentPiece = conePiece;
-  }
-
-  public void setCube() {
-    currentPiece = cubePiece;
   }
 
   @Override
@@ -95,7 +106,7 @@ public class IntakeSubsystem extends SubsystemBase {
     Dashboard.Intake.Debugging.putNumber("Intake Speed", intakeSpeed);
     Dashboard.Intake.Debugging.putBoolean("Intake Object Held", pieceHeld());
     Dashboard.Intake.Debugging.putNumber("Intake Current", intake.getStatorCurrent());
-    Dashboard.Intake.Debugging.putNumber("Current Piece", currentPiece);
+    Dashboard.Intake.Debugging.putString("Current Piece", currentPiece.toString());
     Dashboard.Intake.Debugging.putNumber(getName(), intakeSpeed);
   }
 }

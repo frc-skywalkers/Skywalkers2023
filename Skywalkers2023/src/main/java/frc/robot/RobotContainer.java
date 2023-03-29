@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,6 +26,7 @@ import frc.robot.subsystems.ProfiledPIDArm;
 import frc.robot.subsystems.ProfiledPIDArmNew;
 import frc.robot.subsystems.ProfiledPIDElevator;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.IntakeSubsystem.Piece;
 import frc.robot.subsystems.Limelight;
 
 public class RobotContainer {
@@ -157,12 +159,12 @@ public class RobotContainer {
 
     // A --> Cube 2nd Stage
     operatorJoystick.a().onTrue(
-      Commands.runOnce(() -> { intake.currentPiece = IntakeSubsystem.cubePiece; }, intake)
+      macros.desireCube()
     );
 
     // B --> Cube 3rd Stage
     operatorJoystick.b().onTrue(
-      Commands.runOnce(() -> { intake.currentPiece = IntakeSubsystem.conePiece; }, intake)
+      macros.desireCone()
     );
     
     // Right Bumper --> Intake 
@@ -175,8 +177,8 @@ public class RobotContainer {
     //   macros.outtake()
     // );
 
-    operatorJoystick.rightBumper().onTrue(new IntakePiece(intake));
-    operatorJoystick.leftBumper().onTrue(new OuttakePiece(intake));
+    operatorJoystick.rightBumper().onTrue(macros.intake());
+    operatorJoystick.leftBumper().onTrue(macros.outtake());
 
     // Back --> Manual Intake Stop
     operatorJoystick.back().onTrue(Commands.runOnce(() -> intake.stop(), intake));
@@ -186,8 +188,8 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return m_Chooser.getSelected();
-    // return autoRoutines.leftConeCubeAuto();
+    // return m_Chooser.getSelected();
+    return autoRoutines.debugOdometryReset(new Pose2d());
   }
 
 

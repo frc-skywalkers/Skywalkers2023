@@ -37,10 +37,12 @@ public class HomeElevator extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     elevator.stop();
-    elevator.resetEncoders();
-    elevator.isZeroed = true;
-    elevator.enableSoftLimits();
-    Dashboard.Elevator.Driver.putBoolean("Zeroed", true);
+    if (!interrupted) { 
+      elevator.resetEncoders();
+      elevator.isZeroed = true;
+      elevator.enableSoftLimits();
+      Dashboard.Elevator.Driver.putBoolean("Zeroed", true);
+    }
   }
 
   // Returns true when the command should end.

@@ -10,12 +10,15 @@ import java.util.HashMap;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -34,6 +37,7 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.ProfiledPIDArm;
 import frc.robot.subsystems.ProfiledPIDElevator;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.IntakeSubsystem.Piece;
 
 public final class AutoRoutines {
 
@@ -61,6 +65,20 @@ public final class AutoRoutines {
 
     macros = new Macros(swerve, elevator, arm, intake, limelight);
 
+  }
+
+  public CommandBase debugOdometryReset(Pose2d testPose) {
+    return Commands.runOnce(() -> {
+      Pose2d currentPose = swerve.getPose();
+      SmartDashboard.putNumber("Before Reset X", currentPose.getX());
+      SmartDashboard.putNumber("Before Reset Y", currentPose.getY());
+      SmartDashboard.putNumber("Before Resert R", currentPose.getRotation().getDegrees());
+      swerve.resetOdometry(testPose);
+      Pose2d resetPose = swerve.getPose();
+      SmartDashboard.putNumber("After Reset X", resetPose.getX());
+      SmartDashboard.putNumber("After Reset Y", resetPose.getY());
+      SmartDashboard.putNumber("After Resert R", resetPose.getRotation().getDegrees());
+    }, swerve);
   }
 
   // WORK IN PROGRESS
@@ -101,34 +119,6 @@ public final class AutoRoutines {
       
     );
   }
-
-  // public CommandBase leftConeCubeAutoPathGroup() {
-  //   // PathPlannerTrajectory trajectory = PathPlanner.loadPath("Left_Cone_Cube_Auto", 2, 2);
-
-  //   ArrayList<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("Left_Cone_Cube_Auto_dupl",
-  //     new PathConstraints(1, 1.5),
-  //     new PathConstraints(2.5, 3),
-  //     new PathConstraints(2.5, 3),
-  //     new PathConstraints(1, 1.5)
-  //   );
-
-    // HashMap<String, Command> eventMap = new HashMap<>();
-    // eventMap.put("intakeDown", Commands.print("First Marker"));
-    // eventMap.put("stow", Commands.print("Second Marker"));
-    // eventMap.put("prepareScore", Commands.print("Third Marker"));
-
-    // FollowPathWithEvents grabConeAndPrepareToScore = new FollowPathWithEvents(
-    //   baseSwerveCommand(trajectory, true), 
-    //   trajectory.getMarkers(), 
-    //   eventMap);
-
-    // return Commands.sequence(
-    //   // cone2ndAuto(),
-    //   grabConeAndPrepareToScore
-    //   // macros.outtake(),
-    //   // macros.stow()
-    // );
-  // }
 
   public CommandBase coneChargingStation() {
 
@@ -179,7 +169,12 @@ public final class AutoRoutines {
   }
 
   public CommandBase cone2ndAuto() {
-    return cube2ndAuto();
+    return Commands.sequence(
+      macros.home(),
+      macros.cone2ndStage(),
+      macros.outtake(),
+      macros.stow()
+    );
   } 
 
   public CommandBase cube2ndAuto() {
@@ -220,26 +215,6 @@ public final class AutoRoutines {
     );
   }
 
-  public CommandBase twoCubeAuto() {
-    PathPlannerTrajectory trajectory = PathPlanner.loadPath("Left_2Cube_P1", 2.0, 2.75);
-    PathPlannerTrajectory trajectory2 = PathPlanner.loadPath("Left_2Cube_P2", 2.5, 2.75);
-    
-    return Commands.sequence(
-      macros.home(),
-      macros.cube3rdStage(),
-      macros.outtake(),
-      macros.stow(),
-      Commands.parallel(
-        baseSwerveCommand(trajectory, true), 
-        Commands.waitSeconds(1.5).andThen(macros.groundIntake(true, IntakeSubsystem.cubePiece))),
-      Commands.parallel(
-        macros.stow(),
-        Commands.waitSeconds(1).andThen(baseSwerveCommand(trajectory2, false))),
-      macros.cone3rdStage(),
-      macros.outtake(),
-      macros.stow()
-    );
-  }
 
   public Command baseSwerveCommand(PathPlannerTrajectory trajectory, boolean isFirstPath) {
     InstantCommand resetOdom = new InstantCommand(() -> {
@@ -253,7 +228,7 @@ public final class AutoRoutines {
     });
     PPSwerveControllerCommand command = new PPSwerveControllerCommand(
       trajectory, 
-      swerve::getTrajectoryPose, 
+      swerve::getPose, 
       DriveConstants.kDriveKinematics, 
       new PIDController(6.5, 0, 0), 
       new PIDController(6.5, 0, 0), 
@@ -263,6 +238,33 @@ public final class AutoRoutines {
     return Commands.sequence(
       resetOdom, 
       command,
+      Commands.runOnce(() -> SmartDashboard.putBoolean("Auto Reset", false)));
+  }
+
+  public Command constrainedBaseSwerveCommand(PathPlannerTrajectory trajectory, boolean isFirstPath, double thresholdVel) {
+    InstantCommand resetOdom = new InstantCommand(() -> {
+      if(isFirstPath) {
+        swerve.reset();
+        swerve.reset();
+        swerve.resetOdometry(trajectory.getInitialHolonomicPose());
+        swerve.resetOdometry(trajectory.getInitialHolonomicPose());
+        SmartDashboard.putBoolean("Auto Reset", true);
+      }
+    });
+    PPSwerveControllerCommand command = new PPSwerveControllerCommand(
+      trajectory, 
+      swerve::getPose, 
+      DriveConstants.kDriveKinematics, 
+      new PIDController(6.5, 0, 0), 
+      new PIDController(6.5, 0, 0), 
+      new PIDController(3, 0, 0), 
+      swerve::setModuleStatesClosedLoop, 
+      swerve);
+    return Commands.sequence(
+      resetOdom, 
+      command.until(
+        () -> (swerve.getChassisSpeeds().vxMetersPerSecond > thresholdVel 
+          || swerve.getChassisSpeeds().vyMetersPerSecond > thresholdVel)),
       Commands.runOnce(() -> SmartDashboard.putBoolean("Auto Reset", false)));
   }
 
@@ -276,7 +278,7 @@ public final class AutoRoutines {
       macros.cube3rdStage(),
       macros.cone3rdStage(),
       macros.stow(),
-      new IntakePiece(intake, IntakeSubsystem.cubePiece),
+      new IntakePiece(intake, Piece.CUBE),
       new OuttakePiece(intake)
     );
   }

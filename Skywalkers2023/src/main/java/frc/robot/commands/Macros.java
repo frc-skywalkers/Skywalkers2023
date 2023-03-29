@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.LimelightConstants.*;
 import frc.robot.Constants.Presets;
@@ -13,6 +14,7 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.ProfiledPIDArm;
 import frc.robot.subsystems.ProfiledPIDElevator;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.IntakeSubsystem.Piece;
 
 /** Add your docs here. */
 public class Macros {
@@ -49,8 +51,13 @@ public class Macros {
   public CommandBase moveToPreset(double elevatorPos, double armPos) {
     return Commands.parallel(
       arm.goToPosition(armPos),
-      elevator.goToPosition(elevatorPos)
-    );
+      elevator.goToPosition(elevatorPos))
+      .unless(() -> !elevator.isZeroed)
+      .andThen(() -> {
+        if (!elevator.isZeroed) {
+          System.out.println("ELEVATOR IS NOT ZEROED");
+        }
+      });
   }
 
   public CommandBase stow() {
@@ -59,14 +66,14 @@ public class Macros {
       Presets.STOW_PRESET.kArmPos);
   }
 
-  public CommandBase groundIntake(boolean intakeOn, int piece) {
+  public CommandBase groundIntake(boolean intakeOn, Piece piece) {
     return moveToPreset(
       Presets.GROUND_INTAKE_PRESET.kElevatorPos, 
       Presets.GROUND_INTAKE_PRESET.kArmPos)
       .andThen(new IntakePiece(intake, piece).unless(() -> !intakeOn));
   }
 
-  public CommandBase substationIntake(boolean intakeOn, int piece) {
+  public CommandBase substationIntake(boolean intakeOn, Piece piece) {
     return moveToPreset(
       Presets.SUBSTATION_INTAKE_PRESET.kElevatorPos, 
       Presets.SUBSTATION_INTAKE_PRESET.kArmPos)
@@ -109,12 +116,60 @@ public class Macros {
       Presets.CONE_3RD_STAGE_PRESET.kArmPos);
   }
 
-  public CommandBase intake(int piece) {
+  public CommandBase general2ndStage() {
+    return Commands.runOnce(() -> {
+        Piece p = intake.getCurrentPiece();
+        if (p == Piece.CONE) {
+          CommandScheduler.getInstance().schedule(cone2ndStage());
+        } else if (p == Piece.CUBE) {
+          CommandScheduler.getInstance().schedule(cube2ndStage());
+        } else {
+          System.out.println("NO PIECE INSIDE INTAKE");
+        }
+      }
+    );
+  }
+
+  public CommandBase general3rdStage() {
+    return Commands.runOnce(() -> {
+        Piece p = intake.getCurrentPiece();
+        if (p == Piece.CONE) {
+          CommandScheduler.getInstance().schedule(cone3rdStage());
+        } else if (p == Piece.CUBE) {
+          CommandScheduler.getInstance().schedule(cube3rdStage());
+        } else {
+          System.out.println("NO PIECE INSIDE INTAKE");
+        }
+      }
+    );
+  }
+
+  public CommandBase intake() {
+    return new IntakePiece(intake);
+  }
+
+  public CommandBase intake(Piece piece) {
     return new IntakePiece(intake, piece);
   }
 
   public CommandBase outtake() {
     return new OuttakePiece(intake).withTimeout(1);
+  }
+
+  public CommandBase desireCone() {
+    return Commands.runOnce(() -> intake.setDesiredPiece(Piece.CONE), intake);
+  }
+
+  public CommandBase desireCube() {
+    return Commands.runOnce(() -> intake.setDesiredPiece(Piece.CUBE), intake);
+  }
+
+  public CommandBase possessCone() {
+    return Commands.runOnce(() -> intake.setCurrentPiece(Piece.CONE), intake);
+  }
+
+  public CommandBase possessCube() {
+    return Commands.runOnce(() -> intake.setCurrentPiece(Piece.CUBE), intake);
   }
 
   public CommandBase alignCone2ndStage() {
