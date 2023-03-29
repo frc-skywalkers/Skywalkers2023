@@ -15,9 +15,8 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Dashboard;
+import frc.robot.Dashboard.Limelight.Debugging;
 import frc.robot.Constants.LimelightConstants;
 
 
@@ -184,18 +183,18 @@ public class Limelight extends SubsystemBase {
     int pipeline = limelightTable.getEntry("pipeline").getNumber(0).intValue();
 
     if (pipeline == 1) {
-      SmartDashboard.putNumber("RTTX", getRTTX());
-      SmartDashboard.putNumber("RTTY", getRTTY());
-      SmartDashboard.putNumber("RTTA", getRTTA());
+      Debugging.putNumber("RTTX", getRTTX());
+      Debugging.putNumber("RTTY", getRTTY());
+      Debugging.putNumber("RTTA", getRTTA());
       double currentXdistance = (LimelightConstants.RTheight - LimelightConstants.cameraheight)/Math.tan(getRTTY()*Math.PI/180); //radians
       double currentYdistance = Math.tan(getRTTX()*Math.PI/180) * currentXdistance; //+
 
-      SmartDashboard.putNumber("xdist", currentXdistance);
-      SmartDashboard.putNumber("ydist", currentYdistance);
-      SmartDashboard.putNumber("Printing pipeline", 1);
+      Debugging.putNumber("xdist", currentXdistance);
+      Debugging.putNumber("ydist", currentYdistance);
+      Debugging.putNumber("Printing pipeline", 1);
     } else if (pipeline == 0) {
-      SmartDashboard.putNumber("TAGID", getId());
-      SmartDashboard.putNumber("Printing pipeline", 0);
+      Debugging.putNumber("TAGID", getId());
+      Debugging.putNumber("Printing pipeline", 0);
     }
     
 

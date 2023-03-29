@@ -64,11 +64,11 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public boolean intakeEmpty() {
-    return getActualVelocity() > IntakeConstants.threshold(intakeSpeed);
+    return getActualVelocity() > IntakeConstants.threshold(intakeSpeed) && (getActualVelocity() < 0 == intakeSpeed < 0);
   }
 
   public boolean pieceHeld() {
-    return getActualVelocity() < IntakeConstants.pieceHeldThreshold;
+    return getActualVelocity() < IntakeConstants.pieceHeldThreshold && (getActualVelocity() < 0 == intakeSpeed < 0);
   }
 
   public void holdObject() {

@@ -16,12 +16,12 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import frc.robot.Dashboard;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.HomeElevator;
@@ -96,7 +96,7 @@ public final class AutoRoutines {
       grabConeAndPrepareToScore
       // macros.outtake(),
       // macros.stow()
-      // Commands.runOnce(() -> swerve.reset(swerve.getHeading() + 180)).andThen(Commands.runOnce(() -> SmartDashboard.putString("Reset", "RESET!"))),
+      // Commands.runOnce(() -> swerve.reset(swerve.getHeading() + 180)).andThen(Commands.runOnce(() -> Dashboard.Auto.Debugging.putString("Reset", "RESET!"))),
       // Commands.runOnce(() -> swerve.reset(swerve.getHeading() + 180))
       
     );
@@ -248,7 +248,7 @@ public final class AutoRoutines {
         swerve.reset();
         swerve.resetOdometry(trajectory.getInitialHolonomicPose());
         swerve.resetOdometry(trajectory.getInitialHolonomicPose());
-        SmartDashboard.putBoolean("Auto Reset", true);
+        Dashboard.Auto.Debugging.putBoolean("Auto Reset", true);
       }
     });
     PPSwerveControllerCommand command = new PPSwerveControllerCommand(
@@ -263,7 +263,7 @@ public final class AutoRoutines {
     return Commands.sequence(
       resetOdom, 
       command,
-      Commands.runOnce(() -> SmartDashboard.putBoolean("Auto Reset", false)));
+      Commands.runOnce(() -> Dashboard.Auto.Debugging.putBoolean("Auto Reset", false)));
   }
 
   public CommandBase DiagnosticTest() {

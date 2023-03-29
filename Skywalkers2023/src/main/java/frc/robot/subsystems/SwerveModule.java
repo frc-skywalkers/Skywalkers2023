@@ -159,7 +159,7 @@ public class SwerveModule extends SubsystemBase {
     turnSpeed = MathUtil.clamp(turnSpeed, -0.4, 0.4);
     turningMotor.set(turnSpeed);
     Dashboard.Swerve.Debugging.putNumber(motorId + " goal Angle", state.angle.getRadians());
-    // SmartDashboard.putNumber(motorId + " actual Angle", getTurningPosition());
+    // Dashboard.Swerve.Debugging.putNumber(motorId + " actual Angle", getTurningPosition());
     double dif = state.angle.getRadians() - getTurningPosition();
     dif = Math.abs(dif);
     while(dif > Math.PI) dif -= 2.0 * Math.PI;
@@ -176,7 +176,7 @@ public class SwerveModule extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    // SmartDashboard.putNumber(motorId + " drive Position", getDrivePosition());
+    // Dashboard.Swerve.Debugging.putNumber(motorId + " drive Position", getDrivePosition());
     Dashboard.Swerve.Debugging.putNumber(motorId + " turning Position", getTurningPosition());
     Dashboard.Swerve.Debugging.putNumber(motorId + " absolute Position", getAbsoluteEncoderRad());
     Dashboard.Swerve.Debugging.putNumber(motorId + " drive Speed", getDriveVelocity());

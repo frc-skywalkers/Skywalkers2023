@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.LimelightConstants;
 import frc.robot.Dashboard;
@@ -62,7 +61,7 @@ public class TurnAngle extends CommandBase {
     }
 
     
-    SmartDashboard.putNumber("rspeed", rspeed);
+    Dashboard.Limelight.Debugging.putNumber("rspeed", rspeed);
 
 
     atSetpoint = rcontroller.atSetpoint();
