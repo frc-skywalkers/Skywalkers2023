@@ -20,10 +20,16 @@ public class IntakePiece extends CommandBase {
   //private CommandXboxController controller;
   /** Creates a new IntakeMotor. */
   public IntakePiece(IntakeSubsystem rIntake) {
-    //controller = Controller;
     intake = rIntake;
-    // piece = rPiece;
-    piece = intake.getPiece();
+    
+    addRequirements(rIntake);
+    // Use addRequirements() here to declare subsystem dependencies.
+  }
+
+  public IntakePiece(IntakeSubsystem rIntake, int rPiece) {
+    intake = rIntake;
+    piece = rPiece;
+    //piece = intake.getPiece();
     addRequirements(rIntake);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -31,6 +37,7 @@ public class IntakePiece extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    piece = intake.getPiece();
     stage = 0;
     finished = false;
     intake.moveIn(piece);
@@ -44,6 +51,8 @@ public class IntakePiece extends CommandBase {
     if(stage == 0) {
       if(intake.intakeEmpty()) { // waits for power to go up
         stage = 1;
+      } else {
+        intake.moveIn(piece);
       }
     } else { //starts checking for game pieces once its speed up
       if(intake.pieceHeld()) { // waits for spike when object is intaked
@@ -61,7 +70,7 @@ public class IntakePiece extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     if(!interrupted) {
-      intake.lastIntaked = piece;
+      //intake.currentPiece = piece;
       intake.holdObject();
     }
   }

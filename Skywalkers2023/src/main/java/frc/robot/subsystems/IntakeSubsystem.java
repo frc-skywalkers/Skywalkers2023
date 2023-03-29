@@ -11,15 +11,14 @@ import frc.robot.Dashboard;
 import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
-  public final static int conePiece = -1;
-  public final static int cubePiece = 1;
+  public final static int conePiece = 1;
+  public final static int cubePiece = -1;
 
-  public int lastIntaked = 1;
-  public int intakeMode = cubePiece;
+  public int currentPiece = -1;
 
   private final boolean differentialIntake = IntakeConstants.differentialIntake;
 
-  private final WPI_TalonFX intake = new WPI_TalonFX(IntakeConstants.kIntakePort);
+  private final WPI_TalonFX intake = new WPI_TalonFX(IntakeConstants.kIntakePort, "CANivore");
   private double intakeSpeed = 0;
   public boolean stop = false;
 
@@ -41,19 +40,11 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void moveIn(int piece) {
-    if(!differentialIntake) {
-      piece = 1;
-    }
-
     setSpeed(IntakeConstants.kMaxIntakeSpeed * piece);
     intakeSpeed = IntakeConstants.kMaxIntakeSpeed * piece;
   }
 
   public void moveOut(int piece) {
-    if(!differentialIntake) {
-      piece = 1;
-    }
-
     setSpeed(IntakeConstants.kMaxOuttakeSpeed * piece);
     intakeSpeed = IntakeConstants.kMaxOuttakeSpeed * piece;
   }
@@ -87,15 +78,15 @@ public class IntakeSubsystem extends SubsystemBase {
 
 
   public int getPiece() {
-    return intakeMode;
+    return currentPiece;
   }
 
   public void setCone() {
-    intakeMode = conePiece;
+    currentPiece = conePiece;
   }
 
   public void setCube() {
-    intakeMode = cubePiece;
+    currentPiece = cubePiece;
   }
 
   @Override
@@ -104,6 +95,7 @@ public class IntakeSubsystem extends SubsystemBase {
     Dashboard.Intake.Debugging.putNumber("Intake Speed", intakeSpeed);
     Dashboard.Intake.Debugging.putBoolean("Intake Object Held", pieceHeld());
     Dashboard.Intake.Debugging.putNumber("Intake Current", intake.getStatorCurrent());
+    Dashboard.Intake.Debugging.putNumber("Current Piece", currentPiece);
     Dashboard.Intake.Debugging.putNumber(getName(), intakeSpeed);
   }
 }

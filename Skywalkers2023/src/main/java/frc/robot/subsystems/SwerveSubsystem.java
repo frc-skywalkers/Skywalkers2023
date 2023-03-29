@@ -74,6 +74,8 @@ public class SwerveSubsystem extends SubsystemBase {
 
   private double resetX = 0.00;
   private double resetY = 0.00;
+
+  private int resetCount = 0;
     
   
 
@@ -95,12 +97,13 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public double getHeading() {
-    double[] YPR = new double[3];
-    // imu.getYawPitchRoll(YPR);
-    imu.getYawPitchRoll(YPR);
-    double ret = YPR[0];
-    while(ret >= 360.01) ret -= 360.00;
-    return ret;
+    double angle = imu.getYaw() % 360;
+    if (angle > 180) {
+      angle -= 360;
+    } else if (angle <= -180) {
+        angle += 360;
+    }
+    return angle;
   }
 
   public double getRoll() {
@@ -129,6 +132,7 @@ public class SwerveSubsystem extends SubsystemBase {
     odometer.resetPosition(getRotation2d(), getModulePositions(), pose);
     // resetX = pose.getX();
     // resetY = pose.getY();
+    resetCount++;
   }
 
  
@@ -149,6 +153,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     Dashboard.Swerve.Debugging.putNumber("Estimated X Location", estimatedPose.getX());
     Dashboard.Swerve.Debugging.putNumber("Estimated Y Location", estimatedPose.getY());
+    Dashboard.Swerve.Debugging.putNumber("reset debugging", resetCount);
 
     poseEstimator.addVisionMeasurement(estimatedPose, Timer.getFPGATimestamp() - 0.3);
 

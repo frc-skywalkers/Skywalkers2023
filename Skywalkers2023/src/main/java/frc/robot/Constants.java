@@ -62,7 +62,7 @@ public final class Constants {
         public static final double kTicksPerRotation = 2048 * 150 / 7; // done
         public static final double kDriveTicksPerRotation = 2048 * 6.75;
 
-        public static final double kPTurning = 0.75; // CHANGE!!!
+        public static final double kPTurning = 0.65; // CHANGE!!!
         public static final double kDTurning = 0.025; // necessary??
         public static final double kITurning = 0.0;
 
@@ -155,14 +155,14 @@ public final class Constants {
 
         public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3; // ????
         
-        public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond * 3.000 / 5.0000 * 1.05; // ?????
+        public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond * 4.000 / 5.0000; // ?????
         public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond/4; //????
     }
 
     public static final class IntakeConstants {
         public static final int kIntakePort = 22; // ??
-        public static final double kMaxIntakeSpeed = 0.7; // ??
-        public static final double kMaxOuttakeSpeed = -0.7; // ??
+        public static final double kMaxIntakeSpeed = 0.4; // ??
+        public static final double kMaxOuttakeSpeed = -0.2; // ??
         public static final double kHoldSpeed = 0.015;
 
         public static double kSpeedUpFailTime = 0.75; //seconds it tries to speed up
@@ -220,7 +220,7 @@ public final class Constants {
     public static final class ArmConstants {
         public static final int kArmPort = 23; // ???
         public static final int kArmAbsoluteEncoderPort = 16;
-        public static final double kMaxArmSpeed = 1; // ??
+        public static final double kMaxArmSpeed = 0.25; // ??
         public static final boolean kArmInverted = true; // ??
         public static final boolean kArmAbsEncoderInverted = true;
         // public static final boolean kEncoderInverted = true;
@@ -259,6 +259,8 @@ public final class Constants {
         public static final double kSDown = -0.439;
 
         public static final double kCurrentThreshold = 15.00;
+        public static boolean kNewArmAbsEncoderInverted;
+        public static double kNewAbsEncoderOffset;
 
 
     }
@@ -274,7 +276,7 @@ public final class Constants {
         public static final int kArmTicksPerRotation = 2048; // ??
         public static final double kArmGearRatio = 180.00 * 2.0; // ???
 
-        public static final double kAbsEncoderOffset = -115.6;
+        public static final double kAbsEncoderOffset = 0;
 
 
         public static final double kPositionConversionFactor = 2 * Math.PI / (kArmTicksPerRotation * kArmGearRatio);
@@ -348,19 +350,19 @@ public final class Constants {
     }
 
     public static final class DashbaordConstants {
-        public static boolean SwerveDebugging = false;
-        public static boolean SwerveDriver = false;
+        public static boolean SwerveDebugging = true;
+        public static boolean SwerveDriver = true;
         public static boolean ArmDebugging = true;
         public static boolean ArmDriver = true;
-        public static boolean ElevatorDebugging = false;
-        public static boolean ElevatorDriver = false;
-        public static boolean IntakeDebugging = false;
-        public static boolean IntakeDriver = false;
-        public static boolean AutoDebugging = false;
-        public static boolean AutoDriver = false;
-        public static boolean TeleDebugging = false;
-        public static boolean TeleDriver = false;
-        public static boolean LimelightDebugging = false;
-        public static boolean LimelightDriver = false;
+        public static boolean ElevatorDebugging = true;
+        public static boolean ElevatorDriver = true;
+        public static boolean IntakeDebugging = true;
+        public static boolean IntakeDriver = true;
+        public static boolean AutoDebugging = true;
+        public static boolean AutoDriver = true;
+        public static boolean TeleDebugging = true;
+        public static boolean TeleDriver = true;
+        public static boolean LimelightDebugging = true;
+        public static boolean LimelightDriver = true;
     }
 }

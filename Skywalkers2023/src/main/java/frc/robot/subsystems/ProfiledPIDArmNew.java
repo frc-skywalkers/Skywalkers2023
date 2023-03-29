@@ -27,7 +27,7 @@ import frc.robot.Constants.NewArmConstants;
 
 public class ProfiledPIDArmNew extends ProfiledPIDSubsystem {
 
-  private final WPI_TalonFX armMotor = new WPI_TalonFX(ArmConstants.kArmPort);
+  private final WPI_TalonFX armMotor = new WPI_TalonFX(ArmConstants.kArmPort, "CANivore");
 
   // WPI_TalonFX armMotor = new WPI_TalonFX(ArmConstants.kArmPort, "CANivore");
   // private final CANCoder absoluteEncoder = new CANCoder(ArmConstants.kArmAbsoluteEncoderPort, "CANivore");
@@ -52,12 +52,9 @@ public class ProfiledPIDArmNew extends ProfiledPIDSubsystem {
 
     armMotor.setSelectedSensorPosition(0);
 
-    // absoluteEncoder.configSensorDirection(ArmConstants.kArmAbsEncoderInverted);
-    // absoluteEncoder.configMagnetOffset(ArmConstants.kAbsEncoderOffset);
+    // absoluteEncoder.configSensorDirection(NewArmConstants.kArmAbsEncoderInverted);
+    // absoluteEncoder.configMagnetOffset(NewArmConstants.kAbsEncoderOffset);
     // absoluteEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
-
-    // armMotor.configForwardSoftLimitThreshold(1.35 / ArmConstants.kPositionConversionFactor);
-    // armMotor.configForwardSoftLimitEnable(true);
 
     resetEncoders();
     disable();
@@ -109,7 +106,7 @@ public class ProfiledPIDArmNew extends ProfiledPIDSubsystem {
   }
 
   public void setVoltage(double voltage) {
-    voltage = MathUtil.clamp(voltage, -2, 2);
+    voltage = MathUtil.clamp(voltage, -0.5, 0.5);
     armMotor.setVoltage(voltage);
   }
 
@@ -133,7 +130,7 @@ public class ProfiledPIDArmNew extends ProfiledPIDSubsystem {
 
   public void resetEncoders() {
     // armMotor.setSelectedSensorPosition(armEncoder.getPosition());
-    armMotor.setSelectedSensorPosition(0);
+    // armMotor.setSelectedSensorPosition(absoluteEncoder.getAbsolutePosition());
   }
 
   public boolean isZeroed() {

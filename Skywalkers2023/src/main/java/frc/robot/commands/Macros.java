@@ -110,7 +110,7 @@ public class Macros {
   }
 
   public CommandBase intake(int piece) {
-    return new IntakePiece(intake, piece).andThen(() -> intake.holdObject());
+    return new IntakePiece(intake, piece);
   }
 
   public CommandBase outtake() {
@@ -141,7 +141,4 @@ public class Macros {
       stow()
     );
   }
-
-
-
 }

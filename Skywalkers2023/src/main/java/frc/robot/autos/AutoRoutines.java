@@ -81,9 +81,9 @@ public final class AutoRoutines {
     PathPlannerTrajectory trajectory = PathPlanner.loadPath("Left_Cone_Cube_Auto", 1, 1.5);
 
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("intakeDown", macros.groundIntake(true, IntakeSubsystem.cubePiece));
-    eventMap.put("stow", macros.stow());
-    eventMap.put("prepareScore", macros.cube3rdStage());
+    // eventMap.put("intakeDown", macros.groundIntake(true, IntakeSubsystem.cubePiece));
+    // eventMap.put("stow", macros.stow());
+    // eventMap.put("prepareScore", macros.cube3rdStage());
 
     FollowPathWithEvents grabConeAndPrepareToScore = new FollowPathWithEvents(
       baseSwerveCommand(trajectory, true), 
@@ -91,11 +91,11 @@ public final class AutoRoutines {
       eventMap);
 
     return Commands.sequence(
-      cone3rdAuto(),
+      // cone3rdAuto(),
       // macros.home(),
-      grabConeAndPrepareToScore,
-      macros.outtake(),
-      macros.stow()
+      grabConeAndPrepareToScore
+      // macros.outtake(),
+      // macros.stow()
       // Commands.runOnce(() -> swerve.reset(swerve.getHeading() + 180)).andThen(Commands.runOnce(() -> SmartDashboard.putString("Reset", "RESET!"))),
       // Commands.runOnce(() -> swerve.reset(swerve.getHeading() + 180))
       

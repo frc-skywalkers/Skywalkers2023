@@ -157,19 +157,12 @@ public class RobotContainer {
 
     // A --> Cube 2nd Stage
     operatorJoystick.a().onTrue(
-      // macros.cube2ndStage()
-      Commands.runOnce(() -> {
-        intake.setCone();
-      }, intake)
+      Commands.runOnce(() -> { intake.currentPiece = IntakeSubsystem.cubePiece; }, intake)
     );
 
     // B --> Cube 3rd Stage
     operatorJoystick.b().onTrue(
-      // macros.cube3rdStage()
-      Commands.runOnce(() -> {
-        intake.setCube();
-      }, intake)
-
+      Commands.runOnce(() -> { intake.currentPiece = IntakeSubsystem.conePiece; }, intake)
     );
     
     // Right Bumper --> Intake 
@@ -182,11 +175,8 @@ public class RobotContainer {
     //   macros.outtake()
     // );
 
-    // operatorJoystick.rightBumper().onTrue(new IntakePiece(intake, IntakeSubsystem.cubePiece));
-    operatorJoystick.leftBumper().onTrue(new IntakePiece(intake));
-
-    // operatorJoystick.rightTrigger().onTrue(new OuttakePiece(intake));
-    operatorJoystick.rightBumper().onTrue(new OuttakePiece(intake));
+    operatorJoystick.rightBumper().onTrue(new IntakePiece(intake));
+    operatorJoystick.leftBumper().onTrue(new OuttakePiece(intake));
 
     // Back --> Manual Intake Stop
     operatorJoystick.back().onTrue(Commands.runOnce(() -> intake.stop(), intake));

@@ -12,12 +12,12 @@ public class OuttakePiece extends CommandBase {
 
   private boolean finished = false;
 
-  private final int piece;
+  private int piece;
 
   /** Creates a new IntakeMotor. */
   public OuttakePiece(IntakeSubsystem rIntake) {
     intake = rIntake;
-    piece = intake.getPiece();
+    
     addRequirements(rIntake);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -25,6 +25,7 @@ public class OuttakePiece extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    piece = intake.getPiece();
     intake.moveOut(piece);
     finished = false;
     intake.stop = false;
