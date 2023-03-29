@@ -14,15 +14,13 @@ public class IntakeSubsystem extends SubsystemBase {
   public final static int conePiece = 1;
   public final static int cubePiece = -1;
 
-  public int currentPiece = -1;
+  private int currentPiece = -1;
 
   private final boolean differentialIntake = IntakeConstants.differentialIntake;
 
   private final WPI_TalonFX intake = new WPI_TalonFX(IntakeConstants.kIntakePort, "CANivore");
   private double intakeSpeed = 0;
   public boolean stop = false;
-
-  public boolean outtake = false;
 
   public IntakeSubsystem() {
     intake.configFactoryDefault();
