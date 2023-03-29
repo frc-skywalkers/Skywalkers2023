@@ -170,8 +170,6 @@ public final class Constants {
     
         public static double pieceHeldThreshold = 500;
         public static boolean differentialIntake = true;
-        public static int tofPort = 20;
-        public static double pieceInIntakeThreshold = 350;
         
         public static double threshold(double speed) {
             speed = Math.abs(speed);

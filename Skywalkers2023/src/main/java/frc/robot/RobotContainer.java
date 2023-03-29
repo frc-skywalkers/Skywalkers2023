@@ -157,12 +157,12 @@ public class RobotContainer {
 
     // A --> Cube 2nd Stage
     operatorJoystick.a().onTrue(
-      Commands.runOnce(() -> { intake.selectedPiece = IntakeSubsystem.cubePiece; }, intake)
+      Commands.runOnce(() -> { intake.currentPiece = IntakeSubsystem.cubePiece; }, intake)
     );
 
     // B --> Cube 3rd Stage
     operatorJoystick.b().onTrue(
-      Commands.runOnce(() -> { intake.selectedPiece = IntakeSubsystem.conePiece; }, intake)
+      Commands.runOnce(() -> { intake.currentPiece = IntakeSubsystem.conePiece; }, intake)
     );
     
     // Right Bumper --> Intake 

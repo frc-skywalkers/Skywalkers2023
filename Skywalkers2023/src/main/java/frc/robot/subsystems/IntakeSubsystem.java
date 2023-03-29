@@ -9,16 +9,12 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Dashboard;
 import frc.robot.Constants.IntakeConstants;
-import com.playingwithfusion.TimeOfFlight;
-
 
 public class IntakeSubsystem extends SubsystemBase {
   public final static int conePiece = 1;
   public final static int cubePiece = -1;
 
-  private final TimeOfFlight tof = new TimeOfFlight(IntakeConstants.tofPort);
-
-  public int selectedPiece = -1;
+  public int currentPiece = -1;
 
   private final boolean differentialIntake = IntakeConstants.differentialIntake;
 
@@ -30,8 +26,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public IntakeSubsystem() {
     intake.configFactoryDefault();
-    tof.setRangingMode(TimeOfFlight.RangingMode.Short, 24);
-    tof.setRangeOfInterest(4, 4, 12, 12);
   }
 
   // just speed should be fine, motor voltage unecessary
@@ -81,24 +75,18 @@ public class IntakeSubsystem extends SubsystemBase {
     intake.setVoltage(IntakeConstants.kHoldSpeed * 12.0000);
   }
 
-  public int getSelectedPiece() {
-    return selectedPiece;
-  }
 
-  public int getCurrentPiece() {
-    if(tof.getRange() > 0 && tof.getRange() < IntakeConstants.pieceInIntakeThreshold) {
-      return IntakeSubsystem.conePiece;
-    } else {
-      return IntakeSubsystem.cubePiece;
-    }
+
+  public int getPiece() {
+    return currentPiece;
   }
 
   public void setCone() {
-    selectedPiece = conePiece;
+    currentPiece = conePiece;
   }
 
   public void setCube() {
-    selectedPiece = cubePiece;
+    currentPiece = cubePiece;
   }
 
   @Override
@@ -107,7 +95,7 @@ public class IntakeSubsystem extends SubsystemBase {
     Dashboard.Intake.Debugging.putNumber("Intake Speed", intakeSpeed);
     Dashboard.Intake.Debugging.putBoolean("Intake Object Held", pieceHeld());
     Dashboard.Intake.Debugging.putNumber("Intake Current", intake.getStatorCurrent());
-    Dashboard.Intake.Debugging.putNumber("Selected Piece", selectedPiece);
+    Dashboard.Intake.Debugging.putNumber("Current Piece", currentPiece);
     Dashboard.Intake.Debugging.putNumber(getName(), intakeSpeed);
   }
 }
