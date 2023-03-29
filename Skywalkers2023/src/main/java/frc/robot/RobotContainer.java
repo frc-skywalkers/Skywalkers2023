@@ -15,7 +15,9 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.NewArmConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.autos.AutoRoutines;
+import frc.robot.commands.IntakePiece;
 import frc.robot.commands.Macros;
+import frc.robot.commands.OuttakePiece;
 import frc.robot.commands.SwerveJoystick;
 import frc.robot.commands.TurnAngle;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -43,7 +45,6 @@ public class RobotContainer {
   SendableChooser<Command> m_Chooser = new SendableChooser<>();
 
   public RobotContainer() {
-    startDashboard();
     startDashboard();
 
     swerve.setDefaultCommand(new SwerveJoystick(swerve, driverJoystick));
@@ -97,9 +98,9 @@ public class RobotContainer {
     Dashboard.Auto.Driver.set(DashbaordConstants.AutoDriver);
     Dashboard.Tele.Debugging.set(DashbaordConstants.TeleDebugging);
     Dashboard.Tele.Driver.set(DashbaordConstants.TeleDriver);
-    Dashboard.Limelight.Driver.set(DashbaordConstants.LimelightDebugging);
+    Dashboard.Limelight.Debugging.set(DashbaordConstants.LimelightDebugging);
     Dashboard.Limelight.Driver.set(DashbaordConstants.LimelightDriver);
-    Dashboard.Arm.Driver.set(DashbaordConstants.ArmDebugging);
+    Dashboard.Arm.Debugging.set(DashbaordConstants.ArmDebugging);
     Dashboard.Arm.Driver.set(DashbaordConstants.ArmDriver);
   }
 
@@ -131,7 +132,7 @@ public class RobotContainer {
     
     // POV Left --> First Stage / Ground intake height
     operatorJoystick.povLeft().onTrue(
-      macros.groundIntake(false)
+      macros.groundIntake()
     );
 
     // POV Down --> Stowe
@@ -141,7 +142,7 @@ public class RobotContainer {
 
     // POV Up --> Substration intake height
     operatorJoystick.povUp().onTrue(
-      macros.substationIntake(false)
+      macros.substationIntake()
     );
 
     // X --> Cone 2nd Stage
@@ -174,8 +175,11 @@ public class RobotContainer {
     //   macros.outtake()
     // );
 
-    operatorJoystick.rightBumper().onTrue(Commands.runOnce(() -> intake.moveIn(), intake));
-    operatorJoystick.leftBumper().onTrue(Commands.runOnce(() -> intake.moveOut(), intake));
+    operatorJoystick.rightBumper().onTrue(new IntakePiece(intake, IntakeSubsystem.cubePiece));
+    operatorJoystick.leftBumper().onTrue(new IntakePiece(intake, IntakeSubsystem.conePiece));
+
+    operatorJoystick.rightTrigger().onTrue(new OuttakePiece(intake));
+    operatorJoystick.leftTrigger().onTrue(new OuttakePiece(intake));
 
     // Back --> Manual Intake Stop
     operatorJoystick.back().onTrue(Commands.runOnce(() -> intake.stop(), intake));

@@ -11,6 +11,12 @@ import frc.robot.Dashboard;
 import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
+  public final static int conePiece = -1;
+  public final static int cubePiece = 1;
+
+  public int lastIntaked = 0;
+
+  private final boolean differentialIntake = IntakeConstants.differentialIntake;
 
   private final WPI_TalonFX intake = new WPI_TalonFX(IntakeConstants.kIntakePort);
   private double intakeSpeed = 0;
@@ -33,15 +39,22 @@ public class IntakeSubsystem extends SubsystemBase {
     intake.setVoltage(voltage);
   }
 
-  public void moveIn() {
-    setSpeed(IntakeConstants.kMaxIntakeSpeed);
-    intakeSpeed = IntakeConstants.kMaxIntakeSpeed;
+  public void moveIn(int piece) {
+    if(!differentialIntake) {
+      piece = 1;
+    }
+
+    setSpeed(IntakeConstants.kMaxIntakeSpeed * piece);
+    intakeSpeed = IntakeConstants.kMaxIntakeSpeed * piece;
   }
 
-  public void moveOut() {
-    // setSpeed(-IntakeConstants.kMaxIntakeSpeed);
-    setSpeed(IntakeConstants.kMaxOuttakeSpeed);
-    intakeSpeed = -IntakeConstants.kMaxIntakeSpeed; 
+  public void moveOut(int piece) {
+    if(!differentialIntake) {
+      piece = 1;
+    }
+
+    setSpeed(IntakeConstants.kMaxOuttakeSpeed * piece);
+    intakeSpeed = IntakeConstants.kMaxOuttakeSpeed * piece;
   }
 
   public void stop() {
@@ -51,35 +64,19 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public double getActualVelocity() {
-    return intake.getSelectedSensorVelocity();
+    return Math.abs(intake.getSelectedSensorVelocity());
   }
 
   public double getActualCurrent() {
     return intake.getStatorCurrent();
   }
 
-  public boolean objectHeld(boolean intaking) {
-    if(intaking == true) {
-      return getActualCurrent() > IntakeConstants.kObjectHeldThreshold * Math.abs(IntakeConstants.kMaxIntakeSpeed);
-    } else {
-      return getActualCurrent() > IntakeConstants.kObjectHeldThreshold * Math.abs(IntakeConstants.kMaxOuttakeSpeed);
-    }
+  public boolean intakeEmpty() {
+    return getActualVelocity() > IntakeConstants.threshold(intakeSpeed);
   }
 
-  public boolean speedUp(boolean intaking) {
-    if(intaking == true) {
-      return getActualCurrent() > IntakeConstants.kSpeedUpThreshold * Math.abs(IntakeConstants.kMaxIntakeSpeed);
-    } else {
-      return getActualCurrent() > IntakeConstants.kSpeedUpThreshold * Math.abs(IntakeConstants.kMaxOuttakeSpeed);
-    }
-  }
-
-  public boolean objectOut(boolean intaking) {
-    if(intaking == true) {
-      return getActualCurrent() < IntakeConstants.kObjectOutThreshold * Math.abs(IntakeConstants.kMaxIntakeSpeed);
-    } else {
-      return getActualCurrent() < IntakeConstants.kObjectOutThreshold * Math.abs(IntakeConstants.kMaxOuttakeSpeed);
-    }
+  public boolean pieceHeld() {
+    return getActualVelocity() < IntakeConstants.pieceHeldThreshold;
   }
 
   public void holdObject() {
@@ -90,8 +87,8 @@ public class IntakeSubsystem extends SubsystemBase {
   public void periodic() {
     Dashboard.Intake.Debugging.putNumber("Intake Velocity", getActualVelocity());
     Dashboard.Intake.Debugging.putNumber("Intake Speed", intakeSpeed);
-    Dashboard.Intake.Debugging.putBoolean("Intake Object Held", objectHeld(true));
+    Dashboard.Intake.Debugging.putBoolean("Intake Object Held", pieceHeld());
     Dashboard.Intake.Debugging.putNumber("Intake Current", intake.getStatorCurrent());
-    // System.out.println("Current: " + intake.getStatorCurrent());
+    Dashboard.Intake.Debugging.putNumber(getName(), intakeSpeed);
   }
 }

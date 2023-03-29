@@ -81,7 +81,7 @@ public final class AutoRoutines {
     PathPlannerTrajectory trajectory = PathPlanner.loadPath("Left_Cone_Cube_Auto", 1, 1.5);
 
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("intakeDown", macros.groundIntake(true));
+    eventMap.put("intakeDown", macros.groundIntake(true, IntakeSubsystem.cubePiece));
     eventMap.put("stow", macros.stow());
     eventMap.put("prepareScore", macros.cube3rdStage());
 
@@ -231,7 +231,7 @@ public final class AutoRoutines {
       macros.stow(),
       Commands.parallel(
         baseSwerveCommand(trajectory, true), 
-        Commands.waitSeconds(1.5).andThen(macros.groundIntake(true))),
+        Commands.waitSeconds(1.5).andThen(macros.groundIntake(true, IntakeSubsystem.cubePiece))),
       Commands.parallel(
         macros.stow(),
         Commands.waitSeconds(1).andThen(baseSwerveCommand(trajectory2, false))),
@@ -272,7 +272,7 @@ public final class AutoRoutines {
       macros.cube3rdStage(),
       macros.cone3rdStage(),
       macros.stow(),
-      new IntakePiece(intake),
+      new IntakePiece(intake, IntakeSubsystem.cubePiece),
       new OuttakePiece(intake)
     );
   }

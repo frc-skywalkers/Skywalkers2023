@@ -161,20 +161,20 @@ public final class Constants {
 
     public static final class IntakeConstants {
         public static final int kIntakePort = 22; // ??
-        public static final double kMaxIntakeSpeed = 0.4; // ??
-        public static final double kMaxOuttakeSpeed = -0.40; // ??
-        public static final double kHoldSpeed = 0.07;
-        public static final boolean kIntakeInverted = false; // ?
-        public static final int kIntakeTicksPerRotation = 4096; // ??
-        public static final double kExpectedFullVelocity = 50; // ?? in rotations per cycle
-        public static final double kObjectHeldRatioThreshold = 3.0; // ?? modify as needed
-        public static final double kCurrentThreshold = 15.00;
+        public static final double kMaxIntakeSpeed = 0.7; // ??
+        public static final double kMaxOuttakeSpeed = -0.7; // ??
+        public static final double kHoldSpeed = 0.015;
 
         public static double kSpeedUpFailTime = 0.75; //seconds it tries to speed up
         public static double kOutFailTime = 0.75; //seconds it tries to outtake
-        public static double kObjectHeldThreshold = 300; //proportional to max intake speed, current values found at 0.3
-        public static double kSpeedUpThreshold = 100;
-        public static double kObjectOutThreshold = 166;
+    
+        public static double pieceHeldThreshold = 500;
+        public static boolean differentialIntake = true;
+        
+        public static double threshold(double speed) {
+            speed = Math.abs(speed);
+            return (speed * 20850) - 1365;
+        }
     }
 
     public static final class ElevatorConstants {
@@ -348,19 +348,19 @@ public final class Constants {
     }
 
     public static final class DashbaordConstants {
-        public static boolean SwerveDebugging = true;
-        public static boolean SwerveDriver = true;
+        public static boolean SwerveDebugging = false;
+        public static boolean SwerveDriver = false;
         public static boolean ArmDebugging = true;
         public static boolean ArmDriver = true;
-        public static boolean ElevatorDebugging = true;
-        public static boolean ElevatorDriver = true;
-        public static boolean IntakeDebugging = true;
-        public static boolean IntakeDriver = true;
-        public static boolean AutoDebugging = true;
-        public static boolean AutoDriver = true;
-        public static boolean TeleDebugging = true;
-        public static boolean TeleDriver = true;
-        public static boolean LimelightDebugging = true;
-        public static boolean LimelightDriver = true;
+        public static boolean ElevatorDebugging = false;
+        public static boolean ElevatorDriver = false;
+        public static boolean IntakeDebugging = false;
+        public static boolean IntakeDriver = false;
+        public static boolean AutoDebugging = false;
+        public static boolean AutoDriver = false;
+        public static boolean TeleDebugging = false;
+        public static boolean TeleDriver = false;
+        public static boolean LimelightDebugging = false;
+        public static boolean LimelightDriver = false;
     }
 }

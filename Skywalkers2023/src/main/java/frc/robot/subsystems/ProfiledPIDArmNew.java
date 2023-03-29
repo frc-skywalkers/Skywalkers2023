@@ -27,8 +27,7 @@ import frc.robot.Constants.NewArmConstants;
 
 public class ProfiledPIDArmNew extends ProfiledPIDSubsystem {
 
-  private final CANSparkMax armMotor = new CANSparkMax(NewArmConstants.kArmPort, MotorType.kBrushless);
-  private final RelativeEncoder armEncoder;
+  private final WPI_TalonFX armMotor = new WPI_TalonFX(ArmConstants.kArmPort);
 
   // WPI_TalonFX armMotor = new WPI_TalonFX(ArmConstants.kArmPort, "CANivore");
   // private final CANCoder absoluteEncoder = new CANCoder(ArmConstants.kArmAbsoluteEncoderPort, "CANivore");
@@ -45,14 +44,13 @@ public class ProfiledPIDArmNew extends ProfiledPIDSubsystem {
 
     this.getController().setTolerance(0.03);
 
-    armMotor.restoreFactoryDefaults();
+    armMotor.configFactoryDefault();
     // armMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
     armMotor.setInverted(ArmConstants.kArmInverted);
     // armMotor.setIdleMode(NeutralMode.Brake);
-    armMotor.setIdleMode(IdleMode.kBrake);
+    armMotor.setNeutralMode(NeutralMode.Brake);
 
-    armEncoder = armMotor.getEncoder();
-    armEncoder.setPosition(0);
+    armMotor.setSelectedSensorPosition(0);
 
     // absoluteEncoder.configSensorDirection(ArmConstants.kArmAbsEncoderInverted);
     // absoluteEncoder.configMagnetOffset(ArmConstants.kAbsEncoderOffset);
@@ -122,11 +120,11 @@ public class ProfiledPIDArmNew extends ProfiledPIDSubsystem {
   }
 
   public double getPosition() {
-    return armEncoder.getPosition() * Math.PI / 180.0;
+    return armMotor.getSelectedSensorPosition() * Math.PI / 180.0;
   }
 
   public double getVelocity() {
-    return armEncoder.getVelocity() * Math.PI / 180.0;
+    return armMotor.getSelectedSensorPosition() * Math.PI / 180.0;
   }
 
   public void stop() {
@@ -135,7 +133,7 @@ public class ProfiledPIDArmNew extends ProfiledPIDSubsystem {
 
   public void resetEncoders() {
     // armMotor.setSelectedSensorPosition(armEncoder.getPosition());
-    armEncoder.setPosition(0);
+    armMotor.setSelectedSensorPosition(0);
   }
 
   public boolean isZeroed() {

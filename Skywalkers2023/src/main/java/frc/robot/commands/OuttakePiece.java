@@ -4,66 +4,47 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Dashboard;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class OuttakePiece extends CommandBase {
   private final IntakeSubsystem intake;
 
-  private int stage = 0;
-
   private boolean finished = false;
 
-  private Timer outFail = new Timer();
+  private final int piece;
+
   /** Creates a new IntakeMotor. */
   public OuttakePiece(IntakeSubsystem rIntake) {
     intake = rIntake;
+    piece = intake.lastIntaked;
     addRequirements(rIntake);
     // Use addRequirements() here to declare subsystem dependencies.
+  }
+   
+  public OuttakePiece(IntakeSubsystem rIntake, int rPiece) {
+    intake = rIntake;
+    piece = rPiece;
+    addRequirements(rIntake);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intake.moveOut();
+    intake.moveOut(piece);
     finished = false;
-    stage = 0;
-    outFail.reset();
-    outFail.start();
     intake.stop = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(stage == 0) {
-      if(!intake.objectOut(false)) { //waits for the spike when the piece is still stuck
-        stage = 1;
-      } else {
-        intake.moveOut();
-      }
+    if(intake.intakeEmpty()) {
+      intake.stop();
+      finished = true;
     } else {
-      if(intake.objectOut(false)) { // now it waits for spike to lower, i.e. object out 
-        stage = -1;
-        intake.stop();
-        outFail.stop();
-        finished = true;
-      } else { //sometimes it fails when the cone is stuck, this to prevent damage to the motors
-        Dashboard.Intake.Debugging.putNumber("Trying outtake", outFail.get());
-        if(outFail.get() > IntakeConstants.kOutFailTime) {
-          stage = -1;
-          intake.stop();
-          outFail.stop();
-          finished = true;
-        } else {
-          intake.moveOut();
-        }
-      }
+      intake.moveOut(piece);
     }
-    Dashboard.Intake.Debugging.putNumber("Outtake Step", stage);
   }
 
   // Called once the command ends or is interrupted.

@@ -59,18 +59,30 @@ public class Macros {
       Presets.STOW_PRESET.kArmPos);
   }
 
-  public CommandBase groundIntake(boolean intakeOn) {
+  public CommandBase groundIntake(boolean intakeOn, int piece) {
     return moveToPreset(
       Presets.GROUND_INTAKE_PRESET.kElevatorPos, 
       Presets.GROUND_INTAKE_PRESET.kArmPos)
-      .andThen(new IntakePiece(intake).unless(() -> !intakeOn));
+      .andThen(new IntakePiece(intake, piece).unless(() -> !intakeOn));
   }
 
-  public CommandBase substationIntake(boolean intakeOn) {
+  public CommandBase substationIntake(boolean intakeOn, int piece) {
     return moveToPreset(
       Presets.SUBSTATION_INTAKE_PRESET.kElevatorPos, 
       Presets.SUBSTATION_INTAKE_PRESET.kArmPos)
-      .andThen(new IntakePiece(intake).unless(() -> !intakeOn));
+      .andThen(new IntakePiece(intake, piece).unless(() -> !intakeOn));
+  }
+
+  public CommandBase groundIntake() {
+    return moveToPreset(
+      Presets.GROUND_INTAKE_PRESET.kElevatorPos, 
+      Presets.GROUND_INTAKE_PRESET.kArmPos);
+  }
+
+  public CommandBase substationIntake() {
+    return moveToPreset(
+      Presets.SUBSTATION_INTAKE_PRESET.kElevatorPos, 
+      Presets.SUBSTATION_INTAKE_PRESET.kArmPos);
   }
 
   public CommandBase cube2ndStage() {
@@ -97,8 +109,8 @@ public class Macros {
       Presets.CONE_3RD_STAGE_PRESET.kArmPos);
   }
 
-  public CommandBase intake() {
-    return new IntakePiece(intake).andThen(() -> intake.holdObject());
+  public CommandBase intake(int piece) {
+    return new IntakePiece(intake, piece).andThen(() -> intake.holdObject());
   }
 
   public CommandBase outtake() {
