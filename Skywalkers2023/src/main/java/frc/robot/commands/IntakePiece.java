@@ -72,6 +72,8 @@ public class IntakePiece extends CommandBase {
     if(!interrupted) {
       //intake.currentPiece = piece;
       intake.holdObject();
+    } else {
+      intake.stop();
     }
   }
 
