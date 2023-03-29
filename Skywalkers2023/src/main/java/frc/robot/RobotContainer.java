@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.DashbaordConstants;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.NewArmConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.autos.AutoRoutines;
 import frc.robot.commands.Macros;
@@ -19,6 +20,7 @@ import frc.robot.commands.SwerveJoystick;
 import frc.robot.commands.TurnAngle;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ProfiledPIDArm;
+import frc.robot.subsystems.ProfiledPIDArmNew;
 import frc.robot.subsystems.ProfiledPIDElevator;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.Limelight;
@@ -28,6 +30,7 @@ public class RobotContainer {
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   public final ProfiledPIDElevator elevator = new ProfiledPIDElevator();
   public final ProfiledPIDArm arm = new ProfiledPIDArm();
+  public final ProfiledPIDArmNew newArm = new ProfiledPIDArmNew();
   private final IntakeSubsystem intake = new IntakeSubsystem();
   private final Limelight limelight = new Limelight();
 
@@ -51,11 +54,18 @@ public class RobotContainer {
     }, elevator).unless(elevator::isEnabled));
 
     
-    arm.setDefaultCommand(Commands.run(() -> {
-      double speed = -operatorJoystick.getRightY() * ArmConstants.kMaxArmSpeed;
+    // arm.setDefaultCommand(Commands.run(() -> {
+    //   double speed = -operatorJoystick.getRightY() * ArmConstants.kMaxArmSpeed;
+    //   speed = Math.abs(speed) > OIConstants.kDeadband ? speed : 0.0;
+    //   arm.setSpeed(speed);
+    // }, arm).unless(arm::isEnabled));
+
+    newArm.setDefaultCommand(Commands.run(() -> {
+      double speed = -operatorJoystick.getRightY() * NewArmConstants.kMaxArmSpeed;
       speed = Math.abs(speed) > OIConstants.kDeadband ? speed : 0.0;
-      arm.setSpeed(speed);
-    }, arm).unless(arm::isEnabled));
+      newArm.setSpeed(speed);
+    }, newArm).unless(newArm::isEnabled));
+
 
     m_Chooser.setDefaultOption("3rd Stage Cube Balance", autoRoutines.chargingStation());
     m_Chooser.addOption("3rd Stage Cone Balance", autoRoutines.Cone3rdBalance());
@@ -67,7 +77,8 @@ public class RobotContainer {
     m_Chooser.addOption("2nd Stage Cone", autoRoutines.cone2ndAuto());
     m_Chooser.addOption("2nd Stage Cube", autoRoutines.cube2ndAuto());
 
-    m_Chooser.addOption("2 Cube Auto", autoRoutines.twoCubeAuto());
+    m_Chooser.addOption("2 Piece Auto", autoRoutines.leftConeCubeAuto());
+
 
 
     SmartDashboard.putData(m_Chooser);
@@ -154,14 +165,17 @@ public class RobotContainer {
     );
     
     // Right Bumper --> Intake 
-    operatorJoystick.rightBumper().onTrue(
-      macros.intake()
-    );
+    // operatorJoystick.rightBumper().onTrue(
+    //   macros.intake()
+    // );
 
-    // Left Bumper --> Outtake
-    operatorJoystick.leftBumper().onTrue(
-      macros.outtake()
-    );
+    // // Left Bumper --> Outtake
+    // operatorJoystick.leftBumper().onTrue(
+    //   macros.outtake()
+    // );
+
+    operatorJoystick.rightBumper().onTrue(Commands.runOnce(() -> intake.moveIn(), intake));
+    operatorJoystick.leftBumper().onTrue(Commands.runOnce(() -> intake.moveOut(), intake));
 
     // Back --> Manual Intake Stop
     operatorJoystick.back().onTrue(Commands.runOnce(() -> intake.stop(), intake));
@@ -171,8 +185,8 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    // return m_Chooser.getSelected();
-    return autoRoutines.leftConeCubeAuto();
+    return m_Chooser.getSelected();
+    // return autoRoutines.leftConeCubeAuto();
   }
 
 

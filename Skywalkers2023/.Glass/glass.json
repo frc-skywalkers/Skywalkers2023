@@ -44,7 +44,7 @@
     "Plot <0>": {
       "plots": [
         {
-          "height": -12,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -71,7 +71,7 @@
     "Plot <10>": {
       "plots": [
         {
-          "height": 862,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -98,7 +98,7 @@
     "Plot <11>": {
       "plots": [
         {
-          "height": 584,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -122,6 +122,13 @@
         }
       ]
     },
+    "Plot <12>": {
+      "plots": [
+        {
+          "height": 338
+        }
+      ]
+    },
     "Plot <1>": {
       "plots": [
         {
@@ -132,7 +139,7 @@
     "Plot <2>": {
       "plots": [
         {
-          "height": 828,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -306,7 +313,7 @@
     "Plot <6>": {
       "plots": [
         {
-          "height": 0,
+          "height": 283,
           "series": [
             {
               "color": [
@@ -399,7 +406,7 @@
     "Plot <8>": {
       "plots": [
         {
-          "height": 0,
+          "height": 338,
           "series": [
             {
               "color": [

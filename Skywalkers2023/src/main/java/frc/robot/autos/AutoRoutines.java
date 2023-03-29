@@ -91,13 +91,13 @@ public final class AutoRoutines {
       eventMap);
 
     return Commands.sequence(
-      // cone3rdAuto(),
-      macros.home(),
+      cone3rdAuto(),
+      // macros.home(),
       grabConeAndPrepareToScore,
-      // macros.outtake(),
-      // macros.stow(),
-      Commands.runOnce(() -> swerve.reset(swerve.getHeading() + 180)).andThen(Commands.runOnce(() -> SmartDashboard.putString("Reset", "RESET!"))),
-      Commands.runOnce(() -> swerve.reset(swerve.getHeading() + 180))
+      macros.outtake(),
+      macros.stow()
+      // Commands.runOnce(() -> swerve.reset(swerve.getHeading() + 180)).andThen(Commands.runOnce(() -> SmartDashboard.putString("Reset", "RESET!"))),
+      // Commands.runOnce(() -> swerve.reset(swerve.getHeading() + 180))
       
     );
   }

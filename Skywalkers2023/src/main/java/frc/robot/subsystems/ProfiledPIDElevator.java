@@ -22,8 +22,8 @@ import frc.robot.Constants.ElevatorConstants;
 
 public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
 
-  public final WPI_TalonFX leftElevator = new WPI_TalonFX(ElevatorConstants.kLeftElevatorPort, "CANivore");
-  public final WPI_TalonFX rightElevator = new WPI_TalonFX(ElevatorConstants.kRightElevatorPort, "CANivore");
+  public final WPI_TalonFX leftElevator = new WPI_TalonFX(ElevatorConstants.kLeftElevatorPort);
+  public final WPI_TalonFX rightElevator = new WPI_TalonFX(ElevatorConstants.kRightElevatorPort);
   LinearFilter homingMovingAvg = LinearFilter.movingAverage(8);
 
   public boolean isZeroed = false;

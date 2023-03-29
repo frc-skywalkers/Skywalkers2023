@@ -127,8 +127,8 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public void resetOdometry(Pose2d pose) {
     odometer.resetPosition(getRotation2d(), getModulePositions(), pose);
-    resetX = pose.getX();
-    resetY = pose.getY();
+    // resetX = pose.getX();
+    // resetY = pose.getY();
   }
 
  
@@ -154,8 +154,8 @@ public class SwerveSubsystem extends SubsystemBase {
 
     Dashboard.Swerve.Driver.putBoolean("Field Oriented", fieldOriented);
     
-    Dashboard.Swerve.Debugging.putNumber("Robot X Reset", resetX);
-    Dashboard.Swerve.Debugging.putNumber("Robot Y Reset", resetY);
+    // Dashboard.Swerve.Debugging.putNumber("Robot X Reset", resetX);
+    // Dashboard.Swerve.Debugging.putNumber("Robot Y Reset", resetY);
 
   } 
 
