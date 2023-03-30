@@ -11,6 +11,7 @@ import frc.robot.Constants.LimelightConstants.*;
 import frc.robot.Preset;
 import frc.robot.Constants.Presets;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.Lightstrip;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ProfiledPIDElevator;
@@ -154,7 +155,15 @@ public class Macros {
   }
 
   public CommandBase intake() {
-    return new IntakePiece(intake);
+    return new IntakePiece(intake).andThen(Commands.run(() -> {
+      intake.holdObject();
+    }));
+  }
+
+  public CommandBase intake(Lightstrip lightstrip) {
+    return new IntakePiece(intake, lightstrip).andThen(Commands.run(() -> {
+      intake.holdObject();
+    }));
   }
 
   public CommandBase intake(Piece piece) {

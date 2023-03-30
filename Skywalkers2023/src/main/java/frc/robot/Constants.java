@@ -8,6 +8,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import frc.robot.lightstrip.LedState;
+import frc.robot.lightstrip.TempLedState;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -305,7 +307,7 @@ public final class Constants {
         
     }
 
-    public static final class DashbaordConstants {
+    public static final class DashboardConstants {
         public static boolean SwerveDebugging = true;
         public static boolean SwerveDriver = true;
         public static boolean ArmDebugging = true;
@@ -320,5 +322,16 @@ public final class Constants {
         public static boolean TeleDriver = true;
         public static boolean LimelightDebugging = true;
         public static boolean LimelightDriver = true;
+    }
+
+    public static final class lightstripConstants {
+        public static int redPort = 0;
+        public static int greenPort = 2;
+        public static int bluePort = 1;
+
+        public static LedState defaultState = new LedState(255, 0, 0, "Solid");
+        public static TempLedState successSignal = new TempLedState(0, 255, 0, "Solid", 2);
+        public static LedState coneIntake = new LedState(255, 200, 0, "Solid");
+        public static LedState cubeIntake = new LedState(195, 0, 255, "Solid");
     }
 }

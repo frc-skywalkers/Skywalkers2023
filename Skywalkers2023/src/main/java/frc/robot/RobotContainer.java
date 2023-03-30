@@ -10,10 +10,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.DashbaordConstants;
+import frc.robot.Constants.DashboardConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.NewArmConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.lightstripConstants;
 import frc.robot.autos.AutoRoutines;
 import frc.robot.commands.ArmCharacterization;
 import frc.robot.commands.IntakePiece;
@@ -22,6 +23,7 @@ import frc.robot.commands.OuttakePiece;
 import frc.robot.commands.SwerveJoystick;
 import frc.robot.commands.TurnAngle;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.Lightstrip;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ProfiledPIDElevator;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -32,7 +34,8 @@ public class RobotContainer {
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   public final ProfiledPIDElevator elevator = new ProfiledPIDElevator();
   public final ArmSubsystem arm = new ArmSubsystem();
-  private final IntakeSubsystem intake = new IntakeSubsystem();
+  private final Lightstrip lightstrip = new Lightstrip();
+  private final IntakeSubsystem intake = new IntakeSubsystem(lightstrip);
   private final Limelight limelight = new Limelight();
 
   private final CommandXboxController driverJoystick = new CommandXboxController(OIConstants.kDriverControllerPort);
@@ -80,20 +83,20 @@ public class RobotContainer {
   }
 
   private void startDashboard() {
-    Dashboard.Swerve.Debugging.set(DashbaordConstants.SwerveDebugging);
-    Dashboard.Swerve.Driver.set(DashbaordConstants.SwerveDriver);
-    Dashboard.Elevator.Debugging.set(DashbaordConstants.ElevatorDebugging);
-    Dashboard.Elevator.Driver.set(DashbaordConstants.ElevatorDriver);
-    Dashboard.Intake.Debugging.set(DashbaordConstants.IntakeDebugging);
-    Dashboard.Intake.Driver.set(DashbaordConstants.IntakeDriver);
-    Dashboard.Auto.Debugging.set(DashbaordConstants.AutoDebugging);
-    Dashboard.Auto.Driver.set(DashbaordConstants.AutoDriver);
-    Dashboard.Tele.Debugging.set(DashbaordConstants.TeleDebugging);
-    Dashboard.Tele.Driver.set(DashbaordConstants.TeleDriver);
-    Dashboard.Limelight.Debugging.set(DashbaordConstants.LimelightDebugging);
-    Dashboard.Limelight.Driver.set(DashbaordConstants.LimelightDriver);
-    Dashboard.Arm.Debugging.set(DashbaordConstants.ArmDebugging);
-    Dashboard.Arm.Driver.set(DashbaordConstants.ArmDriver);
+    Dashboard.Swerve.Debugging.set(DashboardConstants.SwerveDebugging);
+    Dashboard.Swerve.Driver.set(DashboardConstants.SwerveDriver);
+    Dashboard.Elevator.Debugging.set(DashboardConstants.ElevatorDebugging);
+    Dashboard.Elevator.Driver.set(DashboardConstants.ElevatorDriver);
+    Dashboard.Intake.Debugging.set(DashboardConstants.IntakeDebugging);
+    Dashboard.Intake.Driver.set(DashboardConstants.IntakeDriver);
+    Dashboard.Auto.Debugging.set(DashboardConstants.AutoDebugging);
+    Dashboard.Auto.Driver.set(DashboardConstants.AutoDriver);
+    Dashboard.Tele.Debugging.set(DashboardConstants.TeleDebugging);
+    Dashboard.Tele.Driver.set(DashboardConstants.TeleDriver);
+    Dashboard.Limelight.Debugging.set(DashboardConstants.LimelightDebugging);
+    Dashboard.Limelight.Driver.set(DashboardConstants.LimelightDriver);
+    Dashboard.Arm.Debugging.set(DashboardConstants.ArmDebugging);
+    Dashboard.Arm.Driver.set(DashboardConstants.ArmDriver);
   }
 
 
@@ -171,7 +174,7 @@ public class RobotContainer {
     
     // Right Bumper --> Intake 
     operatorJoystick.rightBumper().onTrue(
-      macros.intake()
+      macros.intake(lightstrip)
     );
 
     // // Left Bumper --> Outtake

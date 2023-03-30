@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Dashboard;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.lightstripConstants;
+import frc.robot.lightstrip.LedState;
 
 public class IntakeSubsystem extends SubsystemBase {
   public final static int conePiece = 1;
@@ -26,6 +28,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public boolean outtake = false;
 
+  private final Lightstrip lightstrip;
+
   public enum Piece {
     NONE(0),
     CONE(-1),
@@ -38,8 +42,9 @@ public class IntakeSubsystem extends SubsystemBase {
     }
   }
 
-  public IntakeSubsystem() {
+  public IntakeSubsystem(Lightstrip rLightstrip) {
     intake.configFactoryDefault();
+    lightstrip = rLightstrip;
   }
 
   // just speed should be fine, motor voltage unecessary
@@ -109,6 +114,13 @@ public class IntakeSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    if(desiredPiece == Piece.CONE) {
+      lightstrip.setColor(lightstripConstants.coneIntake);
+    } else if(desiredPiece == Piece.CUBE) {
+      lightstrip.setColor(lightstripConstants.cubeIntake);
+    }
+
+
     Dashboard.Intake.Debugging.putNumber("Intake Velocity", getActualVelocity());
     Dashboard.Intake.Debugging.putNumber("Intake Speed", intakeSpeed);
     Dashboard.Intake.Debugging.putBoolean("Intake Object Held", pieceHeld());

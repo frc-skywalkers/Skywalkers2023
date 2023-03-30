@@ -6,7 +6,10 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Dashboard;
+import frc.robot.Constants.lightstripConstants;
+import frc.robot.Dashboard.Intake;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.Lightstrip;
 import frc.robot.subsystems.IntakeSubsystem.Piece;
 
 public class IntakePiece extends CommandBase {
@@ -18,11 +21,20 @@ public class IntakePiece extends CommandBase {
 
   private Piece piece;
 
+  private Lightstrip lightstrip = null;
+
   //private CommandXboxController controller;
   /** Creates a new IntakeMotor. */
   public IntakePiece(IntakeSubsystem rIntake) {
     intake = rIntake;
     
+    addRequirements(rIntake);
+    // Use addRequirements() here to declare subsystem dependencies.
+  }
+
+  public IntakePiece(IntakeSubsystem rIntake, Lightstrip rLightstrip) {
+    intake = rIntake;
+    lightstrip = rLightstrip;
     addRequirements(rIntake);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -42,7 +54,6 @@ public class IntakePiece extends CommandBase {
     finished = false;
     intake.moveIn(piece);
     intake.stop = false;
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -73,6 +84,7 @@ public class IntakePiece extends CommandBase {
     if(!interrupted) {
       intake.setCurrentPiece(intake.getDesiredPiece());
       intake.holdObject();
+      lightstrip.tempColor(lightstripConstants.successSignal);
     } else {
       intake.stop();
     }

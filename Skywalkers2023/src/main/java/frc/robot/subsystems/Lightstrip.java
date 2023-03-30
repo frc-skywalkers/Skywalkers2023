@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.lightstripConstants;
 import frc.robot.lightstrip.LedState;
 import frc.robot.lightstrip.TempLedState;
-import frc.robot.Dashboard;
 
 public class Lightstrip extends SubsystemBase {
   private PWM redOutput = new PWM(lightstripConstants.redPort);
