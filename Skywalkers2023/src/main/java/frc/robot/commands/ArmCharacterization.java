@@ -7,15 +7,15 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.subsystems.ProfiledPIDArmNew;
+import frc.robot.subsystems.ArmSubsystem;
 
 public class ArmCharacterization extends CommandBase {
   /** Creates a new ArmCharacterization. */
-  ProfiledPIDArmNew arm;
+  ArmSubsystem arm;
   CommandXboxController joystick;
   double speed = 0.00;
   double volts = 0.00;
-  public ArmCharacterization(ProfiledPIDArmNew arm, CommandXboxController joystick) {
+  public ArmCharacterization(ArmSubsystem arm, CommandXboxController joystick) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.arm = arm;
     this.joystick = joystick;

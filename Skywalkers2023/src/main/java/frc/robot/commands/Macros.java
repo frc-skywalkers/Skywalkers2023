@@ -10,16 +10,17 @@ import frc.robot.Constants.LimelightConstants.*;
 import frc.robot.Constants.Presets;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.ProfiledPIDArm;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ProfiledPIDElevator;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.IntakeSubsystem.Piece;
 
 /** Add your docs here. */
 public class Macros {
 
   private final SwerveSubsystem swerve;
   private final ProfiledPIDElevator elevator;
-  private final ProfiledPIDArm arm;
+  private final ArmSubsystem arm;
   private final IntakeSubsystem intake;
   private final Limelight limelight;
 
@@ -27,7 +28,7 @@ public class Macros {
   public Macros(
       SwerveSubsystem swerve, 
       ProfiledPIDElevator elevator, 
-      ProfiledPIDArm arm, 
+      ArmSubsystem arm, 
       IntakeSubsystem intake, 
       Limelight limelight) {
     
@@ -59,14 +60,14 @@ public class Macros {
       Presets.STOW_PRESET.kArmPos);
   }
 
-  public CommandBase groundIntake(boolean intakeOn, int piece) {
+  public CommandBase groundIntake(boolean intakeOn, Piece piece) {
     return moveToPreset(
       Presets.GROUND_INTAKE_PRESET.kElevatorPos, 
       Presets.GROUND_INTAKE_PRESET.kArmPos)
       .andThen(new IntakePiece(intake, piece).unless(() -> !intakeOn));
   }
 
-  public CommandBase substationIntake(boolean intakeOn, int piece) {
+  public CommandBase substationIntake(boolean intakeOn, Piece piece) {
     return moveToPreset(
       Presets.SUBSTATION_INTAKE_PRESET.kElevatorPos, 
       Presets.SUBSTATION_INTAKE_PRESET.kArmPos)
@@ -109,12 +110,20 @@ public class Macros {
       Presets.CONE_3RD_STAGE_PRESET.kArmPos);
   }
 
-  public CommandBase intake(int piece) {
+  public CommandBase intake() {
+    return new IntakePiece(intake);
+  }
+
+  public CommandBase intake(Piece piece) {
     return new IntakePiece(intake, piece);
   }
 
   public CommandBase outtake() {
     return new OuttakePiece(intake).withTimeout(1);
+  }
+
+  public CommandBase outtake(Piece piece) {
+    return new OuttakePiece(intake, piece).withTimeout(1);
   }
 
   public CommandBase alignCone2ndStage() {

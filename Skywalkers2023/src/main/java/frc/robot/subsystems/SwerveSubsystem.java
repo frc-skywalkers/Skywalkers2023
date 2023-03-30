@@ -83,6 +83,7 @@ public class SwerveSubsystem extends SubsystemBase {
     camera = new Limelight();
     poseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics, getRotation2d(), getModulePositions(), new Pose2d(), VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)), VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
 
+    imu.configFactoryDefault();
     new Thread(() -> {
       try {
           Thread.sleep(1000);
@@ -90,6 +91,8 @@ public class SwerveSubsystem extends SubsystemBase {
         } catch (Exception e) {
       }
     }).start();
+
+    resetEncoders();
   }
 
   public void zeroHeading() {
@@ -106,6 +109,11 @@ public class SwerveSubsystem extends SubsystemBase {
     return angle;
   }
 
+
+  public void setHeading(double heading) {
+    imu.setYaw(heading);
+  }
+
   public double getRoll() {
     return imu.getRoll();
   }
@@ -116,16 +124,6 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public Pose2d getPose() {
     return odometer.getPoseMeters();
-  }
-
-  public Pose2d invertYPose(Pose2d pose) {
-    return new Pose2d(pose.getX(), pose.getY(), pose.getRotation());
-  }
-
-  public Pose2d getTrajectoryPose() {
-    Pose2d actualPose = getPose();
-    Pose2d dumbPose = new Pose2d(actualPose.getX(), actualPose.getY(), actualPose.getRotation());
-    return dumbPose;
   }
 
   public void resetOdometry(Pose2d pose) {
@@ -178,6 +176,15 @@ public class SwerveSubsystem extends SubsystemBase {
     modulePositions[3] = backLeft.getModulePosition();
     modulePositions[2] = backRight.getModulePosition();
     return modulePositions;
+  }
+
+  public SwerveModuleState[] getModuleStates() {
+    SwerveModuleState[] moduleStates = new SwerveModuleState[4];
+    moduleStates[1] = frontLeft.getState();
+    moduleStates[0] = frontRight.getState();
+    moduleStates[3] = backLeft.getState();
+    moduleStates[2] = backRight.getState();
+    return moduleStates;
   }
 
   public void setModuleStates(SwerveModuleState[] desiredStates) {
@@ -256,5 +263,10 @@ public class SwerveSubsystem extends SubsystemBase {
   public boolean getFieldOriented() {
     return fieldOriented;
   }
+
+  public ChassisSpeeds getChassisSpeeds() {
+    return DriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
+  }
+
 
 }

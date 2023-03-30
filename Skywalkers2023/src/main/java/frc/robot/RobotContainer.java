@@ -4,12 +4,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.DashbaordConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.NewArmConstants;
@@ -22,8 +22,7 @@ import frc.robot.commands.OuttakePiece;
 import frc.robot.commands.SwerveJoystick;
 import frc.robot.commands.TurnAngle;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.ProfiledPIDArm;
-import frc.robot.subsystems.ProfiledPIDArmNew;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ProfiledPIDElevator;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.Limelight;
@@ -32,16 +31,15 @@ public class RobotContainer {
 
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   public final ProfiledPIDElevator elevator = new ProfiledPIDElevator();
-  // public final ProfiledPIDArm arm = new ProfiledPIDArm();
-  public final ProfiledPIDArmNew newArm = new ProfiledPIDArmNew();
+  public final ArmSubsystem arm = new ArmSubsystem();
   private final IntakeSubsystem intake = new IntakeSubsystem();
   private final Limelight limelight = new Limelight();
 
   private final CommandXboxController driverJoystick = new CommandXboxController(OIConstants.kDriverControllerPort);
   private final CommandXboxController operatorJoystick = new CommandXboxController(OIConstants.kDriverControllerPort2);
 
-  // private final Macros macros = new Macros(swerve, elevator, arm, intake, limelight);
-  // private final AutoRoutines autoRoutines = new AutoRoutines(swerve, elevator, arm, intake, limelight);
+  private final Macros macros = new Macros(swerve, elevator, arm, intake, limelight);
+  private final AutoRoutines autoRoutines = new AutoRoutines(swerve, elevator, arm, intake, limelight);
 
   SendableChooser<Command> m_Chooser = new SendableChooser<>();
 
@@ -55,18 +53,11 @@ public class RobotContainer {
       elevator.setSpeed(speed);
     }, elevator).unless(elevator::isEnabled));
 
-    
-    // arm.setDefaultCommand(Commands.run(() -> {
-    //   double speed = -operatorJoystick.getRightY() * ArmConstants.kMaxArmSpeed;
-    //   speed = Math.abs(speed) > OIConstants.kDeadband ? speed : 0.0;
-    //   arm.setSpeed(speed);
-    // }, arm).unless(arm::isEnabled));
-
-    newArm.setDefaultCommand(Commands.run(() -> {
+    arm.setDefaultCommand(Commands.run(() -> {
       double speed = -operatorJoystick.getRightY() * NewArmConstants.kMaxArmSpeed;
       speed = Math.abs(speed) > OIConstants.kDeadband ? speed : 0.0;
-      newArm.setSpeed(speed);
-    }, newArm).unless(newArm::isEnabled));
+      arm.setSpeed(speed);
+    }, arm).unless(arm::isEnabled));
 
 
     // m_Chooser.setDefaultOption("3rd Stage Cube Balance", autoRoutines.chargingStation());
@@ -119,32 +110,26 @@ public class RobotContainer {
     driverJoystick.rightBumper().onTrue(Commands.runOnce(swerve::stopModules, swerve));
 
     // // Right Trigger --> manual override
-    // operatorJoystick.rightTrigger().onTrue(
-    //   Commands.runOnce(() -> {
-    //     arm.stop();
-    //     arm.disable();
-    //     elevator.stop();
-    //     elevator.disable();
-    //   }, arm, elevator));
-
     operatorJoystick.rightTrigger().onTrue(
       Commands.runOnce(() -> {
-        newArm.stop();
-        newArm.disable();
-      }, newArm, elevator));
+        arm.stop();
+        arm.disable();
+        elevator.stop();
+        elevator.disable();
+      }, arm, elevator));
 
 
-    operatorJoystick.a().onTrue(
-      newArm.goToPosition(0)
-    );
+    // operatorJoystick.a().onTrue(
+    //   arm.goToPosition(0)
+    // );
 
-    operatorJoystick.b().onTrue(
-      newArm.goToPosition(1)
-    );
+    // operatorJoystick.b().onTrue(
+    //   arm.goToPosition(1)
+    // );
 
-    operatorJoystick.x().onTrue(
-      newArm.goToPosition(-0.3)
-    );
+    // operatorJoystick.x().onTrue(
+    //   arm.goToPosition(-0.3)
+    // );
     // // Start --> Home
     // operatorJoystick.start().onTrue(macros.home());
 
@@ -205,7 +190,8 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return m_Chooser.getSelected();
+    // return m_Chooser.getSelected();
+    return autoRoutines.debugOdometryReset(new Pose2d());
     // return autoRoutines.leftConeCubeAuto();
   }
 

@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Dashboard;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.IntakeSubsystem.Piece;
 
 public class IntakePiece extends CommandBase {
   private final IntakeSubsystem intake;
@@ -15,7 +16,7 @@ public class IntakePiece extends CommandBase {
 
   private int stage;
 
-  private int piece;
+  private Piece piece;
 
   //private CommandXboxController controller;
   /** Creates a new IntakeMotor. */
@@ -26,10 +27,9 @@ public class IntakePiece extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
-  public IntakePiece(IntakeSubsystem rIntake, int rPiece) {
+  public IntakePiece(IntakeSubsystem rIntake, Piece rPiece) {
     intake = rIntake;
-    piece = rPiece;
-    //piece = intake.getPiece();
+    intake.setDesiredPiece(rPiece);
     addRequirements(rIntake);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -37,7 +37,6 @@ public class IntakePiece extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    piece = intake.getPiece();
     stage = 0;
     finished = false;
     intake.moveIn(piece);
@@ -48,6 +47,7 @@ public class IntakePiece extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    piece = intake.getDesiredPiece();
     if(stage == 0) {
       if(intake.intakeEmpty()) { // waits for power to go up
         stage = 1;
@@ -70,7 +70,7 @@ public class IntakePiece extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     if(!interrupted) {
-      //intake.currentPiece = piece;
+      intake.setCurrentPiece(intake.getDesiredPiece());
       intake.holdObject();
     } else {
       intake.stop();

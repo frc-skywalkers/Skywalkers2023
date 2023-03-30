@@ -217,58 +217,10 @@ public final class Constants {
     }
 
 
-    public static final class ArmConstants {
+    public static final class NewArmConstants {
         public static final int kArmPort = 23; // ???
         public static final int kArmAbsoluteEncoderPort = 16;
         public static final double kMaxArmSpeed = 0.25; // ??
-        public static final boolean kArmInverted = true; // ??
-        public static final boolean kArmAbsEncoderInverted = true;
-        // public static final boolean kEncoderInverted = true;
-        
-        public static final int kArmTicksPerRotation = 2048; // ??
-        public static final double kArmGearRatio = 180.00 * 2.0; // ???
-
-        public static final double kAbsEncoderOffset = -115.6;
-
-
-        public static final double kPositionConversionFactor = 2 * Math.PI / (kArmTicksPerRotation * kArmGearRatio);
-        public static final double kVelocityConversionFactor = kPositionConversionFactor * 10.0;
-
-        public static final double kBottomLimit = -0.17; // -10 degrees
-        public static final double kTopLimit = 2.44; // 150 degrees
-
-        // feedback
-
-        public static final double kPArm = 20.00;
-        public static final double kIArm = 0.0;
-        public static final double kDArm = 0.00;
-
-        // feedforward
-
-        // calculate necessary gains using recalc: https://www.reca.lc/linear (overkill?)
-
-        // public static final double kSArm = 0.00; // to overcome static friction
-        // public static final double kVArm = 2.69; //1.47 for Neo550
-        // public static final double kGArm = 0.07; //0.32 for Neo550
-        // public static final double kAArm = 0.00;
-
-        public static final double kVUp = 6.14;
-        public static final double kSUp = 0.671;
-
-        public static final double kVDown = 6.4;
-        public static final double kSDown = -0.439;
-
-        public static final double kCurrentThreshold = 15.00;
-        public static boolean kNewArmAbsEncoderInverted;
-        public static double kNewAbsEncoderOffset;
-
-
-    }
-
-    public static final class NewArmConstants {
-        public static final int kArmPort = 30; // ???
-        public static final int kArmAbsoluteEncoderPort = 16;
-        public static final double kMaxArmSpeed = 1; // ??
         public static final boolean kArmInverted = true; // ??
         public static final boolean kArmAbsEncoderInverted = false;
         // public static final boolean kEncoderInverted = true;
@@ -282,8 +234,8 @@ public final class Constants {
         public static final double kPositionConversionFactor = 2 * Math.PI / (kArmTicksPerRotation * kArmGearRatio);
         public static final double kVelocityConversionFactor = kPositionConversionFactor * 10.0;
 
-        public static final double kBottomLimit = -0.17; // -10 degrees
-        public static final double kTopLimit = 2.44; // 150 degrees
+        public static final double kBottomLimit = -0.3; 
+        public static final double kTopLimit = 1.8; 
 
         // feedback
 

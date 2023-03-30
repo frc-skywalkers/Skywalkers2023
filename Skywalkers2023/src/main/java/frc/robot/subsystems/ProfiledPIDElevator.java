@@ -90,6 +90,12 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
   @Override
   public void periodic() {
     super.periodic();
+    if (getPosition() > ElevatorConstants.kTopLimit && rightElevator.getMotorOutputVoltage() > 0) {
+      stop();
+    }
+    if (getPosition() < ElevatorConstants.kBottomLimit && rightElevator.getMotorOutputVoltage() < 0) {
+      stop();
+    }
     Dashboard.Elevator.Debugging.putNumber("Elevator Current", getCurrent());
     Dashboard.Elevator.Debugging.putNumber("Elevator Position", getPosition());
     Dashboard.Elevator.Debugging.putNumber("Elevator Velocity", getVelocity());

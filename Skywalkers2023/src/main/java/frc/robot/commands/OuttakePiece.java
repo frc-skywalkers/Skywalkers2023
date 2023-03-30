@@ -6,25 +6,26 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.IntakeSubsystem.Piece;
 
 public class OuttakePiece extends CommandBase {
   private final IntakeSubsystem intake;
 
   private boolean finished = false;
 
-  private final int piece;
+  private Piece piece;
 
   /** Creates a new IntakeMotor. */
   public OuttakePiece(IntakeSubsystem rIntake) {
     intake = rIntake;
-    piece = intake.getPiece();
+    
     addRequirements(rIntake);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
-  public OuttakePiece(IntakeSubsystem rIntake, int kPiece) {
+  public OuttakePiece(IntakeSubsystem rIntake, Piece kPiece) {
     intake = rIntake;
-    piece = kPiece;
+    intake.setCurrentPiece(kPiece);
     addRequirements(rIntake);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -32,6 +33,7 @@ public class OuttakePiece extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    piece = intake.getCurrentPiece();
     intake.moveOut(piece);
     finished = false;
     intake.stop = false;
@@ -51,6 +53,9 @@ public class OuttakePiece extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    if (!interrupted) {
+      intake.setCurrentPiece(Piece.NONE);
+    }
     intake.stop();
   }
 

@@ -9,10 +9,6 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -22,17 +18,16 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc.robot.Dashboard;
-import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.NewArmConstants;
 
-public class ProfiledPIDArmNew extends ProfiledPIDSubsystem {
+public class ArmSubsystem extends ProfiledPIDSubsystem {
 
-  private final WPI_TalonFX armMotor = new WPI_TalonFX(ArmConstants.kArmPort, "CANivore");
+  private final WPI_TalonFX armMotor = new WPI_TalonFX(NewArmConstants.kArmPort, "CANivore");
 
   // WPI_TalonFX armMotor = new WPI_TalonFX(ArmConstants.kArmPort, "CANivore");
-  private final CANCoder absoluteEncoder = new CANCoder(ArmConstants.kArmAbsoluteEncoderPort, "CANivore");
+  private final CANCoder absoluteEncoder = new CANCoder(NewArmConstants.kArmAbsoluteEncoderPort, "CANivore");
 
-  public ProfiledPIDArmNew() {
+  public ArmSubsystem() {
     super(
 
         new ProfiledPIDController(
@@ -46,11 +41,8 @@ public class ProfiledPIDArmNew extends ProfiledPIDSubsystem {
 
     armMotor.configFactoryDefault();
     armMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-    armMotor.setInverted(ArmConstants.kArmInverted);
-    // armMotor.setIdleMode(NeutralMode.Brake);
+    armMotor.setInverted(NewArmConstants.kArmInverted);
     armMotor.setNeutralMode(NeutralMode.Brake);
-
-    // armMotor.setSelectedSensorPosition(0);
 
     absoluteEncoder.configSensorDirection(NewArmConstants.kArmAbsEncoderInverted);
     // absoluteEncoder.configMagnetOffset(NewArmConstants.kAbsEncoderOffset);
@@ -59,7 +51,6 @@ public class ProfiledPIDArmNew extends ProfiledPIDSubsystem {
     resetEncoders();
     disable();
 
-    SmartDashboard.putString("Working", "yes");
     Dashboard.Arm.Debugging.putNumber("Desired Arm Position", 0);
     Dashboard.Arm.Debugging.putNumber("Desired Arm Velocity", 0);
     
@@ -91,13 +82,18 @@ public class ProfiledPIDArmNew extends ProfiledPIDSubsystem {
   @Override
   public void periodic() {
     super.periodic();
-    Dashboard.Arm.Debugging.putNumber("Absolute Arm Position", getPosition());
-    // Dashboard.Arm.Debugging.putNumber("Abs Enc Deg", absoluteEncoder.getAbsolutePosition());
+    if (getPosition() > NewArmConstants.kTopLimit && armMotor.getMotorOutputVoltage() > 0) {
+      armMotor.stopMotor();
+    }
+    if (getPosition() < NewArmConstants.kBottomLimit && armMotor.getMotorOutputVoltage() < 0) {
+      armMotor.stopMotor();
+    }
+    
     Dashboard.Arm.Debugging.putNumber("New Arm Position", getPosition());
     Dashboard.Arm.Debugging.putNumber("New Arm Velocity", getVelocity());
-    // Dashboard.Arm.Debugging.putNumber("Arm Output Voltage", armMotor.getMotorOutputVoltage());
+    Dashboard.Arm.Debugging.putNumber("Arm Output Voltage", armMotor.getMotorOutputVoltage());
     Dashboard.Arm.Driver.putBoolean("New Arm Goal Reached", atGoal());
-    Dashboard.Arm.Debugging.putNumber("arm abs encoder", absoluteEncoder.getAbsolutePosition());
+    Dashboard.Arm.Debugging.putNumber("Arm Abs Enc Deg", absoluteEncoder.getAbsolutePosition());
 
   }
 
@@ -111,29 +107,19 @@ public class ProfiledPIDArmNew extends ProfiledPIDSubsystem {
   public void setVoltage(double voltage) {
     voltage = MathUtil.clamp(voltage, -3, 3);
     armMotor.setVoltage(voltage);
-    SmartDashboard.putNumber("arm motor voltage characterization", voltage);
   }
 
   public void setSpeed(double speed) {
-    speed = MathUtil.clamp(speed, -ArmConstants.kMaxArmSpeed, ArmConstants.kMaxArmSpeed);
+    speed = MathUtil.clamp(speed, -NewArmConstants.kMaxArmSpeed, NewArmConstants.kMaxArmSpeed);
     armMotor.set(speed + 0.0155);
-    Dashboard.Arm.Debugging.putNumber("new arm speed", speed);
+    Dashboard.Arm.Debugging.putNumber("New Arm Speed", speed);
   }
 
   public double getPosition() {
-    SmartDashboard.putNumber("stupid ass shit", (absoluteEncoder.getAbsolutePosition() - NewArmConstants.kAbsEncoderOffset));
-    SmartDashboard.putNumber("stupid ass shit 1", (absoluteEncoder.getAbsolutePosition()));
-    SmartDashboard.putNumber("stupid ass shit 2", (absoluteEncoder.getAbsolutePosition() + 99.6));
-    // SmartDashboard.putNumber("stupid ass shit", (absoluteEncoder.getAbsolutePosition() - NewArmConstants.kAbsEncoderOffset));
     return (absoluteEncoder.getAbsolutePosition() - NewArmConstants.kAbsEncoderOffset) * Math.PI / 180.0;
-    // return absoluteEncoder.getAbsolutePosition() * Math.PI / 180.0;
-    
-    // return absoluteEncoder.getSe
-    // return armMotor.getSelectedSensorPosition() * NewArmConstants.kPositionConversionFactor;
   }
 
   public double getVelocity() {
-    // return absoluteEncoder.getVelocity() * Math.PI / 180.0;
     return armMotor.getSelectedSensorVelocity() * NewArmConstants.kVelocityConversionFactor;
   }
 
@@ -142,18 +128,10 @@ public class ProfiledPIDArmNew extends ProfiledPIDSubsystem {
   }
 
   public void resetEncoders() {
-    // armMotor.setSelectedSensorPosition(armEncoder.getPosition());
     armMotor.setSelectedSensorPosition((absoluteEncoder.getAbsolutePosition() - NewArmConstants.kAbsEncoderOffset) / 360.00 / NewArmConstants.kPositionConversionFactor);
-    SmartDashboard.putNumber("debugging absolute encoder", getPosition());
-  }
-
-  public boolean isZeroed() {
-    // return armMotor.getSupplyCurrent() > ArmConstants.kCurrentThreshold;
-    return false;
   }
 
   public boolean atGoal() {
-    // Dashboard.Arm.Driver.putBoolean("Arm Goal Reached", this.getController().atGoal());
     return Math.abs(getPosition() - this.getController().getGoal().position) <= 0.07;
   }
 }
