@@ -36,6 +36,7 @@ public class HomeElevator extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    Dashboard.Elevator.Debugging.putString("Ended Home", "yes");
     elevator.stop();
     elevator.resetEncoders();
     elevator.isZeroed = true;

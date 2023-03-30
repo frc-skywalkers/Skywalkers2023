@@ -4,9 +4,11 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.LimelightConstants.*;
 import frc.robot.Preset;
 import frc.robot.Constants.Presets;
@@ -93,13 +95,26 @@ public class Macros {
       } else if (p == Piece.CUBE) {
         CommandScheduler.getInstance().schedule(moveToPreset(Presets.GROUND_INTAKE_CUBE_PRESET));
       } else {
-        System.out.println("NO PIECE INSIDE INTAKE");
+        System.out.println("GROUND INTAKE ERROR");
       }
     }
   );
     // return moveToPreset(
     //   Presets.GROUND_INTAKE_PRESET.kElevatorPos, 
     //   Presets.GROUND_INTAKE_PRESET.kArmPos);
+  }
+
+  public CommandBase groundIntake(Piece p) {
+    return Commands.runOnce(() -> {
+      if (p == Piece.CONE) {
+        CommandScheduler.getInstance().schedule(moveToPreset(Presets.GROUND_INTAKE_CONE_PRESET));
+      } else if (p == Piece.CUBE) {
+        CommandScheduler.getInstance().schedule(moveToPreset(Presets.GROUND_INTAKE_CUBE_PRESET));
+      } else {
+        System.out.println("GROUND INTAKE ERROR");
+      }
+    }
+    );
   }
 
   public CommandBase substationIntake() {
@@ -124,7 +139,7 @@ public class Macros {
         } else if (p == Piece.CUBE) {
           CommandScheduler.getInstance().schedule(moveToPreset(Presets.SUBSTATION_INTAKE_CUBE_PRESET));
         } else {
-          System.out.println("NO PIECE INSIDE INTAKE");
+          System.out.println("SUBSTATION INTAKE ERROR");
         }
       }
     );
@@ -224,11 +239,16 @@ public class Macros {
   public CommandBase general2ndStage() {
     return Commands.runOnce(() -> {
         Piece p = intake.getCurrentPiece();
+        if (p != Piece.CONE && p != Piece.CUBE) {
+          p = intake.getDesiredPiece();
+        }
+        System.out.println("PIECE VALUE: " + p);
         if (p == Piece.CONE) {
           CommandScheduler.getInstance().schedule(cone2ndStage());
         } else if (p == Piece.CUBE) {
           CommandScheduler.getInstance().schedule(cube2ndStage());
         } else {
+          System.out.println("GENERAL 2ND STAGE ERROR");
           System.out.println("NO PIECE INSIDE INTAKE");
         }
       }
@@ -238,11 +258,16 @@ public class Macros {
   public CommandBase general3rdStage() {
     return Commands.runOnce(() -> {
         Piece p = intake.getCurrentPiece();
+        if (p != Piece.CONE && p != Piece.CUBE) {
+          p = intake.getDesiredPiece();
+        }
+        System.out.println("PIECE VALUE: " + p);
         if (p == Piece.CONE) {
           CommandScheduler.getInstance().schedule(cone3rdStage());
         } else if (p == Piece.CUBE) {
           CommandScheduler.getInstance().schedule(cube3rdStage());
         } else {
+          System.out.println("GENERAL 3RD STAGE ERROR");
           System.out.println("NO PIECE INSIDE INTAKE");
         }
       }

@@ -97,12 +97,12 @@ public final class AutoRoutines {
   }
 
   public CommandBase leftConeCubeAuto() {
-    PathPlannerTrajectory trajectory = PathPlanner.loadPath("Left_Cone_Cube_Auto", 1, 1.5);
+    PathPlannerTrajectory trajectory = PathPlanner.loadPath("Left_Cone_Cube_Auto", 0.5, 0.5);
 
     HashMap<String, Command> eventMap = new HashMap<>();
-    // eventMap.put("intakeDown", macros.groundIntake(true, IntakeSubsystem.cubePiece));
-    // eventMap.put("stow", macros.stow());
-    // eventMap.put("prepareScore", macros.cube3rdStage());
+    eventMap.put("intakeDown", macros.groundIntake(Piece.CUBE));
+    eventMap.put("stow", macros.stow());
+    eventMap.put("prepareScore", macros.cube3rdStage());
 
     FollowPathWithEvents grabConeAndPrepareToScore = new FollowPathWithEvents(
       baseSwerveCommand(trajectory, true), 
@@ -110,11 +110,10 @@ public final class AutoRoutines {
       eventMap);
 
     return Commands.sequence(
-      // cone3rdAuto(),
-      // macros.home(),
-      grabConeAndPrepareToScore
-      // macros.outtake(),
-      // macros.stow()
+      cone3rdAuto(),
+      grabConeAndPrepareToScore,
+      macros.outtake(),
+      macros.stow()
       // Commands.runOnce(() -> swerve.reset(swerve.getHeading() + 180)).andThen(Commands.runOnce(() -> Dashboard.Auto.Debugging.putString("Reset", "RESET!"))),
       // Commands.runOnce(() -> swerve.reset(swerve.getHeading() + 180))
       
@@ -160,6 +159,7 @@ public final class AutoRoutines {
     return Commands.sequence(
       Commands.runOnce(() -> swerve.setHeading(180), swerve),
       macros.home(),
+      Commands.runOnce(() -> intake.setCurrentPiece(Piece.CUBE), intake),
       macros.cube3rdStage(),
       macros.outtake(),
       macros.stow()
@@ -180,6 +180,7 @@ public final class AutoRoutines {
     return Commands.sequence(
       Commands.runOnce(() -> swerve.setHeading(180), swerve),
       macros.home(),
+      Commands.runOnce(() -> intake.setCurrentPiece(Piece.CUBE)),
       macros.cube2ndStage(),
       macros.outtake(),
       macros.stow()
@@ -210,6 +211,7 @@ public final class AutoRoutines {
     return Commands.sequence(
       Commands.runOnce(() -> swerve.setHeading(180), swerve),
       macros.home(),
+      Commands.runOnce(() -> intake.setCurrentPiece(Piece.CONE)),
       macros.cone3rdStage(),
       macros.outtake(),
       macros.stow()

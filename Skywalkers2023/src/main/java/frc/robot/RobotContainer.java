@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -63,17 +64,17 @@ public class RobotContainer {
     }, arm).unless(arm::isEnabled));
 
 
-    // m_Chooser.setDefaultOption("3rd Stage Cube Balance", autoRoutines.chargingStation());
-    // m_Chooser.addOption("3rd Stage Cone Balance", autoRoutines.Cone3rdBalance());
-    // m_Chooser.addOption("2nd Stage Cone Balance", autoRoutines.coneChargingStation());
-    // m_Chooser.addOption("2nd Stage Cube Balance", autoRoutines.Cube2ndBalance());
+    m_Chooser.setDefaultOption("3rd Stage Cube Balance", autoRoutines.chargingStation());
+    m_Chooser.addOption("3rd Stage Cone Balance", autoRoutines.Cone3rdBalance());
+    m_Chooser.addOption("2nd Stage Cone Balance", autoRoutines.coneChargingStation());
+    m_Chooser.addOption("2nd Stage Cube Balance", autoRoutines.Cube2ndBalance());
 
-    // m_Chooser.addOption("3rd Stage Cube", autoRoutines.cube3rdAuto());
-    // m_Chooser.addOption("3rd Stage Cone", autoRoutines.cone3rdAuto());
-    // m_Chooser.addOption("2nd Stage Cone", autoRoutines.cone2ndAuto());
-    // m_Chooser.addOption("2nd Stage Cube", autoRoutines.cube2ndAuto());
+    m_Chooser.addOption("3rd Stage Cube", autoRoutines.cube3rdAuto());
+    m_Chooser.addOption("3rd Stage Cone", autoRoutines.cone3rdAuto());
+    m_Chooser.addOption("2nd Stage Cone", autoRoutines.cone2ndAuto());
+    m_Chooser.addOption("2nd Stage Cube", autoRoutines.cube2ndAuto());
 
-    // m_Chooser.addOption("2 Piece Auto", autoRoutines.leftConeCubeAuto());
+    m_Chooser.addOption("2 Piece Auto", autoRoutines.leftConeCubeAuto());
 
 
 
@@ -193,8 +194,8 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    // return m_Chooser.getSelected();
-    return autoRoutines.debugOdometryReset(new Pose2d());
+    return m_Chooser.getSelected(); 
+    // return autoRoutines.debugOdometryReset(new Pose2d(2.00, 5.000, new Rotation2d(3.00)));
     // return autoRoutines.leftConeCubeAuto();
   }
 

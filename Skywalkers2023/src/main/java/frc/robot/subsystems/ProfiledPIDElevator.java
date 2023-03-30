@@ -27,6 +27,7 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
   LinearFilter homingMovingAvg = LinearFilter.movingAverage(8);
 
   public boolean isZeroed = false;
+  private boolean softLimitsEnabled = false;
   
   public ProfiledPIDElevator() {
     super(
@@ -90,12 +91,14 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
   @Override
   public void periodic() {
     super.periodic();
-    if (getPosition() > ElevatorConstants.kTopLimit && rightElevator.getMotorOutputVoltage() > 0) {
-      stop();
-    }
-    if (getPosition() < ElevatorConstants.kBottomLimit && rightElevator.getMotorOutputVoltage() < 0) {
-      stop();
-    }
+    if (softLimitsEnabled) {
+      if (getPosition() > ElevatorConstants.kTopLimit && rightElevator.getMotorOutputVoltage() > 0) {
+        stop();
+      }
+      if (getPosition() < ElevatorConstants.kBottomLimit && rightElevator.getMotorOutputVoltage() < 0) {
+        stop();
+      }
+  }
     Dashboard.Elevator.Debugging.putNumber("Elevator Current", getCurrent());
     Dashboard.Elevator.Debugging.putNumber("Elevator Position", getPosition());
     Dashboard.Elevator.Debugging.putNumber("Elevator Velocity", getVelocity());
@@ -118,11 +121,13 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
     speed = MathUtil.clamp(speed, -ElevatorConstants.kMaxElevatorSpeed, ElevatorConstants.kMaxElevatorSpeed);
     rightElevator.set(speed);
     leftElevator.set(speed);
-    if (getPosition() > ElevatorConstants.kTopLimit && speed > 0) {
-      stop();
-    }
-    if (getPosition() < ElevatorConstants.kBottomLimit && speed < 0) {
-      stop();
+    if (softLimitsEnabled) {
+      if (getPosition() > ElevatorConstants.kTopLimit && speed > 0) {
+        stop();
+      }
+      if (getPosition() < ElevatorConstants.kBottomLimit && speed < 0) {
+        stop();
+      }
     }
   }
 
@@ -148,14 +153,11 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
   }
 
   public void disableSoftLimits() {
-    leftElevator.configForwardSoftLimitEnable(false, 0);
-    rightElevator.configReverseSoftLimitEnable(false, 0);
+    softLimitsEnabled = false;
   }
 
   public void enableSoftLimits() {
-    leftElevator.configForwardSoftLimitEnable(true, 0);
-    rightElevator.configReverseSoftLimitEnable(true, 0);
-    // System.out.println("Enabled");
+    softLimitsEnabled = true;
   }
 
   public boolean atGoal() {
