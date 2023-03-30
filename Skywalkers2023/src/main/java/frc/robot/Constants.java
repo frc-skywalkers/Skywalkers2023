@@ -48,13 +48,17 @@ public final class Constants {
     }
 
     public static final class Presets {
-        public static final Preset STOW_PRESET = new Preset(1.13, 0);
-        public static final Preset GROUND_INTAKE_PRESET = new Preset(-0.19, 0.10);
+        public static final Preset STOW_PRESET = new Preset(1.6, 0); // done
+        public static final Preset GROUND_INTAKE_PRESET = new Preset(-0.19, 0.10); // don't use
+        public static final Preset GROUND_INTAKE_CONE_PRESET = new Preset(0.22, 0);     
+        public static final Preset GROUND_INTAKE_CUBE_PRESET = new Preset(0.1, 0.01); // done
+        public static final Preset SUBSTATION_INTAKE_CONE_PRESET = new Preset(0.06, 1.25);
         public static final Preset SUBSTATION_INTAKE_PRESET = new Preset(0.0, 1.13);
-        public static final Preset CONE_2ND_STAGE_PRESET = new Preset(0.8, 0.8);
-        public static final Preset CONE_3RD_STAGE_PRESET = new Preset(0.52, 1.13);
-        public static final Preset CUBE_2ND_STAGE_PRESET = new Preset(0, 0.85);
-        public static final Preset CUBE_3RD_STAGE_PRESET = new Preset(0, 1.27);   
+        public static final Preset SUBSTATION_INTAKE_CUBE_PRESET = new Preset(0.45, 1.05);
+        public static final Preset CONE_2ND_STAGE_PRESET = new Preset(0.54, 0.63);
+        public static final Preset CONE_3RD_STAGE_PRESET = new Preset(0.48, 1.11);
+        public static final Preset CUBE_2ND_STAGE_PRESET = new Preset(0.81, 0.60);
+        public static final Preset CUBE_3RD_STAGE_PRESET = new Preset(0.57, 1.22);   
     }
 
     public static final class ModuleConstants {
@@ -161,14 +165,14 @@ public final class Constants {
 
     public static final class IntakeConstants {
         public static final int kIntakePort = 22; // ??
-        public static final double kMaxIntakeSpeed = 0.4; // ??
-        public static final double kMaxOuttakeSpeed = -0.2; // ??
-        public static final double kHoldSpeed = 0.015;
+        public static final double kMaxIntakeSpeed = 0.6; // ??
+        public static final double kMaxOuttakeSpeed = -0.3; // ??
+        public static final double kHoldSpeed = 0.07;
 
         public static double kSpeedUpFailTime = 0.75; //seconds it tries to speed up
         public static double kOutFailTime = 0.75; //seconds it tries to outtake
     
-        public static double pieceHeldThreshold = 500;
+        public static double pieceHeldThreshold = 750;
         public static boolean differentialIntake = true;
         
         public static double threshold(double speed) {

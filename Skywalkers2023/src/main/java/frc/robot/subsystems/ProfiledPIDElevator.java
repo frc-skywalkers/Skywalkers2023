@@ -118,6 +118,12 @@ public class ProfiledPIDElevator extends ProfiledPIDSubsystem {
     speed = MathUtil.clamp(speed, -ElevatorConstants.kMaxElevatorSpeed, ElevatorConstants.kMaxElevatorSpeed);
     rightElevator.set(speed);
     leftElevator.set(speed);
+    if (getPosition() > ElevatorConstants.kTopLimit && speed > 0) {
+      stop();
+    }
+    if (getPosition() < ElevatorConstants.kBottomLimit && speed < 0) {
+      stop();
+    }
   }
 
   public double getPosition() {

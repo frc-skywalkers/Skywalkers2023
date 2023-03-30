@@ -35,7 +35,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem {
             NewArmConstants.kIArm,
             NewArmConstants.kDArm,
 
-            new TrapezoidProfile.Constraints(1.5, 2)));
+            new TrapezoidProfile.Constraints(2.5, 3.25)));
 
     this.getController().setTolerance(0.03);
 
@@ -105,13 +105,19 @@ public class ArmSubsystem extends ProfiledPIDSubsystem {
   }
 
   public void setVoltage(double voltage) {
-    voltage = MathUtil.clamp(voltage, -3, 3);
+    voltage = MathUtil.clamp(voltage, -6, 6);
     armMotor.setVoltage(voltage);
   }
 
   public void setSpeed(double speed) {
     speed = MathUtil.clamp(speed, -NewArmConstants.kMaxArmSpeed, NewArmConstants.kMaxArmSpeed);
     armMotor.set(speed + 0.0155);
+    if (getPosition() > NewArmConstants.kTopLimit && speed > 0) {
+      armMotor.stopMotor();
+    }
+    if (getPosition() < NewArmConstants.kBottomLimit && speed < 0) {
+      armMotor.stopMotor();
+    }
     Dashboard.Arm.Debugging.putNumber("New Arm Speed", speed);
   }
 

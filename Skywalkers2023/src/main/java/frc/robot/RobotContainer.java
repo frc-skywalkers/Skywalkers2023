@@ -102,7 +102,7 @@ public class RobotContainer {
     driverJoystick.y().onTrue(Commands.runOnce(() -> swerve.reset(), swerve));
     driverJoystick.b().onTrue(Commands.runOnce(() -> swerve.toggleField(), swerve));
 
-    // driverJoystick.x().onTrue(macros.scoreCone3rdStage());
+    driverJoystick.x().onTrue(Commands.runOnce(() -> swerve.setHeading(180.000)));
     driverJoystick.leftBumper().onTrue(Commands.runOnce(() -> swerve.stopModules(), swerve));
     
 
@@ -130,60 +130,60 @@ public class RobotContainer {
     // operatorJoystick.x().onTrue(
     //   arm.goToPosition(-0.3)
     // );
-    // // Start --> Home
-    // operatorJoystick.start().onTrue(macros.home());
+    // Start --> Home
+    operatorJoystick.start().onTrue(macros.home());
 
     
-    // // POV Left --> First Stage / Ground intake height
-    // operatorJoystick.povLeft().onTrue(
-    //   macros.groundIntake()
-    // );
+    // POV Left --> First Stage / Ground intake height
+    operatorJoystick.povLeft().onTrue(
+      macros.groundIntake()
+    );
 
     // // POV Down --> Stowe
-    // operatorJoystick.povDown().onTrue(
-    //   macros.stow()
-    // );
+    operatorJoystick.povDown().onTrue(
+      macros.stow()
+    );
 
     // // POV Up --> Substration intake height
-    // operatorJoystick.povUp().onTrue(
-    //   macros.substationIntake()
-    // );
+    operatorJoystick.povUp().onTrue(
+      macros.substationIntake()
+    );
 
     // // X --> Cone 2nd Stage
-    // operatorJoystick.x().onTrue(
-    //   macros.cone2ndStage()
-    // );
+    operatorJoystick.x().onTrue(
+      macros.general2ndStage()
+    );
 
     // // Y --> Cone 3rd Stage
-    // operatorJoystick.y().onTrue(
-    //   macros.cone3rdStage()
-    // );
+    operatorJoystick.y().onTrue(
+      macros.general3rdStage()
+    );
 
-    // A --> Cube 2nd Stage
-    // operatorJoystick.a().onTrue(
-    //   Commands.runOnce(() -> { intake.setCone(); }, intake)
-    // );
+    // A --> cone mode
+    operatorJoystick.a().onTrue(
+      macros.desireCone()
+    );
 
-    // // B --> Cube 3rd Stage
-    // operatorJoystick.b().onTrue(
-    //   Commands.runOnce(() -> { intake.setCone(); }, intake)
-    // );
+    // // B --> cube mode
+    operatorJoystick.b().onTrue(
+      macros.desireCube()
+    );
     
     // Right Bumper --> Intake 
-    // operatorJoystick.rightBumper().onTrue(
-    //   macros.intake()
-    // );
+    operatorJoystick.rightBumper().onTrue(
+      macros.intake()
+    );
 
     // // Left Bumper --> Outtake
-    // operatorJoystick.leftBumper().onTrue(
-    //   macros.outtake()
-    // );
+    operatorJoystick.leftBumper().onTrue(
+      macros.outtake()
+    );
 
     // operatorJoystick.rightBumper().onTrue(new IntakePiece(intake));
     // operatorJoystick.leftBumper().onTrue(new ArmCharacterization(newArm, operatorJoystick));
 
     // Back --> Manual Intake Stop
-    // operatorJoystick.back().onTrue(Commands.runOnce(() -> intake.stop(), intake));
+    operatorJoystick.back().onTrue(Commands.runOnce(() -> intake.stop(), intake));
 
     // driverJoystick.a().onTrue(Commands.run(() -> swerve.drive(1.00, 0.000, 0.000), swerve));
 

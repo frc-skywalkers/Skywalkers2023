@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Dashboard;
 import frc.robot.Constants.IntakeConstants;
@@ -27,8 +28,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public enum Piece {
     NONE(0),
-    CONE(1),
-    CUBE(-1);
+    CONE(-1),
+    CUBE(1);
 
     public int multiplier;
 
@@ -46,10 +47,12 @@ public class IntakeSubsystem extends SubsystemBase {
   public void setSpeed(double speed) {
     intakeSpeed = speed;
     intake.set(intakeSpeed);
+    Dashboard.Intake.Debugging.putNumber("Intake Set Speed", intakeSpeed);
   }
 
   public void setVoltage(double voltage) {
     intake.setVoltage(voltage);
+    Dashboard.Intake.Debugging.putNumber("Intake Set Voltage", voltage);
   }
 
   public void moveIn(Piece piece) {

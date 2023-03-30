@@ -110,9 +110,6 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
 
-  public void setHeading(double heading) {
-    imu.setYaw(heading);
-  }
 
   public double getRoll() {
     return imu.getRoll();

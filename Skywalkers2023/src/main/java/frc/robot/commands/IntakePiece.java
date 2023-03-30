@@ -37,6 +37,7 @@ public class IntakePiece extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    piece = intake.getDesiredPiece();
     stage = 0;
     finished = false;
     intake.moveIn(piece);

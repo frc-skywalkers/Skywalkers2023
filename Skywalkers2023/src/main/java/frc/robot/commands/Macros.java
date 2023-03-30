@@ -5,8 +5,10 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.LimelightConstants.*;
+import frc.robot.Preset;
 import frc.robot.Constants.Presets;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Limelight;
@@ -54,6 +56,14 @@ public class Macros {
     );
   }
 
+  public CommandBase moveToPreset(Preset preset) {
+    return Commands.parallel(
+      arm.goToPosition(preset.kArmPos),
+      elevator.goToPosition(preset.kElevatorPos)
+    );
+  }
+
+
   public CommandBase stow() {
     return moveToPreset(
       Presets.STOW_PRESET.kElevatorPos, 
@@ -75,15 +85,48 @@ public class Macros {
   }
 
   public CommandBase groundIntake() {
-    return moveToPreset(
-      Presets.GROUND_INTAKE_PRESET.kElevatorPos, 
-      Presets.GROUND_INTAKE_PRESET.kArmPos);
+    return Commands.runOnce(() -> {
+      Piece p = intake.getDesiredPiece();
+      if (p == Piece.CONE) {
+        CommandScheduler.getInstance().schedule(moveToPreset(Presets.GROUND_INTAKE_CONE_PRESET));
+      } else if (p == Piece.CUBE) {
+        CommandScheduler.getInstance().schedule(moveToPreset(Presets.GROUND_INTAKE_CUBE_PRESET));
+      } else {
+        System.out.println("NO PIECE INSIDE INTAKE");
+      }
+    }
+  );
+    // return moveToPreset(
+    //   Presets.GROUND_INTAKE_PRESET.kElevatorPos, 
+    //   Presets.GROUND_INTAKE_PRESET.kArmPos);
   }
 
   public CommandBase substationIntake() {
-    return moveToPreset(
-      Presets.SUBSTATION_INTAKE_PRESET.kElevatorPos, 
-      Presets.SUBSTATION_INTAKE_PRESET.kArmPos);
+    // Piece p = intake.getCurrentPiece();
+    // if(p == Piece.CONE) {
+    //   return moveToPreset(
+    //     Presets.SUBSTATION_INTAKE_CONE_PRESET.kElevatorPos,
+    //     Presets.SUBSTATION_INTAKE_CONE_PRESET.kArmPos);
+    // }
+    // else {
+    //   return moveToPreset(
+    //     Presets.SUBSTATION_INTAKE_CUBE_PRESET.kElevatorPos,
+    //     Presets.SUBSTATION_INTAKE_CUBE_PRESET.kArmPos);
+    // }
+    // return moveToPreset(
+      // Presets.SUBSTATION_INTAKE_PRESET.kElevatorPos, 
+      // Presets.SUBSTATION_INTAKE_PRESET.kArmPos);
+      return Commands.runOnce(() -> {
+        Piece p = intake.getDesiredPiece();
+        if (p == Piece.CONE) {
+          CommandScheduler.getInstance().schedule(moveToPreset(Presets.SUBSTATION_INTAKE_CONE_PRESET));
+        } else if (p == Piece.CUBE) {
+          CommandScheduler.getInstance().schedule(moveToPreset(Presets.SUBSTATION_INTAKE_CUBE_PRESET));
+        } else {
+          System.out.println("NO PIECE INSIDE INTAKE");
+        }
+      }
+    );
   }
 
   public CommandBase cube2ndStage() {
@@ -115,7 +158,9 @@ public class Macros {
   }
 
   public CommandBase intake(Piece piece) {
-    return new IntakePiece(intake, piece);
+    return new IntakePiece(intake, piece).andThen(Commands.run(() -> {
+      intake.holdObject();
+    }));
   }
 
   public CommandBase outtake() {
@@ -150,4 +195,49 @@ public class Macros {
       stow()
     );
   }
+
+  public CommandBase desireCone() {
+    return Commands.runOnce(() -> intake.setDesiredPiece(Piece.CONE), intake);
+  }
+
+  public CommandBase desireCube() {
+    return Commands.runOnce(() -> intake.setDesiredPiece(Piece.CUBE), intake);
+  }
+
+  public CommandBase possessCone() {
+    return Commands.runOnce(() -> intake.setCurrentPiece(Piece.CONE), intake);
+  }
+
+  public CommandBase possessCube() {
+    return Commands.runOnce(() -> intake.setCurrentPiece(Piece.CUBE), intake);
+  }
+
+  public CommandBase general2ndStage() {
+    return Commands.runOnce(() -> {
+        Piece p = intake.getCurrentPiece();
+        if (p == Piece.CONE) {
+          CommandScheduler.getInstance().schedule(cone2ndStage());
+        } else if (p == Piece.CUBE) {
+          CommandScheduler.getInstance().schedule(cube2ndStage());
+        } else {
+          System.out.println("NO PIECE INSIDE INTAKE");
+        }
+      }
+    );
+  }
+
+  public CommandBase general3rdStage() {
+    return Commands.runOnce(() -> {
+        Piece p = intake.getCurrentPiece();
+        if (p == Piece.CONE) {
+          CommandScheduler.getInstance().schedule(cone3rdStage());
+        } else if (p == Piece.CUBE) {
+          CommandScheduler.getInstance().schedule(cube3rdStage());
+        } else {
+          System.out.println("NO PIECE INSIDE INTAKE");
+        }
+      }
+    );
+  }
+
 }
