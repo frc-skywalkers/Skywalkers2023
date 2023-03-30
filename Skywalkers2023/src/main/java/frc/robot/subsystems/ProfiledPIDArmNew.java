@@ -17,6 +17,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
@@ -29,7 +30,7 @@ public class ProfiledPIDArmNew extends ProfiledPIDSubsystem {
   private final WPI_TalonFX armMotor = new WPI_TalonFX(ArmConstants.kArmPort, "CANivore");
 
   // WPI_TalonFX armMotor = new WPI_TalonFX(ArmConstants.kArmPort, "CANivore");
-  // private final CANCoder absoluteEncoder = new CANCoder(ArmConstants.kArmAbsoluteEncoderPort, "CANivore");
+  private final CANCoder absoluteEncoder = new CANCoder(ArmConstants.kArmAbsoluteEncoderPort, "CANivore");
 
   public ProfiledPIDArmNew() {
     super(
@@ -39,25 +40,26 @@ public class ProfiledPIDArmNew extends ProfiledPIDSubsystem {
             NewArmConstants.kIArm,
             NewArmConstants.kDArm,
 
-            new TrapezoidProfile.Constraints(2.75, 3.50)));
+            new TrapezoidProfile.Constraints(1.5, 2)));
 
     this.getController().setTolerance(0.03);
 
     armMotor.configFactoryDefault();
-    // armMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+    armMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
     armMotor.setInverted(ArmConstants.kArmInverted);
     // armMotor.setIdleMode(NeutralMode.Brake);
     armMotor.setNeutralMode(NeutralMode.Brake);
 
-    armMotor.setSelectedSensorPosition(0);
+    // armMotor.setSelectedSensorPosition(0);
 
-    // absoluteEncoder.configSensorDirection(NewArmConstants.kArmAbsEncoderInverted);
+    absoluteEncoder.configSensorDirection(NewArmConstants.kArmAbsEncoderInverted);
     // absoluteEncoder.configMagnetOffset(NewArmConstants.kAbsEncoderOffset);
-    // absoluteEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
+    absoluteEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
 
     resetEncoders();
     disable();
 
+    SmartDashboard.putString("Working", "yes");
     Dashboard.Arm.Debugging.putNumber("Desired Arm Position", 0);
     Dashboard.Arm.Debugging.putNumber("Desired Arm Velocity", 0);
     
@@ -69,10 +71,10 @@ public class ProfiledPIDArmNew extends ProfiledPIDSubsystem {
     double feedforward = 0.000;
 
     if(setpoint.velocity > 0) {
-      feedforward = setpoint.velocity * ArmConstants.kVUp + ArmConstants.kSUp;
+      feedforward = setpoint.velocity * NewArmConstants.kVUp + NewArmConstants.kSUp;
     }
     else {
-      feedforward = setpoint.velocity * ArmConstants.kVDown + ArmConstants.kSDown;
+      feedforward = setpoint.velocity * NewArmConstants.kVDown + NewArmConstants.kSDown;
     }
 
     setVoltage(feedforward + output);
@@ -89,12 +91,14 @@ public class ProfiledPIDArmNew extends ProfiledPIDSubsystem {
   @Override
   public void periodic() {
     super.periodic();
-    // Dashboard.Arm.Debugging.putNumber("Absolute Arm Position", absoluteEncoder.getAbsolutePosition() * 2 * Math.PI /360.0);
+    Dashboard.Arm.Debugging.putNumber("Absolute Arm Position", getPosition());
     // Dashboard.Arm.Debugging.putNumber("Abs Enc Deg", absoluteEncoder.getAbsolutePosition());
     Dashboard.Arm.Debugging.putNumber("New Arm Position", getPosition());
     Dashboard.Arm.Debugging.putNumber("New Arm Velocity", getVelocity());
     // Dashboard.Arm.Debugging.putNumber("Arm Output Voltage", armMotor.getMotorOutputVoltage());
-    Dashboard.Arm.Driver.putBoolean("New Arm Goal Reached", this.getController().atGoal());
+    Dashboard.Arm.Driver.putBoolean("New Arm Goal Reached", atGoal());
+    Dashboard.Arm.Debugging.putNumber("arm abs encoder", absoluteEncoder.getAbsolutePosition());
+
   }
 
   public CommandBase goToPosition(double position) {
@@ -105,8 +109,9 @@ public class ProfiledPIDArmNew extends ProfiledPIDSubsystem {
   }
 
   public void setVoltage(double voltage) {
-    voltage = MathUtil.clamp(voltage, -0.5, 0.5);
+    voltage = MathUtil.clamp(voltage, -3, 3);
     armMotor.setVoltage(voltage);
+    SmartDashboard.putNumber("arm motor voltage characterization", voltage);
   }
 
   public void setSpeed(double speed) {
@@ -116,11 +121,20 @@ public class ProfiledPIDArmNew extends ProfiledPIDSubsystem {
   }
 
   public double getPosition() {
-    return armMotor.getSelectedSensorPosition() * Math.PI / 180.0;
+    SmartDashboard.putNumber("stupid ass shit", (absoluteEncoder.getAbsolutePosition() - NewArmConstants.kAbsEncoderOffset));
+    SmartDashboard.putNumber("stupid ass shit 1", (absoluteEncoder.getAbsolutePosition()));
+    SmartDashboard.putNumber("stupid ass shit 2", (absoluteEncoder.getAbsolutePosition() + 99.6));
+    // SmartDashboard.putNumber("stupid ass shit", (absoluteEncoder.getAbsolutePosition() - NewArmConstants.kAbsEncoderOffset));
+    return (absoluteEncoder.getAbsolutePosition() - NewArmConstants.kAbsEncoderOffset) * Math.PI / 180.0;
+    // return absoluteEncoder.getAbsolutePosition() * Math.PI / 180.0;
+    
+    // return absoluteEncoder.getSe
+    // return armMotor.getSelectedSensorPosition() * NewArmConstants.kPositionConversionFactor;
   }
 
   public double getVelocity() {
-    return armMotor.getSelectedSensorPosition() * Math.PI / 180.0;
+    // return absoluteEncoder.getVelocity() * Math.PI / 180.0;
+    return armMotor.getSelectedSensorVelocity() * NewArmConstants.kVelocityConversionFactor;
   }
 
   public void stop() {
@@ -129,7 +143,8 @@ public class ProfiledPIDArmNew extends ProfiledPIDSubsystem {
 
   public void resetEncoders() {
     // armMotor.setSelectedSensorPosition(armEncoder.getPosition());
-    // armMotor.setSelectedSensorPosition(absoluteEncoder.getAbsolutePosition());
+    armMotor.setSelectedSensorPosition((absoluteEncoder.getAbsolutePosition() - NewArmConstants.kAbsEncoderOffset) / 360.00 / NewArmConstants.kPositionConversionFactor);
+    SmartDashboard.putNumber("debugging absolute encoder", getPosition());
   }
 
   public boolean isZeroed() {

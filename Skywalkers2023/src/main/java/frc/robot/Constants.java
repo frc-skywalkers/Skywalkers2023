@@ -270,13 +270,13 @@ public final class Constants {
         public static final int kArmAbsoluteEncoderPort = 16;
         public static final double kMaxArmSpeed = 1; // ??
         public static final boolean kArmInverted = true; // ??
-        public static final boolean kArmAbsEncoderInverted = true;
+        public static final boolean kArmAbsEncoderInverted = false;
         // public static final boolean kEncoderInverted = true;
         
         public static final int kArmTicksPerRotation = 2048; // ??
-        public static final double kArmGearRatio = 180.00 * 2.0; // ???
+        public static final double kArmGearRatio = 45.0 * 44.0 / 18.0;
 
-        public static final double kAbsEncoderOffset = 0;
+        public static final double kAbsEncoderOffset = -73.5;
 
 
         public static final double kPositionConversionFactor = 2 * Math.PI / (kArmTicksPerRotation * kArmGearRatio);
@@ -287,7 +287,7 @@ public final class Constants {
 
         // feedback
 
-        public static final double kPArm = 20.00;
+        public static final double kPArm = 5.00;
         public static final double kIArm = 0.0;
         public static final double kDArm = 0.00;
 
@@ -300,11 +300,11 @@ public final class Constants {
         // public static final double kGArm = 0.07; //0.32 for Neo550
         // public static final double kAArm = 0.00;
 
-        public static final double kVUp = 6.14;
-        public static final double kSUp = 0.671;
+        public static final double kVUp = 1.95;
+        public static final double kSUp = 0.613;
 
-        public static final double kVDown = 6.4;
-        public static final double kSDown = -0.439;
+        public static final double kVDown = 1.92;
+        public static final double kSDown = -0.424;
 
         public static final double kCurrentThreshold = 15.00;
 

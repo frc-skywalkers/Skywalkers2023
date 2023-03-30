@@ -15,6 +15,7 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.NewArmConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.autos.AutoRoutines;
+import frc.robot.commands.ArmCharacterization;
 import frc.robot.commands.IntakePiece;
 import frc.robot.commands.Macros;
 import frc.robot.commands.OuttakePiece;
@@ -31,7 +32,7 @@ public class RobotContainer {
 
   private final SwerveSubsystem swerve = new SwerveSubsystem();
   public final ProfiledPIDElevator elevator = new ProfiledPIDElevator();
-  public final ProfiledPIDArm arm = new ProfiledPIDArm();
+  // public final ProfiledPIDArm arm = new ProfiledPIDArm();
   public final ProfiledPIDArmNew newArm = new ProfiledPIDArmNew();
   private final IntakeSubsystem intake = new IntakeSubsystem();
   private final Limelight limelight = new Limelight();
@@ -39,8 +40,8 @@ public class RobotContainer {
   private final CommandXboxController driverJoystick = new CommandXboxController(OIConstants.kDriverControllerPort);
   private final CommandXboxController operatorJoystick = new CommandXboxController(OIConstants.kDriverControllerPort2);
 
-  private final Macros macros = new Macros(swerve, elevator, arm, intake, limelight);
-  private final AutoRoutines autoRoutines = new AutoRoutines(swerve, elevator, arm, intake, limelight);
+  // private final Macros macros = new Macros(swerve, elevator, arm, intake, limelight);
+  // private final AutoRoutines autoRoutines = new AutoRoutines(swerve, elevator, arm, intake, limelight);
 
   SendableChooser<Command> m_Chooser = new SendableChooser<>();
 
@@ -68,17 +69,17 @@ public class RobotContainer {
     }, newArm).unless(newArm::isEnabled));
 
 
-    m_Chooser.setDefaultOption("3rd Stage Cube Balance", autoRoutines.chargingStation());
-    m_Chooser.addOption("3rd Stage Cone Balance", autoRoutines.Cone3rdBalance());
-    m_Chooser.addOption("2nd Stage Cone Balance", autoRoutines.coneChargingStation());
-    m_Chooser.addOption("2nd Stage Cube Balance", autoRoutines.Cube2ndBalance());
+    // m_Chooser.setDefaultOption("3rd Stage Cube Balance", autoRoutines.chargingStation());
+    // m_Chooser.addOption("3rd Stage Cone Balance", autoRoutines.Cone3rdBalance());
+    // m_Chooser.addOption("2nd Stage Cone Balance", autoRoutines.coneChargingStation());
+    // m_Chooser.addOption("2nd Stage Cube Balance", autoRoutines.Cube2ndBalance());
 
-    m_Chooser.addOption("3rd Stage Cube", autoRoutines.cube3rdAuto());
-    m_Chooser.addOption("3rd Stage Cone", autoRoutines.cone3rdAuto());
-    m_Chooser.addOption("2nd Stage Cone", autoRoutines.cone2ndAuto());
-    m_Chooser.addOption("2nd Stage Cube", autoRoutines.cube2ndAuto());
+    // m_Chooser.addOption("3rd Stage Cube", autoRoutines.cube3rdAuto());
+    // m_Chooser.addOption("3rd Stage Cone", autoRoutines.cone3rdAuto());
+    // m_Chooser.addOption("2nd Stage Cone", autoRoutines.cone2ndAuto());
+    // m_Chooser.addOption("2nd Stage Cube", autoRoutines.cube2ndAuto());
 
-    m_Chooser.addOption("2 Piece Auto", autoRoutines.leftConeCubeAuto());
+    // m_Chooser.addOption("2 Piece Auto", autoRoutines.leftConeCubeAuto());
 
 
 
@@ -110,60 +111,78 @@ public class RobotContainer {
     driverJoystick.y().onTrue(Commands.runOnce(() -> swerve.reset(), swerve));
     driverJoystick.b().onTrue(Commands.runOnce(() -> swerve.toggleField(), swerve));
 
-    driverJoystick.x().onTrue(macros.scoreCone3rdStage());
+    // driverJoystick.x().onTrue(macros.scoreCone3rdStage());
     driverJoystick.leftBumper().onTrue(Commands.runOnce(() -> swerve.stopModules(), swerve));
     
 
     // driverJoystick.a().onTrue(new Balance(swerve));
     driverJoystick.rightBumper().onTrue(Commands.runOnce(swerve::stopModules, swerve));
 
-    // Right Trigger --> manual override
+    // // Right Trigger --> manual override
+    // operatorJoystick.rightTrigger().onTrue(
+    //   Commands.runOnce(() -> {
+    //     arm.stop();
+    //     arm.disable();
+    //     elevator.stop();
+    //     elevator.disable();
+    //   }, arm, elevator));
+
     operatorJoystick.rightTrigger().onTrue(
       Commands.runOnce(() -> {
-        arm.stop();
-        arm.disable();
-        elevator.stop();
-        elevator.disable();
-      }, arm, elevator));
+        newArm.stop();
+        newArm.disable();
+      }, newArm, elevator));
 
-    // Start --> Home
-    operatorJoystick.start().onTrue(macros.home());
+
+    operatorJoystick.a().onTrue(
+      newArm.goToPosition(0)
+    );
+
+    operatorJoystick.b().onTrue(
+      newArm.goToPosition(1)
+    );
+
+    operatorJoystick.x().onTrue(
+      newArm.goToPosition(-0.3)
+    );
+    // // Start --> Home
+    // operatorJoystick.start().onTrue(macros.home());
 
     
-    // POV Left --> First Stage / Ground intake height
-    operatorJoystick.povLeft().onTrue(
-      macros.groundIntake()
-    );
+    // // POV Left --> First Stage / Ground intake height
+    // operatorJoystick.povLeft().onTrue(
+    //   macros.groundIntake()
+    // );
 
-    // POV Down --> Stowe
-    operatorJoystick.povDown().onTrue(
-      macros.stow()
-    );
+    // // POV Down --> Stowe
+    // operatorJoystick.povDown().onTrue(
+    //   macros.stow()
+    // );
 
-    // POV Up --> Substration intake height
-    operatorJoystick.povUp().onTrue(
-      macros.substationIntake()
-    );
+    // // POV Up --> Substration intake height
+    // operatorJoystick.povUp().onTrue(
+    //   macros.substationIntake()
+    // );
 
-    // X --> Cone 2nd Stage
-    operatorJoystick.x().onTrue(
-      macros.cone2ndStage()
-    );
+    // // X --> Cone 2nd Stage
+    // operatorJoystick.x().onTrue(
+    //   macros.cone2ndStage()
+    // );
 
-    // Y --> Cone 3rd Stage
-    operatorJoystick.y().onTrue(
-      macros.cone3rdStage()
-    );
+    // // Y --> Cone 3rd Stage
+    // operatorJoystick.y().onTrue(
+    //   macros.cone3rdStage()
+    // );
 
     // A --> Cube 2nd Stage
-    operatorJoystick.a().onTrue(
-      Commands.runOnce(() -> { intake.setCone(); }, intake)
-    );
+    // operatorJoystick.a().onTrue(
+    //   Commands.runOnce(() -> { intake.setCone(); }, intake)
+    // );
 
-    // B --> Cube 3rd Stage
-    operatorJoystick.b().onTrue(
-      Commands.runOnce(() -> { intake.setCone(); }, intake)
-    );
+    // // B --> Cube 3rd Stage
+    // operatorJoystick.b().onTrue(
+    //   Commands.runOnce(() -> { intake.setCone(); }, intake)
+    // );
     
     // Right Bumper --> Intake 
     // operatorJoystick.rightBumper().onTrue(
@@ -175,11 +194,11 @@ public class RobotContainer {
     //   macros.outtake()
     // );
 
-    operatorJoystick.rightBumper().onTrue(new IntakePiece(intake));
-    operatorJoystick.leftBumper().onTrue(new OuttakePiece(intake));
+    // operatorJoystick.rightBumper().onTrue(new IntakePiece(intake));
+    // operatorJoystick.leftBumper().onTrue(new ArmCharacterization(newArm, operatorJoystick));
 
     // Back --> Manual Intake Stop
-    operatorJoystick.back().onTrue(Commands.runOnce(() -> intake.stop(), intake));
+    // operatorJoystick.back().onTrue(Commands.runOnce(() -> intake.stop(), intake));
 
     // driverJoystick.a().onTrue(Commands.run(() -> swerve.drive(1.00, 0.000, 0.000), swerve));
 

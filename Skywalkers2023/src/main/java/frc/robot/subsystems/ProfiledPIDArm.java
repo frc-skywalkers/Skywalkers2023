@@ -22,7 +22,7 @@ import frc.robot.Constants.ArmConstants;
 public class ProfiledPIDArm extends ProfiledPIDSubsystem {
 
   WPI_TalonFX armMotor = new WPI_TalonFX(ArmConstants.kArmPort, "CANivore");
-  private final CANCoder absoluteEncoder = new CANCoder(ArmConstants.kArmAbsoluteEncoderPort, "CANivore");
+  // private final CANCoder absoluteEncoder = new CANCoder(ArmConstants.kArmAbsoluteEncoderPort, "CANivore");
 
   public ProfiledPIDArm() {
     super(
@@ -40,9 +40,9 @@ public class ProfiledPIDArm extends ProfiledPIDSubsystem {
     armMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
     armMotor.setInverted(ArmConstants.kArmInverted);
     armMotor.setNeutralMode(NeutralMode.Brake);
-    absoluteEncoder.configSensorDirection(ArmConstants.kArmAbsEncoderInverted);
-    absoluteEncoder.configMagnetOffset(ArmConstants.kAbsEncoderOffset);
-    absoluteEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
+    // absoluteEncoder.configSensorDirection(ArmConstants.kArmAbsEncoderInverted);
+    // absoluteEncoder.configMagnetOffset(ArmConstants.kAbsEncoderOffset);
+    // absoluteEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
 
     armMotor.configForwardSoftLimitThreshold(1.35 / ArmConstants.kPositionConversionFactor);
     // armMotor.configForwardSoftLimitEnable(true);
@@ -80,13 +80,13 @@ public class ProfiledPIDArm extends ProfiledPIDSubsystem {
 
   @Override
   public void periodic() {
-    super.periodic();
-    Dashboard.Arm.Debugging.putNumber("Absolute Arm Position", absoluteEncoder.getAbsolutePosition() * 2 * Math.PI /360.0);
-    Dashboard.Arm.Debugging.putNumber("Abs Enc Deg", absoluteEncoder.getAbsolutePosition());
-    Dashboard.Arm.Debugging.putNumber("Arm Position", getPosition());
-    Dashboard.Arm.Debugging.putNumber("Arm Velocity", getVelocity());
-    Dashboard.Arm.Debugging.putNumber("Arm Output Voltage", armMotor.getMotorOutputVoltage());
-    Dashboard.Arm.Driver.putBoolean("Arm Goal Reached", this.getController().atGoal());
+    // super.periodic();
+    // Dashboard.Arm.Debugging.putNumber("Absolute Arm Position", absoluteEncoder.getAbsolutePosition() * 2 * Math.PI /360.0);
+    // Dashboard.Arm.Debugging.putNumber("Abs Enc Deg", absoluteEncoder.getAbsolutePosition());
+    // Dashboard.Arm.Debugging.putNumber("Arm Position", getPosition());
+    // Dashboard.Arm.Debugging.putNumber("Arm Velocity", getVelocity());
+    // Dashboard.Arm.Debugging.putNumber("Arm Output Voltage", armMotor.getMotorOutputVoltage());
+    // Dashboard.Arm.Driver.putBoolean("Arm Goal Reached", this.getController().atGoal());
   }
 
   public CommandBase goToPosition(double position) {
@@ -107,11 +107,13 @@ public class ProfiledPIDArm extends ProfiledPIDSubsystem {
   }
 
   public double getPosition() {
-    return absoluteEncoder.getAbsolutePosition() * Math.PI / 180.0;
+    // return absoluteEncoder.getAbsolutePosition() * Math.PI / 180.0;
+    return 0;
   }
 
   public double getVelocity() {
-    return absoluteEncoder.getVelocity() * Math.PI / 180.0;
+    // return absoluteEncoder.getVelocity() * Math.PI / 180.0;
+    return 0;
   }
 
   public void stop() {
@@ -119,7 +121,7 @@ public class ProfiledPIDArm extends ProfiledPIDSubsystem {
   }
 
   public void resetEncoders() {
-    armMotor.setSelectedSensorPosition(absoluteEncoder.getAbsolutePosition());
+    // armMotor.setSelectedSensorPosition(absoluteEncoder.getAbsolutePosition());
   }
 
   public boolean isZeroed() {

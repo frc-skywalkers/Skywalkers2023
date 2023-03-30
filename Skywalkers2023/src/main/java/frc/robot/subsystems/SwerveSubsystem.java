@@ -139,7 +139,7 @@ public class SwerveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
 
-    recalibrate();
+    // recalibrate();
 
     odometer.update(getRotation2d(), getModulePositions());
 
