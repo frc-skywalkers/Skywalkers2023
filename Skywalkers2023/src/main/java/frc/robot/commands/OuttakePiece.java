@@ -34,6 +34,9 @@ public class OuttakePiece extends CommandBase {
   @Override
   public void initialize() {
     piece = intake.getCurrentPiece();
+    if (piece == Piece.NONE) {
+      piece = intake.getDesiredPiece();
+    }
     intake.moveOut(piece);
     finished = false;
     intake.stop = false;
