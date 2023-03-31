@@ -174,8 +174,10 @@ public final class Constants {
         public static double kSpeedUpFailTime = 0.75; //seconds it tries to speed up
         public static double kOutFailTime = 0.75; //seconds it tries to outtake
     
-        public static double pieceHeldThreshold = 750;
+        public static double conePieceHeldThreshold = 500;
+        public static double cubePieceHeldThreshold = 750;
         public static boolean differentialIntake = true;
+        public static int tofPort = 15;
         
         public static double threshold(double speed) {
             speed = Math.abs(speed);

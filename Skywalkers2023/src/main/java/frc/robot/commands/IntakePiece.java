@@ -4,10 +4,14 @@
 
 package frc.robot.commands;
 
+import com.playingwithfusion.TimeOfFlight;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Dashboard;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.lightstripConstants;
 import frc.robot.Dashboard.Intake;
+import frc.robot.lightstrip.TempLedState;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Lightstrip;
 import frc.robot.subsystems.IntakeSubsystem.Mode;
@@ -51,6 +55,10 @@ public class IntakePiece extends CommandBase {
     finished = false;
     intake.moveIn();
     intake.stop = false;
+
+    if(lightstrip != null) {
+      lightstrip.tempColor(new TempLedState(0, 255, 0, "Solid", 1));
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -79,7 +87,9 @@ public class IntakePiece extends CommandBase {
   public void end(boolean interrupted) {
     if(!interrupted) {
       intake.holdObject();
-      lightstrip.tempColor(lightstripConstants.successSignal);
+      if(lightstrip != null) {
+        lightstrip.tempColor(lightstripConstants.successSignal);
+      }
     } else {
       intake.stop();
     }

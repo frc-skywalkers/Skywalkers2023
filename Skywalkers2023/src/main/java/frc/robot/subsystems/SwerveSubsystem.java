@@ -144,13 +144,13 @@ public class SwerveSubsystem extends SubsystemBase {
     Dashboard.Swerve.Debugging.putNumber("Robot Y Location", getPose().getTranslation().getY());
     Dashboard.Swerve.Debugging.putNumber("Robot Heading", getHeading());
 
-    Pose2d estimatedPose = camera.campose().toPose2d();
+    //Pose2d estimatedPose = camera.campose().toPose2d();
 
-    Dashboard.Swerve.Debugging.putNumber("Estimated X Location", estimatedPose.getX());
+   /*  Dashboard.Swerve.Debugging.putNumber("Estimated X Location", estimatedPose.getX());
     Dashboard.Swerve.Debugging.putNumber("Estimated Y Location", estimatedPose.getY());
     Dashboard.Swerve.Debugging.putNumber("reset debugging", resetCount);
 
-    poseEstimator.addVisionMeasurement(estimatedPose, Timer.getFPGATimestamp() - 0.3);
+    poseEstimator.addVisionMeasurement(estimatedPose, Timer.getFPGATimestamp() - 0.3);*/
 
     Dashboard.Swerve.Driver.putBoolean("Field Oriented", fieldOriented);
     

@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.LimelightConstants.*;
 import frc.robot.Preset;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.Presets;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Lightstrip;
@@ -168,19 +169,19 @@ public class Macros {
   public CommandBase intake() {
     return new IntakePiece(intake).andThen(Commands.run(() -> {
       intake.holdObject();
-    }));
+    }, intake).until(() -> {return intake.getSpeed() > (IntakeConstants.kHoldSpeed / 2);}));
   }
 
   public CommandBase intake(Lightstrip lightstrip) {
     return new IntakePiece(intake, lightstrip).andThen(Commands.run(() -> {
       intake.holdObject();
-    }));
+    }, intake).until(() -> {return intake.getSpeed() > (IntakeConstants.kHoldSpeed / 2);}));
   }
 
   public CommandBase intake(Mode m) {
     return new IntakePiece(intake, m).andThen(Commands.run(() -> {
       intake.holdObject();
-    }));
+    }, intake).until(() -> {return intake.getSpeed() > (IntakeConstants.kHoldSpeed / 2);}));
   }
 
   public CommandBase outtake() {
