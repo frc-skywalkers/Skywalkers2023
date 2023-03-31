@@ -90,7 +90,9 @@ public final class AutoRoutines {
 
     return Commands.sequence(
       cube3rdAuto(),
+      Commands.runOnce(() -> SmartDashboard.putString("before move back", "yes")),
       baseSwerveCommand(trajectory, true),
+      Commands.runOnce(() -> SmartDashboard.putString("after move back", "yes")),
       new Balance(swerve)
     );
     
@@ -157,7 +159,7 @@ public final class AutoRoutines {
 
   public CommandBase cube3rdAuto() {
     return Commands.sequence(
-      Commands.runOnce(() -> swerve.setHeading(180), swerve),
+      // Commands.runOnce(() -> swerve.setHeading(180), swerve),
       macros.home(),
       macros.setCubeMode(),
       macros.cube3rdStage(),
@@ -271,7 +273,7 @@ public final class AutoRoutines {
           timer.reset();
           timer.start();
         })), 
-      command.alongWith(
+      command.raceWith(
         Commands.run(() -> {
           double t = timer.get();
           PathPlannerState state = (PathPlannerState) trajectory.sample(t);

@@ -108,7 +108,7 @@ public class RobotContainer {
 
     //driverJoystick.x().onTrue(Commands.runOnce(() -> swerve.setHeading(180.000)));
     driverJoystick.leftBumper().onTrue(Commands.runOnce(() -> swerve.stopModules(), swerve));
-    driverJoystick.x().onTrue(macros.alignCone2ndStage());
+    // driverJoystick.x().onTrue(macros.alignCone2ndStage());
 
     // driverJoystick.a().onTrue(new Balance(swerve));
     driverJoystick.rightBumper().onTrue(Commands.runOnce(swerve::stopModules, swerve));

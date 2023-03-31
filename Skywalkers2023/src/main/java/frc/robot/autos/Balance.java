@@ -20,8 +20,10 @@ public class Balance extends CommandBase {
 
   public Balance(SwerveSubsystem swerve) {
     this.swerve = swerve;
-    SmartDashboard.putNumber("balance speed ", 0.00);
-    SmartDashboard.putNumber("balance roll", swerve.getRoll());
+    SmartDashboard.putNumber("balancee speed ", 0.00);
+    SmartDashboard.putNumber("balancee roll", swerve.getRoll());
+    SmartDashboard.putNumber("balancee speed should", swerve.getRoll() * 0.05);
+
     addRequirements(swerve);
     // Use addRequirements() here to declare subsystem dependencies.
   
@@ -39,8 +41,9 @@ public class Balance extends CommandBase {
   @Override
   public void execute() {
     double xSpeed = controller.calculate(swerve.getRoll());
-    SmartDashboard.putNumber("balance speed ", xSpeed);
-    SmartDashboard.putNumber("balance roll", swerve.getRoll());
+    SmartDashboard.putNumber("balancee speed ", xSpeed);
+    SmartDashboard.putNumber("balancee roll", swerve.getRoll());
+    SmartDashboard.putNumber("balancee speed should", swerve.getRoll() * 0.05);
     xSpeed = -MathUtil.clamp(xSpeed, -1, 1);
     swerve.drive(xSpeed, 0, 0);
   }

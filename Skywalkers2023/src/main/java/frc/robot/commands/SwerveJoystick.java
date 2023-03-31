@@ -31,7 +31,7 @@ public class SwerveJoystick extends CommandBase {
   public void execute() {
     double ySpeed = -driverJoystick.getRawAxis(OIConstants.kDriverXAxis);
     double xSpeed = -driverJoystick.getRawAxis(OIConstants.kDriverYAxis);
-    double scaleFactor = 0.900;
+    double scaleFactor = 1.00;
 
     if(driverJoystick.getRightTriggerAxis() > 0.5) {
       scaleFactor = 1.000;
