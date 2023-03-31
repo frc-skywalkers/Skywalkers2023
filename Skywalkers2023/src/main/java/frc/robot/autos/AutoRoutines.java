@@ -38,7 +38,7 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ProfiledPIDElevator;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.IntakeSubsystem.Piece;
+import frc.robot.subsystems.IntakeSubsystem.Mode;
 
 public final class AutoRoutines {
 
@@ -100,7 +100,7 @@ public final class AutoRoutines {
     PathPlannerTrajectory trajectory = PathPlanner.loadPath("Left_Cone_Cube_Auto", 0.5, 0.5);
 
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("intakeDown", macros.groundIntake(Piece.CUBE));
+    eventMap.put("intakeDown", macros.groundIntake(true, Mode.CUBE));
     eventMap.put("stow", macros.stow());
     eventMap.put("prepareScore", macros.cube3rdStage());
 
@@ -159,7 +159,7 @@ public final class AutoRoutines {
     return Commands.sequence(
       Commands.runOnce(() -> swerve.setHeading(180), swerve),
       macros.home(),
-      Commands.runOnce(() -> intake.setCurrentPiece(Piece.CUBE), intake),
+      macros.setCubeMode(),
       macros.cube3rdStage(),
       macros.outtake(),
       macros.stow()
@@ -170,6 +170,7 @@ public final class AutoRoutines {
     return Commands.sequence(
       Commands.runOnce(() -> swerve.setHeading(180), swerve),
       macros.home(),
+      macros.setConeMode(),
       macros.cone2ndStage(),
       macros.outtake(),
       macros.stow()
@@ -180,7 +181,7 @@ public final class AutoRoutines {
     return Commands.sequence(
       Commands.runOnce(() -> swerve.setHeading(180), swerve),
       macros.home(),
-      Commands.runOnce(() -> intake.setCurrentPiece(Piece.CUBE)),
+      macros.setCubeMode(),
       macros.cube2ndStage(),
       macros.outtake(),
       macros.stow()
@@ -211,7 +212,7 @@ public final class AutoRoutines {
     return Commands.sequence(
       Commands.runOnce(() -> swerve.setHeading(180), swerve),
       macros.home(),
-      Commands.runOnce(() -> intake.setCurrentPiece(Piece.CONE)),
+      macros.setConeMode(),
       macros.cone3rdStage(),
       macros.outtake(),
       macros.stow()
@@ -229,7 +230,7 @@ public final class AutoRoutines {
       macros.stow(),
       Commands.parallel(
         baseSwerveCommand(trajectory, true), 
-        Commands.waitSeconds(1.5).andThen(macros.groundIntake(true, Piece.CUBE))),
+        Commands.waitSeconds(1.5).andThen(macros.groundIntake(true, Mode.CUBE))),
       Commands.parallel(
         macros.stow(),
         Commands.waitSeconds(1).andThen(baseSwerveCommand(trajectory2, false))),
@@ -271,7 +272,7 @@ public final class AutoRoutines {
       macros.cube3rdStage(),
       macros.cone3rdStage(),
       macros.stow(),
-      new IntakePiece(intake, Piece.CUBE),
+      new IntakePiece(intake, Mode.CUBE),
       new OuttakePiece(intake)
     );
   }

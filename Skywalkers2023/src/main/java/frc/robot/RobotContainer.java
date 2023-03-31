@@ -122,18 +122,6 @@ public class RobotContainer {
         elevator.disable();
       }, arm, elevator));
 
-
-    // operatorJoystick.a().onTrue(
-    //   arm.goToPosition(0)
-    // );
-
-    // operatorJoystick.b().onTrue(
-    //   arm.goToPosition(1)
-    // );
-
-    // operatorJoystick.x().onTrue(
-    //   arm.goToPosition(-0.3)
-    // );
     // Start --> Home
     operatorJoystick.start().onTrue(macros.home());
 
@@ -165,12 +153,12 @@ public class RobotContainer {
 
     // A --> cone mode
     operatorJoystick.a().onTrue(
-      macros.desireCone()
+      macros.setConeMode()
     );
 
     // // B --> cube mode
     operatorJoystick.b().onTrue(
-      macros.desireCube()
+      macros.setCubeMode()
     );
     
     // Right Bumper --> Intake 

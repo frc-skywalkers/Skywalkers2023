@@ -18,7 +18,7 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ProfiledPIDElevator;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.IntakeSubsystem.Piece;
+import frc.robot.subsystems.IntakeSubsystem.Mode;
 
 /** Add your docs here. */
 public class Macros {
@@ -73,42 +73,52 @@ public class Macros {
       Presets.STOW_PRESET.kArmPos);
   }
 
-  public CommandBase groundIntake(boolean intakeOn, Piece piece) {
-    return moveToPreset(
-      Presets.GROUND_INTAKE_PRESET.kElevatorPos, 
-      Presets.GROUND_INTAKE_PRESET.kArmPos)
-      .andThen(new IntakePiece(intake, piece).unless(() -> !intakeOn));
+  public CommandBase setCubeMode() {
+    return Commands.runOnce(() -> {
+      intake.setMode(Mode.CUBE);
+    });
   }
 
-  public CommandBase substationIntake(boolean intakeOn, Piece piece) {
-    return moveToPreset(
-      Presets.SUBSTATION_INTAKE_PRESET.kElevatorPos, 
-      Presets.SUBSTATION_INTAKE_PRESET.kArmPos)
-      .andThen(new IntakePiece(intake, piece).unless(() -> !intakeOn));
+  public CommandBase setConeMode() {
+    return Commands.runOnce(() -> {
+      intake.setMode(Mode.CONE);
+    });
+  }
+
+  public CommandBase groundIntake(boolean intakeOn, Mode m) {
+    return Commands.sequence(
+      Commands.runOnce(() -> intake.setMode(m)),
+      groundIntake(),
+      new IntakePiece(intake).unless(() -> !intakeOn)
+    );
+  }
+
+  public CommandBase substationIntake(boolean intakeOn, Mode m) {
+    return Commands.sequence(
+      Commands.runOnce(() -> intake.setMode(m)),
+      substationIntake(),
+      new IntakePiece(intake).unless(() -> !intakeOn)
+    );
   }
 
   public CommandBase groundIntake() {
     return Commands.runOnce(() -> {
-      Piece p = intake.getDesiredPiece();
-      if (p == Piece.CONE) {
+      Mode m = intake.getMode();
+      if (m == Mode.CONE) {
         CommandScheduler.getInstance().schedule(moveToPreset(Presets.GROUND_INTAKE_CONE_PRESET));
-      } else if (p == Piece.CUBE) {
+      } else if (m == Mode.CUBE) {
         CommandScheduler.getInstance().schedule(moveToPreset(Presets.GROUND_INTAKE_CUBE_PRESET));
       } else {
         System.out.println("GROUND INTAKE ERROR");
       }
-    }
-  );
-    // return moveToPreset(
-    //   Presets.GROUND_INTAKE_PRESET.kElevatorPos, 
-    //   Presets.GROUND_INTAKE_PRESET.kArmPos);
+    });
   }
 
-  public CommandBase groundIntake(Piece p) {
+  public CommandBase groundIntake(Mode m) {
     return Commands.runOnce(() -> {
-      if (p == Piece.CONE) {
+      if (m == Mode.CONE) {
         CommandScheduler.getInstance().schedule(moveToPreset(Presets.GROUND_INTAKE_CONE_PRESET));
-      } else if (p == Piece.CUBE) {
+      } else if (m == Mode.CUBE) {
         CommandScheduler.getInstance().schedule(moveToPreset(Presets.GROUND_INTAKE_CUBE_PRESET));
       } else {
         System.out.println("GROUND INTAKE ERROR");
@@ -118,25 +128,11 @@ public class Macros {
   }
 
   public CommandBase substationIntake() {
-    // Piece p = intake.getCurrentPiece();
-    // if(p == Piece.CONE) {
-    //   return moveToPreset(
-    //     Presets.SUBSTATION_INTAKE_CONE_PRESET.kElevatorPos,
-    //     Presets.SUBSTATION_INTAKE_CONE_PRESET.kArmPos);
-    // }
-    // else {
-    //   return moveToPreset(
-    //     Presets.SUBSTATION_INTAKE_CUBE_PRESET.kElevatorPos,
-    //     Presets.SUBSTATION_INTAKE_CUBE_PRESET.kArmPos);
-    // }
-    // return moveToPreset(
-      // Presets.SUBSTATION_INTAKE_PRESET.kElevatorPos, 
-      // Presets.SUBSTATION_INTAKE_PRESET.kArmPos);
       return Commands.runOnce(() -> {
-        Piece p = intake.getDesiredPiece();
-        if (p == Piece.CONE) {
+        Mode m = intake.getMode();
+        if (m == Mode.CONE) {
           CommandScheduler.getInstance().schedule(moveToPreset(Presets.SUBSTATION_INTAKE_CONE_PRESET));
-        } else if (p == Piece.CUBE) {
+        } else if (m == Mode.CUBE) {
           CommandScheduler.getInstance().schedule(moveToPreset(Presets.SUBSTATION_INTAKE_CUBE_PRESET));
         } else {
           System.out.println("SUBSTATION INTAKE ERROR");
@@ -181,8 +177,8 @@ public class Macros {
     }));
   }
 
-  public CommandBase intake(Piece piece) {
-    return new IntakePiece(intake, piece).andThen(Commands.run(() -> {
+  public CommandBase intake(Mode m) {
+    return new IntakePiece(intake, m).andThen(Commands.run(() -> {
       intake.holdObject();
     }));
   }
@@ -191,8 +187,8 @@ public class Macros {
     return new OuttakePiece(intake).withTimeout(1);
   }
 
-  public CommandBase outtake(Piece piece) {
-    return new OuttakePiece(intake, piece).withTimeout(1);
+  public CommandBase outtake(Mode m) {
+    return new OuttakePiece(intake, m).withTimeout(1);
   }
 
   public CommandBase alignCone2ndStage() {
@@ -220,32 +216,13 @@ public class Macros {
     );
   }
 
-  public CommandBase desireCone() {
-    return Commands.runOnce(() -> intake.setDesiredPiece(Piece.CONE), intake);
-  }
-
-  public CommandBase desireCube() {
-    return Commands.runOnce(() -> intake.setDesiredPiece(Piece.CUBE), intake);
-  }
-
-  public CommandBase possessCone() {
-    return Commands.runOnce(() -> intake.setCurrentPiece(Piece.CONE), intake);
-  }
-
-  public CommandBase possessCube() {
-    return Commands.runOnce(() -> intake.setCurrentPiece(Piece.CUBE), intake);
-  }
-
   public CommandBase general2ndStage() {
     return Commands.runOnce(() -> {
-        Piece p = intake.getCurrentPiece();
-        if (p != Piece.CONE && p != Piece.CUBE) {
-          p = intake.getDesiredPiece();
-        }
-        System.out.println("PIECE VALUE: " + p);
-        if (p == Piece.CONE) {
+        Mode m = intake.getMode();
+        System.out.println("INTAKE MODE 2: " + m);
+        if (m == Mode.CONE) {
           CommandScheduler.getInstance().schedule(cone2ndStage());
-        } else if (p == Piece.CUBE) {
+        } else if (m == Mode.CUBE) {
           CommandScheduler.getInstance().schedule(cube2ndStage());
         } else {
           System.out.println("GENERAL 2ND STAGE ERROR");
@@ -257,14 +234,11 @@ public class Macros {
 
   public CommandBase general3rdStage() {
     return Commands.runOnce(() -> {
-        Piece p = intake.getCurrentPiece();
-        if (p != Piece.CONE && p != Piece.CUBE) {
-          p = intake.getDesiredPiece();
-        }
-        System.out.println("PIECE VALUE: " + p);
-        if (p == Piece.CONE) {
+        Mode m = intake.getMode();
+        System.out.println("INTAKE MODE 3: " + m);
+        if (m == Mode.CONE) {
           CommandScheduler.getInstance().schedule(cone3rdStage());
-        } else if (p == Piece.CUBE) {
+        } else if (m == Mode.CUBE) {
           CommandScheduler.getInstance().schedule(cube3rdStage());
         } else {
           System.out.println("GENERAL 3RD STAGE ERROR");

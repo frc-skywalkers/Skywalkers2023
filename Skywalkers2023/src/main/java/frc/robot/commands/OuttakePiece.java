@@ -6,14 +6,13 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.IntakeSubsystem.Piece;
+import frc.robot.subsystems.IntakeSubsystem.Mode;
 
 public class OuttakePiece extends CommandBase {
   private final IntakeSubsystem intake;
 
   private boolean finished = false;
 
-  private Piece piece;
 
   /** Creates a new IntakeMotor. */
   public OuttakePiece(IntakeSubsystem rIntake) {
@@ -23,9 +22,9 @@ public class OuttakePiece extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
-  public OuttakePiece(IntakeSubsystem rIntake, Piece kPiece) {
+  public OuttakePiece(IntakeSubsystem rIntake, Mode mode) {
     intake = rIntake;
-    intake.setCurrentPiece(kPiece);
+    intake.setMode(mode);
     addRequirements(rIntake);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -33,11 +32,7 @@ public class OuttakePiece extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    piece = intake.getCurrentPiece();
-    if (piece == Piece.NONE) {
-      piece = intake.getDesiredPiece();
-    }
-    intake.moveOut(piece);
+    intake.moveOut();
     finished = false;
     intake.stop = false;
   }
@@ -49,16 +44,13 @@ public class OuttakePiece extends CommandBase {
       intake.stop();
       finished = true;
     } else {
-      intake.moveOut(piece);
+      intake.moveOut();
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // if (!interrupted) {
-      // intake.setCurrentPiece(Piece.NONE);
-    // }
     intake.stop();
   }
 

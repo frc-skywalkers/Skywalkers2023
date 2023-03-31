@@ -10,7 +10,7 @@ import frc.robot.Constants.lightstripConstants;
 import frc.robot.Dashboard.Intake;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Lightstrip;
-import frc.robot.subsystems.IntakeSubsystem.Piece;
+import frc.robot.subsystems.IntakeSubsystem.Mode;
 
 public class IntakePiece extends CommandBase {
   private final IntakeSubsystem intake;
@@ -18,8 +18,6 @@ public class IntakePiece extends CommandBase {
   private boolean finished = false;
 
   private int stage;
-
-  private Piece piece;
 
   private Lightstrip lightstrip = null;
 
@@ -39,9 +37,9 @@ public class IntakePiece extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
-  public IntakePiece(IntakeSubsystem rIntake, Piece rPiece) {
+  public IntakePiece(IntakeSubsystem rIntake, Mode mode) {
     intake = rIntake;
-    intake.setDesiredPiece(rPiece);
+    intake.setMode(mode);
     addRequirements(rIntake);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -49,22 +47,20 @@ public class IntakePiece extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    piece = intake.getDesiredPiece();
     stage = 0;
     finished = false;
-    intake.moveIn(piece);
+    intake.moveIn();
     intake.stop = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    piece = intake.getDesiredPiece();
     if(stage == 0) {
       if(intake.intakeEmpty()) { // waits for power to go up
         stage = 1;
       } else {
-        intake.moveIn(piece);
+        intake.moveIn();
       }
     } else { //starts checking for game pieces once its speed up
       if(intake.pieceHeld()) { // waits for spike when object is intaked
@@ -72,7 +68,7 @@ public class IntakePiece extends CommandBase {
         finished = true;
         stage = -1;
       } else {
-        intake.moveIn(piece);
+        intake.moveIn();
       }
     }
     Dashboard.Intake.Debugging.putNumber("Intake Step", stage);
@@ -82,7 +78,6 @@ public class IntakePiece extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     if(!interrupted) {
-      intake.setCurrentPiece(intake.getDesiredPiece());
       intake.holdObject();
       lightstrip.tempColor(lightstripConstants.successSignal);
     } else {

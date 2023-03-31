@@ -17,8 +17,7 @@ public class IntakeSubsystem extends SubsystemBase {
   public final static int conePiece = 1;
   public final static int cubePiece = -1;
 
-  public Piece currentPiece = Piece.NONE;
-  public Piece desiredPiece = Piece.CUBE;
+  public Mode mode = Mode.CUBE;
 
   private final boolean differentialIntake = IntakeConstants.differentialIntake;
 
@@ -30,14 +29,13 @@ public class IntakeSubsystem extends SubsystemBase {
 
   private final Lightstrip lightstrip;
 
-  public enum Piece {
-    NONE(0),
+  public enum Mode {
     CONE(-1),
     CUBE(1);
 
     public int multiplier;
 
-    Piece(int m) {
+    Mode(int m) {
       multiplier = m;
     }
   }
@@ -60,14 +58,14 @@ public class IntakeSubsystem extends SubsystemBase {
     Dashboard.Intake.Debugging.putNumber("Intake Set Voltage", voltage);
   }
 
-  public void moveIn(Piece piece) {
-    setSpeed(IntakeConstants.kMaxIntakeSpeed * piece.multiplier);
-    intakeSpeed = IntakeConstants.kMaxIntakeSpeed * piece.multiplier;
+  public void moveIn() {
+    setSpeed(IntakeConstants.kMaxIntakeSpeed * mode.multiplier);
+    intakeSpeed = IntakeConstants.kMaxIntakeSpeed * mode.multiplier;
   }
 
-  public void moveOut(Piece piece) {
-    setSpeed(IntakeConstants.kMaxOuttakeSpeed * piece.multiplier);
-    intakeSpeed = IntakeConstants.kMaxOuttakeSpeed * piece.multiplier;
+  public void moveOut() {
+    setSpeed(IntakeConstants.kMaxOuttakeSpeed * mode.multiplier);
+    intakeSpeed = IntakeConstants.kMaxOuttakeSpeed * mode.multiplier;
   }
 
   public void stop() {
@@ -93,30 +91,30 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void holdObject() {
-    intake.setVoltage(IntakeConstants.kHoldSpeed * 12.0000 * currentPiece.multiplier);
+    intake.setVoltage(IntakeConstants.kHoldSpeed * 12.0000 * mode.multiplier);
   }
 
-  public Piece getDesiredPiece() {
-    return desiredPiece;
+  public void setMode(Mode m) {
+    this.mode = m;
   }
 
-  public void setDesiredPiece(Piece p) {
-    desiredPiece = p;
+  public Mode getMode() {
+    return mode;
   }
 
-  public void setCurrentPiece(Piece p) {
-    currentPiece = p;
-  }
-
-  public Piece getCurrentPiece() {
-    return currentPiece;
+  public void toggleMode() {
+    if (mode == Mode.CONE) {
+      setMode(Mode.CUBE);
+    } else if (mode == Mode.CUBE) {
+      setMode(Mode.CONE);
+    }
   }
 
   @Override
   public void periodic() {
-    if(desiredPiece == Piece.CONE) {
+    if(mode == Mode.CONE) {
       lightstrip.setColor(lightstripConstants.coneIntake);
-    } else if(desiredPiece == Piece.CUBE) {
+    } else if(mode == Mode.CUBE) {
       lightstrip.setColor(lightstripConstants.cubeIntake);
     }
 
@@ -125,8 +123,7 @@ public class IntakeSubsystem extends SubsystemBase {
     Dashboard.Intake.Debugging.putNumber("Intake Speed", intakeSpeed);
     Dashboard.Intake.Debugging.putBoolean("Intake Object Held", pieceHeld());
     Dashboard.Intake.Debugging.putNumber("Intake Current", intake.getStatorCurrent());
-    Dashboard.Intake.Driver.putString("Desired Piece", desiredPiece.toString());
-    Dashboard.Intake.Driver.putString("Current Piece", currentPiece.toString());
+    Dashboard.Intake.Driver.putString("Intake Mode", mode.toString());
     Dashboard.Intake.Debugging.putNumber(getName(), intakeSpeed);
   }
 }
