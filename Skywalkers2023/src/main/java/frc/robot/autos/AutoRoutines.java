@@ -28,12 +28,14 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Dashboard;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.Presets;
 import frc.robot.commands.HomeElevator;
 import frc.robot.commands.IntakePiece;
 import frc.robot.commands.Macros;
 import frc.robot.commands.OuttakePiece;
 import frc.robot.commands.SwerveDriveTimed;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.Lightstrip;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ProfiledPIDElevator;
@@ -47,6 +49,7 @@ public final class AutoRoutines {
   private final ArmSubsystem arm;
   private final IntakeSubsystem intake;
   private final Limelight limelight;
+  private final Lightstrip lightstrip;
 
   private final Macros macros;
 
@@ -56,16 +59,31 @@ public final class AutoRoutines {
       ProfiledPIDElevator elevator, 
       ArmSubsystem arm, 
       IntakeSubsystem intake, 
-      Limelight limelight) {
+      Limelight limelight,
+      Lightstrip lightstrip) {
     
     this.swerve = swerve;
     this.elevator = elevator;
     this.arm = arm;
     this.intake = intake;
     this.limelight = limelight;
+    this.lightstrip = lightstrip;
+
 
     macros = new Macros(swerve, elevator, arm, intake, limelight);
 
+  }
+
+  public CommandBase debugIntakePart() {
+    return Commands.sequence(
+      macros.home(),
+      macros.setCubeMode(),
+      Commands.runOnce(() -> SmartDashboard.putString("Before Ground Intake", "yes")),
+      macros.cubeGroundIntake(),
+      Commands.runOnce(() -> SmartDashboard.putString("After Ground Intake", "yes")),
+      macros.intake(),
+      Commands.runOnce(() -> SmartDashboard.putString("After Intake On", "yes"))
+    );
   }
 
   public CommandBase debugOdometryReset(Pose2d testPose) {
@@ -99,10 +117,10 @@ public final class AutoRoutines {
   }
 
   public CommandBase leftConeCubeAuto() {
-    PathPlannerTrajectory trajectory = PathPlanner.loadPath("Left_Cone_Cube_Auto", 0.5, 0.5);
+    PathPlannerTrajectory trajectory = PathPlanner.loadPath("Left_Cone_Cube_Auto", 1, 1.5);
 
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("intakeDown", Commands.none());
+    eventMap.put("intakeDown", macros.setCubeMode().andThen(macros.cubeGroundIntake()).andThen(macros.intake()));
     eventMap.put("stow", macros.stow());
     eventMap.put("prepareScore", macros.cube3rdStage());
 
@@ -215,6 +233,8 @@ public final class AutoRoutines {
       Commands.runOnce(() -> swerve.setHeading(180), swerve),
       macros.home(),
       macros.setConeMode(),
+      elevator.goToPosition(Presets.CONE_3RD_STAGE_PRESET.kElevatorPos),
+      arm.goToPosition(Presets.CONE_3RD_STAGE_PRESET.kArmPos),
       macros.cone3rdStage(),
       macros.outtake(),
       macros.stow()

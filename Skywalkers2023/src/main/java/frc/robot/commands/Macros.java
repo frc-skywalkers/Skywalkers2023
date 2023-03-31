@@ -90,7 +90,7 @@ public class Macros {
     return Commands.sequence(
       Commands.runOnce(() -> intake.setMode(m)),
       groundIntake(),
-      new IntakePiece(intake).unless(() -> !intakeOn)
+      new IntakePiece(intake, m).unless(() -> !intakeOn)
     );
   }
 
@@ -99,6 +99,18 @@ public class Macros {
       Commands.runOnce(() -> intake.setMode(m)),
       substationIntake(),
       new IntakePiece(intake).unless(() -> !intakeOn)
+    );
+  }
+
+  public CommandBase cubeGroundIntake() {
+    return moveToPreset(
+      Presets.GROUND_INTAKE_CUBE_PRESET
+    );
+  }
+
+  public CommandBase coneGroundIntake() {
+    return moveToPreset(
+      Presets.GROUND_INTAKE_CONE_PRESET
     );
   }
 

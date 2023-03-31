@@ -43,7 +43,7 @@ public class RobotContainer {
   private final CommandXboxController operatorJoystick = new CommandXboxController(OIConstants.kDriverControllerPort2);
 
   private final Macros macros = new Macros(swerve, elevator, arm, intake, limelight);
-  private final AutoRoutines autoRoutines = new AutoRoutines(swerve, elevator, arm, intake, limelight);
+  private final AutoRoutines autoRoutines = new AutoRoutines(swerve, elevator, arm, intake, limelight, lightstrip);
 
   SendableChooser<Command> m_Chooser = new SendableChooser<>();
 
@@ -187,6 +187,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     return m_Chooser.getSelected(); 
+    // return autoRoutines.debugIntakePart();
     // return autoRoutines.debugOdometryReset(new Pose2d(2.00, 5.000, new Rotation2d(3.00)));
     // return autoRoutines.leftConeCubeAuto();
   }
