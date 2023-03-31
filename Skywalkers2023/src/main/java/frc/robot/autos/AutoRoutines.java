@@ -100,7 +100,7 @@ public final class AutoRoutines {
     PathPlannerTrajectory trajectory = PathPlanner.loadPath("Left_Cone_Cube_Auto", 0.5, 0.5);
 
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("intakeDown", macros.groundIntake(true, Mode.CUBE));
+    eventMap.put("intakeDown", Commands.none());
     eventMap.put("stow", macros.stow());
     eventMap.put("prepareScore", macros.cube3rdStage());
 
@@ -257,9 +257,33 @@ public final class AutoRoutines {
       swerve::setModuleStatesClosedLoop, 
       swerve);
 
+    Timer timer = new Timer();
+    SmartDashboard.putNumber("Desired X", 0);
+          SmartDashboard.putNumber("Desired Y", 0);
+          SmartDashboard.putNumber("Desired R", 0);
+          SmartDashboard.putNumber("Error X", 0);
+          SmartDashboard.putNumber("Error Y", 0);
+          SmartDashboard.putNumber("Error R", 0);
+
     return Commands.sequence(
-      resetOdom, 
-      command);
+      resetOdom.andThen(Commands.runOnce(
+        () -> {
+          timer.reset();
+          timer.start();
+        })), 
+      command.alongWith(
+        Commands.run(() -> {
+          double t = timer.get();
+          PathPlannerState state = (PathPlannerState) trajectory.sample(t);
+          SmartDashboard.putNumber("Desired X", state.poseMeters.getX());
+          SmartDashboard.putNumber("Desired Y", state.poseMeters.getY());
+          SmartDashboard.putNumber("Desired R", state.poseMeters.getRotation().getRadians());
+          SmartDashboard.putNumber("Error X", state.poseMeters.getX() - swerve.getPose().getX());
+          SmartDashboard.putNumber("Error Y", state.poseMeters.getY() - swerve.getPose().getY());
+          SmartDashboard.putNumber("Error R", state.poseMeters.getRotation().getRadians() - swerve.getPose().getRotation().getRadians());
+        })
+      ), 
+      Commands.runOnce(() -> SmartDashboard.putString("Path Ended", "yes")));
   }
 
   public CommandBase DiagnosticTest() {

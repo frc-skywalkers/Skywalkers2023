@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -13,11 +14,13 @@ public class Balance extends CommandBase {
   /** Creates a new Balance. */
 
   SwerveSubsystem swerve;
-  PIDController controller = new PIDController(0, 0, 0);
+  PIDController controller = new PIDController(0.05, 0, 0);
 
   public Balance(SwerveSubsystem swerve) {
     this.swerve = swerve;
     addRequirements(swerve);
+    SmartDashboard.putNumber("Balance Roll", 0);
+    SmartDashboard.putNumber("Balance Speed", 0);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -25,6 +28,7 @@ public class Balance extends CommandBase {
   @Override
   public void initialize() {
     controller.setSetpoint(0);
+    swerve.toggleField();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -33,12 +37,15 @@ public class Balance extends CommandBase {
     double xSpeed = controller.calculate(swerve.getRoll());
     xSpeed = -MathUtil.clamp(xSpeed, -0.5, 0.5);
     swerve.drive(xSpeed, 0, 0);
+    SmartDashboard.putNumber("Balance Roll", swerve.getRoll());
+    SmartDashboard.putNumber("Balance Speed", xSpeed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     swerve.stopModules();
+    swerve.toggleField();
   }
 
   // Returns true when the command should end.

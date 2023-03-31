@@ -141,6 +141,10 @@ public class RobotContainer {
       macros.substationIntake()
     );
 
+    operatorJoystick.povRight().onTrue(
+      macros.singleSubstationIntake()
+    );
+
     // // X --> Cone 2nd Stage
     operatorJoystick.x().onTrue(
       macros.general2ndStage()

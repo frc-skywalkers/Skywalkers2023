@@ -4,8 +4,6 @@
 
 package frc.robot.commands;
 
-import com.playingwithfusion.TimeOfFlight;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Dashboard;
 import frc.robot.Constants.IntakeConstants;
@@ -55,10 +53,6 @@ public class IntakePiece extends CommandBase {
     finished = false;
     intake.moveIn();
     intake.stop = false;
-
-    if(lightstrip != null) {
-      lightstrip.tempColor(new TempLedState(0, 255, 0, "Solid", 1));
-    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.

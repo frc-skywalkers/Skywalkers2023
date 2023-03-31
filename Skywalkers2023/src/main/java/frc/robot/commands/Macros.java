@@ -142,6 +142,20 @@ public class Macros {
     );
   }
 
+  public CommandBase singleSubstationIntake() {
+    return Commands.runOnce(() -> {
+      Mode m = intake.getMode();
+      if (m == Mode.CONE) {
+        CommandScheduler.getInstance().schedule(moveToPreset(Presets.SINGLE_SUBSTATION_CONE));
+      } else if (m == Mode.CUBE) {
+        CommandScheduler.getInstance().schedule(moveToPreset(Presets.SINGLE_SUBSTATION_CUBE));
+      } else {
+        System.out.println("SUBSTATION INTAKE ERROR");
+      }
+    }
+  );
+}
+
   public CommandBase cube2ndStage() {
     return moveToPreset(
       Presets.CUBE_2ND_STAGE_PRESET.kElevatorPos, 

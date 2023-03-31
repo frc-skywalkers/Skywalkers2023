@@ -5,7 +5,6 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.playingwithfusion.TimeOfFlight;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,7 +24,6 @@ public class IntakeSubsystem extends SubsystemBase {
   private final WPI_TalonFX intake = new WPI_TalonFX(IntakeConstants.kIntakePort, "CANivore");
   private double intakeSpeed = 0;
   public boolean stop = false;
-  private final TimeOfFlight tof = new TimeOfFlight(IntakeConstants.tofPort);
 
   public boolean outtake = false;
 
@@ -45,8 +43,6 @@ public class IntakeSubsystem extends SubsystemBase {
   public IntakeSubsystem(Lightstrip rLightstrip) {
     intake.configFactoryDefault();
     lightstrip = rLightstrip;
-    tof.setRangingMode(TimeOfFlight.RangingMode.Short, 24); //short is default, sampling rate could be between 24 and 1000 ms
-    tof.setRangeOfInterest(4, 4, 12, 12);
   }
 
   // just speed should be fine, motor voltage unecessary
@@ -55,10 +51,6 @@ public class IntakeSubsystem extends SubsystemBase {
     intakeSpeed = speed;
     intake.set(intakeSpeed);
     Dashboard.Intake.Debugging.putNumber("Intake Set Speed", intakeSpeed);
-  }
-
-  public double getRange() {
-    return tof.getRange();
   }
 
   public void setVoltage(double voltage) {
@@ -136,16 +128,10 @@ public class IntakeSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if(getActualVelocity() < getThreshold() + 100 && intakeSpeed > 0) {
-      lightstrip.setColor(new LedState(255, 0, 0, "Solid"));
-    } else if(getActualVelocity() < getThreshold() + 200 && intakeSpeed > 0) {
-      lightstrip.setColor(new LedState(0, 0, 255, "Solid"));
-    } else {
-      if(mode == Mode.CONE) {
-        lightstrip.setColor(lightstripConstants.coneIntake);
-      } else if(mode == Mode.CUBE) {
-        lightstrip.setColor(lightstripConstants.cubeIntake);
-      }
+    if(mode == Mode.CONE) {
+      lightstrip.setColor(lightstripConstants.coneIntake);
+    } else if(mode == Mode.CUBE) {
+      lightstrip.setColor(lightstripConstants.cubeIntake);
     }
 
 
@@ -153,7 +139,6 @@ public class IntakeSubsystem extends SubsystemBase {
     Dashboard.Intake.Debugging.putNumber("Intake Speed", intakeSpeed);
     Dashboard.Intake.Debugging.putNumber("Intake Current", intake.getStatorCurrent());
     Dashboard.Intake.Driver.putString("Intake Mode", mode.toString());
-    Dashboard.Intake.Debugging.putNumber("Intake Tof Range", getRange());
     Dashboard.Intake.Debugging.putNumber(getName(), intakeSpeed);
   }
 }

@@ -35,7 +35,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem {
             NewArmConstants.kIArm,
             NewArmConstants.kDArm,
 
-            new TrapezoidProfile.Constraints(2.5, 3.25)));
+            new TrapezoidProfile.Constraints(3, 4)));
 
     this.getController().setTolerance(0.03);
 

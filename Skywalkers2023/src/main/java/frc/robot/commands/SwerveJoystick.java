@@ -38,7 +38,7 @@ public class SwerveJoystick extends CommandBase {
     }
 
     if(driverJoystick.getLeftTriggerAxis() > 0.5) {
-      scaleFactor = 0.55;
+      scaleFactor = 0.40;
     }
 
     ySpeed *= scaleFactor;
