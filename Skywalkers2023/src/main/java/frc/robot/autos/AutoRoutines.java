@@ -118,7 +118,7 @@ public final class AutoRoutines {
   }
 
   public CommandBase blueConeCubeAuto() {
-    PathPlannerTrajectory trajectory = PathPlanner.loadPath("Left_Cone_Cube_Auto", 1, 1.5);
+    PathPlannerTrajectory trajectory = PathPlanner.loadPath("Left_Cone_Cube_Auto", 1.5, 1.75);
 
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("intakeDown", macros.setCubeMode().andThen(macros.cubeGroundIntake()).andThen(macros.intake()));
@@ -139,7 +139,7 @@ public final class AutoRoutines {
   }
 
   public CommandBase redConeCubeAuto() {
-    PathPlannerTrajectory trajectory = PathPlanner.loadPath("Left_Cone_Cube_Auto", 1, 1.5);
+    PathPlannerTrajectory trajectory = PathPlanner.loadPath("Left_Cone_Cube_Auto", 1.5, 1.75);
     trajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(trajectory, DriverStation.Alliance.Red);
 
     HashMap<String, Command> eventMap = new HashMap<>();
