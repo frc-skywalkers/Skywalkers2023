@@ -206,7 +206,7 @@ public final class Constants {
         public static final double kTopLimit = 1.45;
 
         public static final double kMaxVel = 1.5;
-        public static final double kMaxAcc = 1.75;
+        public static final double kMaxAcc = 1.0;
 
         public static final double kVUp = 6.17;
         public static final double kSUp = 0.999;
