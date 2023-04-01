@@ -18,6 +18,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -116,7 +117,7 @@ public final class AutoRoutines {
     
   }
 
-  public CommandBase leftConeCubeAuto() {
+  public CommandBase blueConeCubeAuto() {
     PathPlannerTrajectory trajectory = PathPlanner.loadPath("Left_Cone_Cube_Auto", 1, 1.5);
 
     HashMap<String, Command> eventMap = new HashMap<>();
@@ -134,9 +135,28 @@ public final class AutoRoutines {
       grabConeAndPrepareToScore,
       macros.outtake(),
       macros.stow()
-      // Commands.runOnce(() -> swerve.reset(swerve.getHeading() + 180)).andThen(Commands.runOnce(() -> Dashboard.Auto.Debugging.putString("Reset", "RESET!"))),
-      // Commands.runOnce(() -> swerve.reset(swerve.getHeading() + 180))
-      
+    );
+  }
+
+  public CommandBase redConeCubeAuto() {
+    PathPlannerTrajectory trajectory = PathPlanner.loadPath("Left_Cone_Cube_Auto", 1, 1.5);
+    trajectory = PathPlannerTrajectory.transformTrajectoryForAlliance(trajectory, DriverStation.Alliance.Red);
+
+    HashMap<String, Command> eventMap = new HashMap<>();
+    eventMap.put("intakeDown", macros.setCubeMode().andThen(macros.cubeGroundIntake()).andThen(macros.intake()));
+    eventMap.put("stow", macros.stow());
+    eventMap.put("prepareScore", macros.cube3rdStage());
+
+    FollowPathWithEvents grabConeAndPrepareToScore = new FollowPathWithEvents(
+      baseSwerveCommand(trajectory, true), 
+      trajectory.getMarkers(), 
+      eventMap);
+
+    return Commands.sequence(
+      cone3rdAuto(),
+      grabConeAndPrepareToScore,
+      macros.outtake(),
+      macros.stow()
     );
   }
 
@@ -177,7 +197,7 @@ public final class AutoRoutines {
 
   public CommandBase cube3rdAuto() {
     return Commands.sequence(
-      // Commands.runOnce(() -> swerve.setHeading(180), swerve),
+      Commands.runOnce(() -> swerve.setHeading(180), swerve),
       macros.home(),
       macros.setCubeMode(),
       macros.cube3rdStage(),

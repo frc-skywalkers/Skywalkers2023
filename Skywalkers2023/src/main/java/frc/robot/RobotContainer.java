@@ -74,7 +74,8 @@ public class RobotContainer {
     m_Chooser.addOption("2nd Stage Cone", autoRoutines.cone2ndAuto());
     m_Chooser.addOption("2nd Stage Cube", autoRoutines.cube2ndAuto());
 
-    m_Chooser.addOption("2 Piece Auto", autoRoutines.leftConeCubeAuto());
+    m_Chooser.addOption("BLUE 2 Piece Auto", autoRoutines.blueConeCubeAuto());
+    m_Chooser.addOption("RED 2 Piece Auto", autoRoutines.redConeCubeAuto());
 
 
 
