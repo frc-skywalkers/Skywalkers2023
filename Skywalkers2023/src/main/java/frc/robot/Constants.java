@@ -171,7 +171,7 @@ public final class Constants {
         public static final int kIntakePort = 22; // ??
         public static final double kMaxIntakeSpeed = 0.8; // ??
         public static final double kMaxOuttakeSpeed = -0.3; // ??
-        public static final double kHoldSpeed = 0.07;
+        public static final double kHoldSpeed = 0.08;
 
         public static double kSpeedUpFailTime = 0.75; //seconds it tries to speed up
         public static double kOutFailTime = 0.75; //seconds it tries to outtake
